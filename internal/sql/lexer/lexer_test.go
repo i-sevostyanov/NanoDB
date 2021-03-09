@@ -38,6 +38,11 @@ func TestLexer_NextToken(t *testing.T) {
 			literal:   token.Comma.String(),
 		},
 		{
+			input:     ";",
+			tokenType: token.Semicolon,
+			literal:   token.Semicolon.String(),
+		},
+		{
 			input:     "(",
 			tokenType: token.OpenParen,
 			literal:   token.OpenParen.String(),
@@ -156,6 +161,11 @@ func TestLexer_NextToken(t *testing.T) {
 			input:     "TABLE",
 			tokenType: token.Table,
 			literal:   token.Table.String(),
+		},
+		{
+			input:     "DATABASE",
+			tokenType: token.Database,
+			literal:   token.Database.String(),
 		},
 		{
 			input:     "DROP",

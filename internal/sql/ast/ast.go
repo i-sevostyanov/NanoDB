@@ -106,6 +106,18 @@ type DeleteStatement struct {
 
 func (s *DeleteStatement) statementNode() {}
 
+type CreateDatabaseStatement struct {
+	Table Expression
+}
+
+func (s *CreateDatabaseStatement) statementNode() {}
+
+type DropDatabaseStatement struct {
+	Table Expression
+}
+
+func (s *DropDatabaseStatement) statementNode() {}
+
 type CreateTableStatement struct {
 	Table   Expression
 	Columns []Column
@@ -114,8 +126,11 @@ type CreateTableStatement struct {
 func (s *CreateTableStatement) statementNode() {}
 
 type Column struct {
-	Name Expression
-	Type token.Type
+	Name       Expression
+	Type       token.Type
+	Default    Expression
+	Nullable   *bool
+	PrimaryKey bool
 }
 
 type DropTableStatement struct {

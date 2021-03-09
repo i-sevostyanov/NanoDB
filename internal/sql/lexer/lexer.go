@@ -40,6 +40,8 @@ func (l *Lexer) NextToken() token.Token {
 		return l.readString()
 	case ',':
 		return token.New(token.Comma, l.offset)
+	case ';':
+		return token.New(token.Semicolon, l.offset)
 	case '(':
 		return token.New(token.OpenParen, l.offset)
 	case ')':

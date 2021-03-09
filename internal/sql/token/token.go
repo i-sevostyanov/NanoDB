@@ -21,6 +21,7 @@ const (
 
 	// Special chars
 	Comma      // ,
+	Semicolon  // ;
 	OpenParen  // (
 	CloseParen // )
 
@@ -59,6 +60,7 @@ const (
 	// Keywords
 	Create
 	Table
+	Database
 	Drop
 	Select
 	As
@@ -84,6 +86,7 @@ var tokens = [...]string{
 	Ident:   "Ident",
 
 	Comma:      ",",
+	Semicolon:  ";",
 	OpenParen:  "(",
 	CloseParen: ")",
 
@@ -114,25 +117,26 @@ var tokens = [...]string{
 	True:  "TRUE",
 	False: "FALSE",
 
-	Create: "CREATE",
-	Table:  "TABLE",
-	Drop:   "DROP",
-	Select: "SELECT",
-	As:     "AS",
-	From:   "FROM",
-	Where:  "WHERE",
-	Order:  "ORDER",
-	By:     "BY",
-	Asc:    "ASC",
-	Desc:   "DESC",
-	Limit:  "LIMIT",
-	Offset: "OFFSET",
-	Insert: "INSERT",
-	Into:   "INTO",
-	Values: "VALUES",
-	Update: "UPDATE",
-	Set:    "SET",
-	Delete: "DELETE",
+	Create:   "CREATE",
+	Table:    "TABLE",
+	Database: "DATABASE",
+	Drop:     "DROP",
+	Select:   "SELECT",
+	As:       "AS",
+	From:     "FROM",
+	Where:    "WHERE",
+	Order:    "ORDER",
+	By:       "BY",
+	Asc:      "ASC",
+	Desc:     "DESC",
+	Limit:    "LIMIT",
+	Offset:   "OFFSET",
+	Insert:   "INSERT",
+	Into:     "INTO",
+	Values:   "VALUES",
+	Update:   "UPDATE",
+	Set:      "SET",
+	Delete:   "DELETE",
 }
 
 func (t Type) String() string {
@@ -151,35 +155,36 @@ func (t Type) String() string {
 
 func Lookup(ident string) Type {
 	keywords := map[string]Type{
-		"INTEGER": Integer,
-		"FLOAT":   Float,
-		"STRING":  String,
-		"BOOLEAN": Boolean,
-		"CREATE":  Create,
-		"TABLE":   Table,
-		"DROP":    Drop,
-		"SELECT":  Select,
-		"AS":      As,
-		"FROM":    From,
-		"WHERE":   Where,
-		"ORDER":   Order,
-		"BY":      By,
-		"ASC":     Asc,
-		"DESC":    Desc,
-		"LIMIT":   Limit,
-		"OFFSET":  Offset,
-		"INSERT":  Insert,
-		"INTO":    Into,
-		"VALUES":  Values,
-		"UPDATE":  Update,
-		"SET":     Set,
-		"DELETE":  Delete,
-		"AND":     And,
-		"OR":      Or,
-		"NOT":     Not,
-		"TRUE":    True,
-		"FALSE":   False,
-		"NULL":    Null,
+		"INTEGER":  Integer,
+		"FLOAT":    Float,
+		"STRING":   String,
+		"BOOLEAN":  Boolean,
+		"CREATE":   Create,
+		"TABLE":    Table,
+		"DATABASE": Database,
+		"DROP":     Drop,
+		"SELECT":   Select,
+		"AS":       As,
+		"FROM":     From,
+		"WHERE":    Where,
+		"ORDER":    Order,
+		"BY":       By,
+		"ASC":      Asc,
+		"DESC":     Desc,
+		"LIMIT":    Limit,
+		"OFFSET":   Offset,
+		"INSERT":   Insert,
+		"INTO":     Into,
+		"VALUES":   Values,
+		"UPDATE":   Update,
+		"SET":      Set,
+		"DELETE":   Delete,
+		"AND":      And,
+		"OR":       Or,
+		"NOT":      Not,
+		"TRUE":     True,
+		"FALSE":    False,
+		"NULL":     Null,
 	}
 
 	if t, ok := keywords[strings.ToUpper(ident)]; ok {

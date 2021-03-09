@@ -26,7 +26,7 @@ func New(lx *lexer.Lexer) *Parser {
 func (p *Parser) Parse() (*ast.Tree, []error) {
 	var statements []ast.Statement
 
-	for p.token.Type != token.EOF {
+	for p.token.Type != token.Semicolon && p.token.Type != token.EOF {
 		if stmt := p.parseStatement(); stmt != nil {
 			statements = append(statements, stmt)
 		}
@@ -63,7 +63,37 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.Drop:
 		return p.parseDropStatement()
 	default:
-		return &ast.BadStatement{Type: p.token.Type, Literal: p.token.Literal}
+		return p.parseBadStatement()
+	}
+}
+
+func (p *Parser) parseCreateStatement() ast.Statement {
+	p.nextToken()
+
+	switch p.token.Type {
+	case token.Database:
+		p.nextToken()
+		return p.parseCreateDatabaseStatement()
+	case token.Table:
+		p.nextToken()
+		return p.parseCreateTableStatement()
+	default:
+		return p.parseBadStatement()
+	}
+}
+
+func (p *Parser) parseDropStatement() ast.Statement {
+	p.nextToken()
+
+	switch p.token.Type {
+	case token.Database:
+		p.nextToken()
+		return p.parseDropDatabaseStatement()
+	case token.Table:
+		p.nextToken()
+		return p.parseDropTableStatement()
+	default:
+		return p.parseBadStatement()
 	}
 }
 
@@ -147,16 +177,23 @@ func (p *Parser) parseDeleteStatement() ast.Statement {
 	}
 }
 
-func (p *Parser) parseCreateStatement() ast.Statement {
-	p.nextToken()
-
-	if p.token.Type != token.Table {
-		p.expect(token.Table)
+func (p *Parser) parseCreateDatabaseStatement() ast.Statement {
+	if p.token.Type != token.Ident {
+		p.expect(token.Ident)
 		return nil
 	}
 
+	table := p.token.Literal
 	p.nextToken()
 
+	return &ast.CreateDatabaseStatement{
+		Table: &ast.IdentExpr{
+			Name: table,
+		},
+	}
+}
+
+func (p *Parser) parseCreateTableStatement() ast.Statement {
 	if p.token.Type != token.Ident {
 		p.expect(token.Ident)
 		return nil
@@ -202,6 +239,8 @@ func (p *Parser) parseColumns() []ast.Column {
 			})
 
 			p.nextToken()
+
+			// FIXME: parse constraint
 		default:
 			// p.expect(token.Ident)
 			return columns
@@ -213,26 +252,39 @@ func (p *Parser) parseColumns() []ast.Column {
 	return columns
 }
 
-func (p *Parser) parseDropStatement() ast.Statement {
-	p.nextToken()
+func (p *Parser) parseDropDatabaseStatement() ast.Statement {
+	var table ast.Expression
 
-	if p.token.Type != token.Table {
-		p.expect(token.Table)
-		return nil
+	switch p.token.Type {
+	case token.Ident:
+		table = p.parseIdent()
+	default:
+		// p.expect(token.Ident)
+		table = p.parseBadExpr()
 	}
 
 	p.nextToken()
 
-	if p.token.Type != token.Ident {
-		p.expect(token.Ident)
-		return nil
+	return &ast.DropDatabaseStatement{
+		Table: table,
+	}
+}
+
+func (p *Parser) parseDropTableStatement() ast.Statement {
+	var table ast.Expression
+
+	switch p.token.Type {
+	case token.Ident:
+		table = p.parseIdent()
+	default:
+		// p.expect(token.Ident)
+		table = p.parseBadExpr()
 	}
 
-	table := p.token.Literal
 	p.nextToken()
 
 	return &ast.DropTableStatement{
-		Table: &ast.IdentExpr{Name: table},
+		Table: table,
 	}
 }
 
@@ -538,8 +590,7 @@ func (p *Parser) parseOperand() ast.Expression {
 	case token.OpenParen:
 		return p.parseGroupExpr()
 	default:
-		// error?
-		return nil
+		return p.parseBadExpr()
 	}
 }
 
@@ -564,6 +615,20 @@ func (p *Parser) isInfixOperator(t token.Type) bool {
 	}
 
 	return false
+}
+
+func (p *Parser) parseBadStatement() ast.Statement {
+	return &ast.BadStatement{
+		Type:    p.token.Type,
+		Literal: p.token.Literal,
+	}
+}
+
+func (p *Parser) parseBadExpr() ast.Expression {
+	return &ast.BadExpr{
+		Type:    p.token.Type,
+		Literal: p.token.Literal,
+	}
 }
 
 func (p *Parser) parseIdent() ast.Expression {

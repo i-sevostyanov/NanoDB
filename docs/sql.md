@@ -1,7 +1,9 @@
 # SQL
+
 Detailed reference documentation for NanoDB's SQL dialect.
 
 ## Data Types
+
 * BOOLEAN: logical truth values, i.e. true and false.
 * FLOAT: 64-bit signed floating-point numbers.
 * INTEGER: 64-bit signed integer numbers.
@@ -11,25 +13,32 @@ Detailed reference documentation for NanoDB's SQL dialect.
 ## SQL Syntax
 
 ### Identifiers and Keywords
-Identifiers and keywords must begin with a letter (a-z) or an underscore (_). 
-Subsequent characters in an identifier or keyword can be letters, underscores or digits (0-9).
+
+Identifiers and keywords must begin with a letter (a-z) or an underscore (_). Subsequent characters in an identifier or
+keyword can be letters or underscores.
 
 ### Numeric Constants
+
 Numeric constants are accepted in these general forms:
+
 ```
 digits
 digits.[digits]
 ```
-where digits is one or more decimal digits (0-9).
+
+where `digits` is one or more decimal digits (0-9).
 
 These are some examples of valid numeric constants:
+
 ```
 42
 3.5
 ```
 
 ### String Constants
-A string constant in SQL is an arbitrary sequence of characters bounded by single quotes ('), for example 'This is a string'.
+
+A string constant in SQL is an arbitrary sequence of characters bounded by single quotes ('), for example 'This is a
+string'.
 
 ### Boolean Constants
 
@@ -45,12 +54,12 @@ Unary operators:
 
 Binary operators:
 
-* `+`: addition, e.g. 1 + 2 yields 3.
-* `-`: subtraction, e.g. 3 - 2 yields 1.
-* `*`: multiplication, e.g. 3 * 2 yields 6.
-* `/`: division, e.g. 6 / 2 yields 3.
-* `^`: exponentiation, e.g. 2 ^ 4 yields 16.
-* `%`: modulo or remainder, e.g. 8 % 3 yields 2. The result has the sign of the divisor.
+* `+`: addition, e.g. 1 + 2 = 3.
+* `-`: subtraction, e.g. 3 - 2 = 1.
+* `*`: multiplication, e.g. 3 * 2 = 6.
+* `/`: division, e.g. 6 / 2 = 3.
+* `^`: exponentiation, e.g. 2 ^ 4 = 16.
+* `%`: modulo, e.g. 8 % 3 = 2
 
 ### Operator Precedence (highest to lowest)
 
@@ -66,40 +75,88 @@ Binary operators:
 
 ## SQL Statements
 
+### CREATE DATABASE
+
+#### Syntax
+
+```
+CREATE DATABASE name
+```
+
+#### Description
+
+CREATE DATABASE will create a new database.
+
+#### Example
+
+```
+CREATE DATABASE films;
+```
+
+### DROP DATABASE
+
+#### Syntax
+
+```
+DROP DATABASE name
+```
+
+#### Description
+
+DROP DATABASE drops a database.
+
+#### Example
+
+```
+DROP DATABASE films;
+```
 
 ### CREATE TABLE
 
 #### Syntax
+
 ```
 CREATE TABLE table_name (
-    [ column_name data_type ] [, ... ]
+  [ column_name data_type [ column_constraint [ ... ] ]
+  [, ... ]
 )
 ```
 
+where `column_constraint` is:
+* NOT NULL
+* NULL
+* DEFAULT expr 
+* PRIMARY KEY
+
 #### Description
+
 CREATE TABLE will create a new empty table.
 
 #### Example
+
 ```
 CREATE TABLE films (
-    id        INTEGER,
-    code      STRING,
-    title     STRING,
-    is_active BOOLEAN,
+    id        INTEGER PRIMARY KEY,
+    code      STRING NOT NULL,
+    title     STRING NOT NULL,
+    is_active BOOLEAN DEFAULT FALSE,
 );
 ```
 
 ### DROP TABLE
 
 #### Syntax
+
 ```
 DROP TABLE table_name
 ```
 
 #### Description
+
 DROP TABLE removes tables from the database.
 
 #### Example
+
 ```
 DROP TABLE films;
 ```
@@ -107,6 +164,7 @@ DROP TABLE films;
 ### SELECT
 
 #### Syntax
+
 ```
 SELECT [ * | expression [ [ AS ] output_name [, ...] ] ]
     [ FROM table_name [, ...] ]
@@ -117,9 +175,11 @@ SELECT [ * | expression [ [ AS ] output_name [, ...] ] ]
 ```
 
 #### Description
+
 SELECT retrieves rows from zero or more tables.
 
 #### Example
+
 ```
 SELECT id, title FROM films LIMIT 2;
 
@@ -132,14 +192,17 @@ SELECT id, title FROM films LIMIT 2;
 ### INSERT
 
 #### Syntax
+
 ```
 INSERT INTO table_name [ ( column_name [, ... ] ) ] VALUES ( expression [, ... ] ) [, ... ]
 ```
 
 #### Description
+
 INSERT inserts new rows into a table.
 
 #### Example
+
 ```
 INSERT INTO films (id, code, title, is_active) VALUES (1, 'UA502', 'Bananas', true);
 ```
@@ -147,15 +210,18 @@ INSERT INTO films (id, code, title, is_active) VALUES (1, 'UA502', 'Bananas', tr
 ### UPDATE
 
 #### Syntax
+
 ```
 UPDATE table_name SET column_name = expression [, ... ] [ WHERE predicate ]
 ```
 
 #### Description
-UPDATE changes the values of the specified columns in all rows that satisfy the condition. 
-Only the columns to be modified need be mentioned in the SET clause; columns not explicitly modified retain their previous values.
+
+UPDATE changes the values of the specified columns in all rows that satisfy the condition. Only the columns to be
+modified need be mentioned in the SET clause; columns not explicitly modified retain their previous values.
 
 #### Example
+
 ```
 UPDATE films SET code = 'UW500' WHERE id = 42;
 ```
@@ -163,15 +229,18 @@ UPDATE films SET code = 'UW500' WHERE id = 42;
 ### DELETE
 
 #### Syntax
+
 ```
 DELETE FROM table_name [ WHERE predicate ]
 ```
 
 #### Description
-DELETE deletes rows that satisfy the WHERE clause from the specified table. 
-If the WHERE clause is absent, the effect is to delete all rows in the table. The result is a valid, but empty table.
+
+DELETE deletes rows that satisfy the WHERE clause from the specified table. If the WHERE clause is absent, the effect is
+to delete all rows in the table.
 
 #### Example
+
 ```
 DELETE FROM films WHERE id = 10;
 ```

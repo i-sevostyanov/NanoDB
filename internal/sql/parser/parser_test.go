@@ -763,6 +763,95 @@ func TestParser_Delete(t *testing.T) {
 	}
 }
 
+func TestParser_CreateDatabase(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		input string
+		ast   *ast.Tree
+	}{
+		{
+			input: "CREATE DATABASE customers",
+			ast: &ast.Tree{
+				Statements: []ast.Statement{
+					&ast.CreateDatabaseStatement{
+						Table: &ast.IdentExpr{
+							Name: "customers",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+
+		t.Run(test.input, func(t *testing.T) {
+			t.Parallel()
+
+			p := parser.New(lexer.New(test.input))
+			tree, errors := p.Parse()
+			assert.Equal(t, test.ast, tree)
+
+			for _, err := range errors {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestParser_DropDatabase(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		input string
+		ast   *ast.Tree
+	}{
+		{
+			input: "DROP DATABASE customers",
+			ast: &ast.Tree{
+				Statements: []ast.Statement{
+					&ast.DropDatabaseStatement{
+						Table: &ast.IdentExpr{
+							Name: "customers",
+						},
+					},
+				},
+			},
+		},
+		{
+			input: "DROP DATABASE 9",
+			ast: &ast.Tree{
+				Statements: []ast.Statement{
+					&ast.DropDatabaseStatement{
+						Table: &ast.BadExpr{
+							Type:    token.Integer,
+							Literal: "9",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+
+		t.Run(test.input, func(t *testing.T) {
+			t.Parallel()
+
+			p := parser.New(lexer.New(test.input))
+			tree, errors := p.Parse()
+			assert.Equal(t, test.ast, tree)
+
+			for _, err := range errors {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
 func TestParser_CreateTable(t *testing.T) {
 	t.Parallel()
 
