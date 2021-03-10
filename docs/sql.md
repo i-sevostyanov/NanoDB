@@ -4,18 +4,24 @@ Detailed reference documentation for NanoDB's SQL dialect.
 
 ## Data Types
 
-* BOOLEAN: logical truth values, i.e. true and false.
-* FLOAT: 64-bit signed floating-point numbers.
-* INTEGER: 64-bit signed integer numbers.
-* STRING: UTF-8 encoded strings.
-* NULL: unknown value ([three-valued logic](https://en.wikipedia.org/wiki/Three-valued_logic)).
+* `BOOLEAN`: logical truth values, i.e. true and false.
+* `FLOAT`: 64-bit signed floating-point numbers.
+* `INTEGER`: 64-bit signed integer numbers.
+* `STRING`: UTF-8 encoded strings.
+* `NULL`: unknown value ([three-valued logic](https://en.wikipedia.org/wiki/Three-valued_logic)).
 
 ## SQL Syntax
 
 ### Identifiers and Keywords
 
 Identifiers and keywords must begin with a letter (a-z) or an underscore (_). Subsequent characters in an identifier or
-keyword can be letters or underscores.
+keyword can be letters, digits (0-9) or underscores. For example:
+
+```
+abc
+local_x
+_xyz9
+```
 
 ### Numeric Constants
 
@@ -37,29 +43,43 @@ These are some examples of valid numeric constants:
 
 ### String Constants
 
-A string constant in SQL is an arbitrary sequence of characters bounded by single quotes ('), for example 'This is a
-string'.
+A string constant in SQL is an arbitrary sequence of characters bounded by single quotes ('), for
+example `'This is a string'`.
 
 ### Boolean Constants
 
-* `TRUE`: the boolean true value.
-* `FALSE`: the boolean false value.
+* `TRUE`: the boolean true value
+* `FALSE`: the boolean false value
 
 ### Operators
 
 Unary operators:
 
-* `+` (prefix): identity, e.g. +1 yields 1.
-* `-` (prefix): negation, e.g. -2 yields -2.
+* `+` (prefix): identity, e.g. +1 yields 1
+* `-` (prefix): negation, e.g. -2 yields -2
 
 Binary operators:
 
-* `+`: addition, e.g. 1 + 2 = 3.
-* `-`: subtraction, e.g. 3 - 2 = 1.
-* `*`: multiplication, e.g. 3 * 2 = 6.
-* `/`: division, e.g. 6 / 2 = 3.
-* `^`: exponentiation, e.g. 2 ^ 4 = 16.
+* `+`: addition, e.g. 1 + 2 = 3
+* `-`: subtraction, e.g. 3 - 2 = 1
+* `*`: multiplication, e.g. 3 * 2 = 6
+* `/`: division, e.g. 6 / 2 = 3
+* `^`: exponentiation, e.g. 2 ^ 4 = 16
 * `%`: modulo, e.g. 8 % 3 = 2
+
+Comparison operators:
+
+* `=`: equal
+* `!=`: not equal
+* `>`: greater than
+* `<`: less than
+* `>=`: greater or equal
+* `<=`: less or equal
+
+Logical operators:
+
+* `AND`: intersection
+* `OR`: union
 
 ### Operator Precedence (highest to lowest)
 
@@ -123,9 +143,10 @@ CREATE TABLE table_name (
 ```
 
 where `column_constraint` is:
+
 * NOT NULL
 * NULL
-* DEFAULT expr 
+* DEFAULT expr
 * PRIMARY KEY
 
 #### Description
