@@ -24,7 +24,7 @@ func main() {
 			p := parser.New(lexer.New(input))
 			tree, errors := p.Parse()
 
-			fmt.Print(ast.Dump(tree))
+			fmt.Print(ast.Print(tree))
 
 			for _, err := range errors {
 				fmt.Printf("%v\n", err)
