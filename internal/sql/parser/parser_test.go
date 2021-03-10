@@ -541,6 +541,37 @@ func TestParser_Select(t *testing.T) {
 				},
 			},
 		},
+		{
+			input: "SELECT 2 ^ 3 ^ 4",
+			ast: &ast.Tree{
+				Statements: []ast.Statement{
+					&ast.SelectStatement{
+						Result: []ast.ResultStatement{
+							{
+								Expr: &ast.BinaryExpr{
+									Left: &ast.ScalarExpr{
+										Type:    token.Integer,
+										Literal: "2",
+									},
+									Operator: token.Pow,
+									Right: &ast.BinaryExpr{
+										Left: &ast.ScalarExpr{
+											Type:    token.Integer,
+											Literal: "3",
+										},
+										Operator: token.Pow,
+										Right: &ast.ScalarExpr{
+											Type:    token.Integer,
+											Literal: "4",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {
@@ -775,7 +806,7 @@ func TestParser_CreateDatabase(t *testing.T) {
 			ast: &ast.Tree{
 				Statements: []ast.Statement{
 					&ast.CreateDatabaseStatement{
-						Table: &ast.IdentExpr{
+						Name: &ast.IdentExpr{
 							Name: "customers",
 						},
 					},
@@ -813,7 +844,7 @@ func TestParser_DropDatabase(t *testing.T) {
 			ast: &ast.Tree{
 				Statements: []ast.Statement{
 					&ast.DropDatabaseStatement{
-						Table: &ast.IdentExpr{
+						Name: &ast.IdentExpr{
 							Name: "customers",
 						},
 					},
@@ -825,7 +856,7 @@ func TestParser_DropDatabase(t *testing.T) {
 			ast: &ast.Tree{
 				Statements: []ast.Statement{
 					&ast.DropDatabaseStatement{
-						Table: &ast.BadExpr{
+						Name: &ast.BadExpr{
 							Type:    token.Integer,
 							Literal: "9",
 						},

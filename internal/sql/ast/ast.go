@@ -107,13 +107,13 @@ type DeleteStatement struct {
 func (s *DeleteStatement) statementNode() {}
 
 type CreateDatabaseStatement struct {
-	Table Expression
+	Name Expression
 }
 
 func (s *CreateDatabaseStatement) statementNode() {}
 
 type DropDatabaseStatement struct {
-	Table Expression
+	Name Expression
 }
 
 func (s *DropDatabaseStatement) statementNode() {}

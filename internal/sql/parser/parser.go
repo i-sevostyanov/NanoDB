@@ -187,7 +187,7 @@ func (p *Parser) parseCreateDatabaseStatement() ast.Statement {
 	p.nextToken()
 
 	return &ast.CreateDatabaseStatement{
-		Table: &ast.IdentExpr{
+		Name: &ast.IdentExpr{
 			Name: table,
 		},
 	}
@@ -266,7 +266,7 @@ func (p *Parser) parseDropDatabaseStatement() ast.Statement {
 	p.nextToken()
 
 	return &ast.DropDatabaseStatement{
-		Table: table,
+		Name: table,
 	}
 }
 
@@ -657,8 +657,14 @@ func (p *Parser) parseUnaryExpr() ast.Expression {
 
 func (p *Parser) parseBinaryExpr(left ast.Expression) ast.Expression {
 	operator := p.token.Type
+	precedence := operator.Precedence()
+
+	if operator.IsRightAssociative() {
+		precedence--
+	}
+
 	p.nextToken()
-	right := p.parseExpr(operator.Precedence())
+	right := p.parseExpr(precedence)
 
 	return &ast.BinaryExpr{
 		Left:     left,

@@ -227,3 +227,7 @@ func (t Type) Precedence() int {
 		return LowestPrecedence
 	}
 }
+
+func (t Type) IsRightAssociative() bool {
+	return t == Pow
+}
