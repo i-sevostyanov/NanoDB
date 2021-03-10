@@ -2,6 +2,26 @@
 
 Detailed reference documentation for NanoDB's SQL dialect.
 
+* [Data Types](#data-types)
+* [SQL Syntax](#sql-syntax)
+    * [Identifiers and Keywords](#identifiers-and-keywords)
+    * [Numeric Constants](#numeric-constants)
+    * [String Constants](#string-constants)
+    * [Boolean Constants](#boolean-constants)
+    * [Operators](#operators)
+    * [Operator Precedence](#operator-precedence)
+* [SQL Statements](#sql-statements)
+    * Data Definition Language
+      * [CREATE DATABASE](#create-database)
+      * [DROP DATABASE](#drop-database)
+      * [CREATE TABLE](#create-table)
+      * [DROP TABLE](#drop-table)
+    * Data Manipulation Language  
+      * [SELECT](#select)
+      * [INSERT](#insert)
+      * [UPDATE](#update)
+      * [DELETE](#delete)
+
 ## Data Types
 
 * `BOOLEAN`: logical truth values, i.e. true and false.
@@ -81,7 +101,7 @@ Logical operators:
 * `AND`: intersection
 * `OR`: union
 
-### Operator Precedence (highest to lowest)
+### Operator Precedence
 
 | Precedence | Operator                        | Associativity |
 | ---------- | ------------------------------- | ------------- |
