@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql/ast"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/lexer"
@@ -18,17 +19,6 @@ func TestParser_Select(t *testing.T) {
 		input string
 		ast   *ast.Tree
 	}{
-		{
-			input: "SEL",
-			ast: &ast.Tree{
-				Statements: []ast.Statement{
-					&ast.BadStatement{
-						Type:    token.Ident,
-						Literal: "SEL",
-					},
-				},
-			},
-		},
 		{
 			input: "SELECT id AS alias",
 			ast: &ast.Tree{
@@ -322,28 +312,6 @@ func TestParser_Select(t *testing.T) {
 			},
 		},
 		{
-			input: "SELECT id FROM",
-			ast: &ast.Tree{
-				Statements: []ast.Statement{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.BadExpr{
-								Type:    token.EOF,
-								Literal: token.EOF.String(),
-							},
-						},
-					},
-				},
-			},
-		},
-		{
 			input: "SELECT id FROM customers WHERE id = 10 AND name = 'vlad'",
 			ast: &ast.Tree{
 				Statements: []ast.Statement{
@@ -572,6 +540,60 @@ func TestParser_Select(t *testing.T) {
 				},
 			},
 		},
+		{
+			input: "SELECT -2, +2",
+			ast: &ast.Tree{
+				Statements: []ast.Statement{
+					&ast.SelectStatement{
+						Result: []ast.ResultStatement{
+							{
+								Expr: &ast.UnaryExpr{
+									Operator: token.Sub,
+									Right: &ast.ScalarExpr{
+										Type:    token.Integer,
+										Literal: "2",
+									},
+								},
+							},
+							{
+								Expr: &ast.UnaryExpr{
+									Operator: token.Add,
+									Right: &ast.ScalarExpr{
+										Type:    token.Integer,
+										Literal: "2",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			input: "SELECT id FROM customers ORDER BY id",
+			ast: &ast.Tree{
+				Statements: []ast.Statement{
+					&ast.SelectStatement{
+						Result: []ast.ResultStatement{
+							{
+								Expr: &ast.IdentExpr{
+									Name: "id",
+								},
+							},
+						},
+						From: &ast.FromStatement{
+							Table: &ast.IdentExpr{
+								Name: "customers",
+							},
+						},
+						OrderBy: &ast.OrderByStatement{
+							Column: &ast.IdentExpr{Name: "id"},
+							Order:  &ast.IdentExpr{Name: "ASC"},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {
@@ -589,6 +611,300 @@ func TestParser_Select(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("returns error", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name  string
+			input string
+			ast   *ast.Tree
+		}{
+			{
+				name:  "unexpected statement",
+				input: "SEL",
+				ast: &ast.Tree{
+					Statements: nil,
+				},
+			},
+			{
+				name:  "no columns specified",
+				input: "SELECT",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{},
+					},
+				},
+			},
+			{
+				name:  "no column alias specified",
+				input: "SELECT id AS",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{},
+					},
+				},
+			},
+			{
+				name:  "unexpected column alias",
+				input: "SELECT id AS 7",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{},
+					},
+				},
+			},
+			{
+				name:  "table name not specified",
+				input: "SELECT id FROM",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "unexpected table name",
+				input: "SELECT id FROM 9",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "empty 'where' expression",
+				input: "SELECT id FROM customers WHERE",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+							From: &ast.FromStatement{
+								Table: &ast.IdentExpr{
+									Name: "customers",
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "unfinished 'order by' statement",
+				input: "SELECT id FROM customers WHERE id > 2 ORDER",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+							From: &ast.FromStatement{
+								Table: &ast.IdentExpr{
+									Name: "customers",
+								},
+							},
+							Where: &ast.WhereStatement{
+								Expr: &ast.BinaryExpr{
+									Left: &ast.IdentExpr{
+										Name: "id",
+									},
+									Operator: token.GreaterThan,
+									Right: &ast.ScalarExpr{
+										Type:    token.Integer,
+										Literal: "2",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "no column specified at 'order by' statement",
+				input: "SELECT id FROM customers ORDER BY",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+							From: &ast.FromStatement{
+								Table: &ast.IdentExpr{
+									Name: "customers",
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "unexpected 'order by' column type",
+				input: "SELECT id FROM customers ORDER BY 9",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+							From: &ast.FromStatement{
+								Table: &ast.IdentExpr{
+									Name: "customers",
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "'limit' value not specified",
+				input: "SELECT id FROM customers LIMIT",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+							From: &ast.FromStatement{
+								Table: &ast.IdentExpr{
+									Name: "customers",
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "unexpected 'limit' value type",
+				input: "SELECT id FROM customers LIMIT abc",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+							From: &ast.FromStatement{
+								Table: &ast.IdentExpr{
+									Name: "customers",
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "'offset' value not specified",
+				input: "SELECT id FROM customers OFFSET",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+							From: &ast.FromStatement{
+								Table: &ast.IdentExpr{
+									Name: "customers",
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "unexpected 'offset' value type",
+				input: "SELECT id FROM customers OFFSET abc",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{
+							Result: []ast.ResultStatement{
+								{
+									Expr: &ast.IdentExpr{
+										Name: "id",
+									},
+								},
+							},
+							From: &ast.FromStatement{
+								Table: &ast.IdentExpr{
+									Name: "customers",
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				name:  "no close paren in group expr",
+				input: "SELECT (10-2",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.SelectStatement{},
+					},
+				},
+			},
+		}
+
+		for _, test := range tests {
+			test := test
+
+			t.Run(test.name, func(t *testing.T) {
+				t.Parallel()
+
+				p := parser.New(lexer.New(test.input))
+				tree, errors := p.Parse()
+
+				assert.Equal(t, test.ast, tree)
+				require.NotEmpty(t, errors)
+
+				for _, err := range errors {
+					assert.NotNil(t, err)
+				}
+			})
+		}
+	})
 }
 
 func TestParser_Insert(t *testing.T) {
@@ -604,10 +920,10 @@ func TestParser_Insert(t *testing.T) {
 				Statements: []ast.Statement{
 					&ast.InsertStatement{
 						Table: &ast.IdentExpr{Name: "customers"},
-						Columns: []ast.IdentExpr{
-							{Name: "id"},
-							{Name: "name"},
-							{Name: "salary"},
+						Columns: []ast.Expression{
+							&ast.IdentExpr{Name: "id"},
+							&ast.IdentExpr{Name: "name"},
+							&ast.IdentExpr{Name: "salary"},
 						},
 						Values: []ast.Expression{
 							&ast.ScalarExpr{
@@ -794,16 +1110,17 @@ func TestParser_Delete(t *testing.T) {
 	}
 }
 
-func TestParser_CreateDatabase(t *testing.T) {
+func TestParser_Create(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		input string
-		ast   *ast.Tree
-	}{
-		{
-			input: "CREATE DATABASE customers",
-			ast: &ast.Tree{
+	t.Run("create database", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("correct query", func(t *testing.T) {
+			t.Parallel()
+
+			input := "CREATE DATABASE customers"
+			expected := &ast.Tree{
 				Statements: []ast.Statement{
 					&ast.CreateDatabaseStatement{
 						Name: &ast.IdentExpr{
@@ -811,37 +1128,178 @@ func TestParser_CreateDatabase(t *testing.T) {
 						},
 					},
 				},
-			},
-		},
-	}
+			}
 
-	for _, test := range tests {
-		test := test
-
-		t.Run(test.input, func(t *testing.T) {
-			t.Parallel()
-
-			p := parser.New(lexer.New(test.input))
+			p := parser.New(lexer.New(input))
 			tree, errors := p.Parse()
-			assert.Equal(t, test.ast, tree)
+			assert.Equal(t, expected, tree)
 
 			for _, err := range errors {
 				assert.NoError(t, err)
 			}
 		})
-	}
+
+		t.Run("wrong query", func(t *testing.T) {
+			t.Parallel()
+
+			input := "CREATE DATABASE ^"
+			expected := &ast.Tree{
+				Statements: nil,
+			}
+
+			p := parser.New(lexer.New(input))
+			tree, errors := p.Parse()
+
+			assert.Equal(t, expected, tree)
+			assert.Len(t, errors, 1)
+			assert.NotNil(t, errors[0])
+		})
+	})
+
+	t.Run("create table", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			input string
+			ast   *ast.Tree
+		}{
+			{
+				input: "CREATE TABLE customers (id INTEGER, name STRING, salary FLOAT, is_active BOOLEAN)",
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.CreateTableStatement{
+							Table: &ast.IdentExpr{
+								Name: "customers",
+							},
+							Columns: []ast.Column{
+								{
+									Name: &ast.IdentExpr{
+										Name: "id",
+									},
+									Type: token.Integer,
+								},
+								{
+									Name: &ast.IdentExpr{
+										Name: "name",
+									},
+									Type: token.String,
+								},
+								{
+									Name: &ast.IdentExpr{
+										Name: "salary",
+									},
+									Type: token.Float,
+								},
+								{
+									Name: &ast.IdentExpr{
+										Name: "is_active",
+									},
+									Type: token.Boolean,
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				input: `
+				CREATE TABLE customers (
+					id INTEGER PRIMARY KEY, 
+					name STRING NULL, 
+					salary FLOAT NOT NULL, 
+					is_active BOOLEAN NOT NULL DEFAULT true,
+				)
+			`,
+				ast: &ast.Tree{
+					Statements: []ast.Statement{
+						&ast.CreateTableStatement{
+							Table: &ast.IdentExpr{
+								Name: "customers",
+							},
+							Columns: []ast.Column{
+								{
+									Name: &ast.IdentExpr{
+										Name: "id",
+									},
+									Type:       token.Integer,
+									PrimaryKey: true,
+								},
+								{
+									Name: &ast.IdentExpr{
+										Name: "name",
+									},
+									Type: token.String,
+								},
+								{
+									Name: &ast.IdentExpr{
+										Name: "salary",
+									},
+									Type:    token.Float,
+									NotNull: true,
+								},
+								{
+									Name: &ast.IdentExpr{
+										Name: "is_active",
+									},
+									Type:    token.Boolean,
+									NotNull: true,
+									Default: &ast.ScalarExpr{
+										Type:    token.Boolean,
+										Literal: "true",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		for _, test := range tests {
+			test := test
+
+			t.Run(test.input, func(t *testing.T) {
+				t.Parallel()
+
+				p := parser.New(lexer.New(test.input))
+				tree, errors := p.Parse()
+				assert.Equal(t, test.ast, tree)
+
+				for _, err := range errors {
+					assert.NoError(t, err)
+				}
+			})
+		}
+	})
+
+	t.Run("create unexpected", func(t *testing.T) {
+		t.Parallel()
+
+		input := "CREATE abc"
+		expected := &ast.Tree{
+			Statements: nil,
+		}
+
+		p := parser.New(lexer.New(input))
+		tree, errors := p.Parse()
+
+		assert.Equal(t, expected, tree)
+		assert.Len(t, errors, 1)
+		assert.NotNil(t, errors[0])
+	})
 }
 
-func TestParser_DropDatabase(t *testing.T) {
+func TestParser_Drop(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		input string
-		ast   *ast.Tree
-	}{
-		{
-			input: "DROP DATABASE customers",
-			ast: &ast.Tree{
+	t.Run("drop database", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("correct query", func(t *testing.T) {
+			t.Parallel()
+
+			input := "DROP DATABASE customers"
+			expected := &ast.Tree{
 				Statements: []ast.Statement{
 					&ast.DropDatabaseStatement{
 						Name: &ast.IdentExpr{
@@ -849,114 +1307,42 @@ func TestParser_DropDatabase(t *testing.T) {
 						},
 					},
 				},
-			},
-		},
-		{
-			input: "DROP DATABASE 9",
-			ast: &ast.Tree{
-				Statements: []ast.Statement{
-					&ast.DropDatabaseStatement{
-						Name: &ast.BadExpr{
-							Type:    token.Integer,
-							Literal: "9",
-						},
-					},
-				},
-			},
-		},
-	}
+			}
 
-	for _, test := range tests {
-		test := test
-
-		t.Run(test.input, func(t *testing.T) {
-			t.Parallel()
-
-			p := parser.New(lexer.New(test.input))
+			p := parser.New(lexer.New(input))
 			tree, errors := p.Parse()
-			assert.Equal(t, test.ast, tree)
+			assert.Equal(t, expected, tree)
 
 			for _, err := range errors {
 				assert.NoError(t, err)
 			}
 		})
-	}
-}
 
-func TestParser_CreateTable(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		input string
-		ast   *ast.Tree
-	}{
-		{
-			input: "CREATE TABLE customers (id INTEGER, name STRING, salary FLOAT, is_active BOOLEAN)",
-			ast: &ast.Tree{
-				Statements: []ast.Statement{
-					&ast.CreateTableStatement{
-						Table: &ast.IdentExpr{
-							Name: "customers",
-						},
-						Columns: []ast.Column{
-							{
-								Name: &ast.IdentExpr{
-									Name: "id",
-								},
-								Type: token.Integer,
-							},
-							{
-								Name: &ast.IdentExpr{
-									Name: "name",
-								},
-								Type: token.String,
-							},
-							{
-								Name: &ast.IdentExpr{
-									Name: "salary",
-								},
-								Type: token.Float,
-							},
-							{
-								Name: &ast.IdentExpr{
-									Name: "is_active",
-								},
-								Type: token.Boolean,
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-
-	for _, test := range tests {
-		test := test
-
-		t.Run(test.input, func(t *testing.T) {
+		t.Run("wrong database name", func(t *testing.T) {
 			t.Parallel()
 
-			p := parser.New(lexer.New(test.input))
-			tree, errors := p.Parse()
-			assert.Equal(t, test.ast, tree)
-
-			for _, err := range errors {
-				assert.NoError(t, err)
+			input := "DROP DATABASE 9"
+			expected := &ast.Tree{
+				Statements: nil,
 			}
+
+			p := parser.New(lexer.New(input))
+			tree, errors := p.Parse()
+
+			assert.Equal(t, expected, tree)
+			assert.Len(t, errors, 1)
+			assert.NotNil(t, errors[0])
 		})
-	}
-}
+	})
 
-func TestParser_DropTable(t *testing.T) {
-	t.Parallel()
+	t.Run("drop table", func(t *testing.T) {
+		t.Parallel()
 
-	tests := []struct {
-		input string
-		ast   *ast.Tree
-	}{
-		{
-			input: "DROP TABLE customers",
-			ast: &ast.Tree{
+		t.Run("correct query", func(t *testing.T) {
+			t.Parallel()
+
+			input := "DROP TABLE customers"
+			expected := &ast.Tree{
 				Statements: []ast.Statement{
 					&ast.DropTableStatement{
 						Table: &ast.IdentExpr{
@@ -964,23 +1350,47 @@ func TestParser_DropTable(t *testing.T) {
 						},
 					},
 				},
-			},
-		},
-	}
+			}
 
-	for _, test := range tests {
-		test := test
-
-		t.Run(test.input, func(t *testing.T) {
-			t.Parallel()
-
-			p := parser.New(lexer.New(test.input))
+			p := parser.New(lexer.New(input))
 			tree, errors := p.Parse()
-			assert.Equal(t, test.ast, tree)
+			assert.Equal(t, expected, tree)
 
 			for _, err := range errors {
 				assert.NoError(t, err)
 			}
 		})
-	}
+
+		t.Run("wrong table name", func(t *testing.T) {
+			t.Parallel()
+
+			input := "DROP TABLE +"
+			expected := &ast.Tree{
+				Statements: nil,
+			}
+
+			p := parser.New(lexer.New(input))
+			tree, errors := p.Parse()
+
+			assert.Equal(t, expected, tree)
+			assert.Len(t, errors, 1)
+			assert.NotNil(t, errors[0])
+		})
+	})
+
+	t.Run("drop unexpected", func(t *testing.T) {
+		t.Parallel()
+
+		input := "DROP abc"
+		expected := &ast.Tree{
+			Statements: nil,
+		}
+
+		p := parser.New(lexer.New(input))
+		tree, errors := p.Parse()
+
+		assert.Equal(t, expected, tree)
+		assert.Len(t, errors, 1)
+		assert.NotNil(t, errors[0])
+	})
 }

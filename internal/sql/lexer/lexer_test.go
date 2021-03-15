@@ -33,6 +33,21 @@ func TestLexer_NextToken(t *testing.T) {
 			literal:   "id",
 		},
 		{
+			input:     "_id",
+			tokenType: token.Ident,
+			literal:   "_id",
+		},
+		{
+			input:     "i9",
+			tokenType: token.Ident,
+			literal:   "i9",
+		},
+		{
+			input:     "    i9  ",
+			tokenType: token.Ident,
+			literal:   "i9",
+		},
+		{
 			input:     ",",
 			tokenType: token.Comma,
 			literal:   token.Comma.String(),
@@ -71,6 +86,11 @@ func TestLexer_NextToken(t *testing.T) {
 			input:     "!=",
 			tokenType: token.NotEqual,
 			literal:   token.NotEqual.String(),
+		},
+		{
+			input:     "!",
+			tokenType: token.Not,
+			literal:   token.Not.String(),
 		},
 		{
 			input:     "<=",
@@ -144,12 +164,12 @@ func TestLexer_NextToken(t *testing.T) {
 		},
 		{
 			input:     "true",
-			tokenType: token.True,
+			tokenType: token.Boolean,
 			literal:   "true",
 		},
 		{
 			input:     "false",
-			tokenType: token.False,
+			tokenType: token.Boolean,
 			literal:   "false",
 		},
 		{
@@ -251,6 +271,16 @@ func TestLexer_NextToken(t *testing.T) {
 			input:     "DELETE",
 			tokenType: token.Delete,
 			literal:   token.Delete.String(),
+		},
+		{
+			input:     "DEFAULT",
+			tokenType: token.Default,
+			literal:   token.Default.String(),
+		},
+		{
+			input:     "NULL",
+			tokenType: token.Null,
+			literal:   token.Null.String(),
 		},
 	}
 

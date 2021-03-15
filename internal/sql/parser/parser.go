@@ -4,18 +4,21 @@ import (
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql/ast"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/lexer"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/token"
 )
 
+type Lexer interface {
+	NextToken() token.Token
+}
+
 type Parser struct {
-	lexer     *lexer.Lexer
+	lexer     Lexer
 	token     token.Token
 	peekToken token.Token
 	errors    []error
 }
 
-func New(lx *lexer.Lexer) *Parser {
+func New(lx Lexer) *Parser {
 	return &Parser{
 		lexer:     lx,
 		token:     lx.NextToken(),
@@ -63,7 +66,8 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.Drop:
 		return p.parseDropStatement()
 	default:
-		return p.parseBadStatement()
+		p.errorf("unexpected statement %q", p.token.Type)
+		return nil
 	}
 }
 
@@ -78,7 +82,8 @@ func (p *Parser) parseCreateStatement() ast.Statement {
 		p.nextToken()
 		return p.parseCreateTableStatement()
 	default:
-		return p.parseBadStatement()
+		p.errorf("unexpected keyword at CREATE statement %q", p.token.Type)
+		return nil
 	}
 }
 
@@ -93,7 +98,8 @@ func (p *Parser) parseDropStatement() ast.Statement {
 		p.nextToken()
 		return p.parseDropTableStatement()
 	default:
-		return p.parseBadStatement()
+		p.errorf("unexpected keyword at DROP statement %q", p.token.Type)
+		return nil
 	}
 }
 
@@ -113,23 +119,21 @@ func (p *Parser) parseSelectStatement() ast.Statement {
 func (p *Parser) parseInsertStatement() ast.Statement {
 	p.nextToken()
 
-	if p.token.Type != token.Into {
-		p.expect(token.Into)
+	if !p.expect(token.Into) {
 		return nil
 	}
 
 	p.nextToken()
 
-	if p.token.Type != token.Ident {
-		p.expect(token.Ident)
+	if !p.expect(token.Ident) {
 		return nil
 	}
 
-	table := p.token.Literal
+	table := p.parseIdent()
 	p.nextToken()
 
 	return &ast.InsertStatement{
-		Table:   &ast.IdentExpr{Name: table},
+		Table:   table,
 		Columns: p.parseColumnsStatement(),
 		Values:  p.parseValuesStatement(),
 	}
@@ -138,16 +142,15 @@ func (p *Parser) parseInsertStatement() ast.Statement {
 func (p *Parser) parseUpdateStatement() ast.Statement {
 	p.nextToken()
 
-	if p.token.Type != token.Ident {
-		p.expect(token.Ident)
+	if !p.expect(token.Ident) {
 		return nil
 	}
 
-	table := p.token.Literal
+	table := p.parseIdent()
 	p.nextToken()
 
 	return &ast.UpdateStatement{
-		Table: &ast.IdentExpr{Name: table},
+		Table: table,
 		Set:   p.parseSetStatement(),
 		Where: p.parseWhereStatement(),
 	}
@@ -156,65 +159,58 @@ func (p *Parser) parseUpdateStatement() ast.Statement {
 func (p *Parser) parseDeleteStatement() ast.Statement {
 	p.nextToken()
 
-	if p.token.Type != token.From {
-		p.expect(token.From)
+	if !p.expect(token.From) {
 		return nil
 	}
 
 	p.nextToken()
 
-	if p.token.Type != token.Ident {
-		p.expect(token.Ident)
+	if !p.expect(token.Ident) {
 		return nil
 	}
 
-	table := p.token.Literal
+	table := p.parseIdent()
 	p.nextToken()
 
 	return &ast.DeleteStatement{
-		Table: &ast.IdentExpr{Name: table},
+		Table: table,
 		Where: p.parseWhereStatement(),
 	}
 }
 
 func (p *Parser) parseCreateDatabaseStatement() ast.Statement {
-	if p.token.Type != token.Ident {
-		p.expect(token.Ident)
+	if !p.expect(token.Ident) {
 		return nil
 	}
 
-	table := p.token.Literal
+	database := p.parseIdent()
 	p.nextToken()
 
 	return &ast.CreateDatabaseStatement{
-		Name: &ast.IdentExpr{
-			Name: table,
-		},
+		Name: database,
 	}
 }
 
 func (p *Parser) parseCreateTableStatement() ast.Statement {
-	if p.token.Type != token.Ident {
-		p.expect(token.Ident)
+	if !p.expect(token.Ident) {
 		return nil
 	}
 
-	table := p.token.Literal
+	table := p.parseIdent()
 	p.nextToken()
 
 	return &ast.CreateTableStatement{
-		Table:   &ast.IdentExpr{Name: table},
+		Table:   table,
 		Columns: p.parseColumns(),
 	}
 }
 
 func (p *Parser) parseColumns() []ast.Column {
-	columns := make([]ast.Column, 0)
-
-	if p.token.Type != token.OpenParen {
-		p.expect(token.OpenParen)
+	if !p.expect(token.OpenParen) {
 		return nil
 	}
+
+	columns := make([]ast.Column, 0)
 
 	p.nextToken()
 
@@ -223,64 +219,91 @@ func (p *Parser) parseColumns() []ast.Column {
 			p.nextToken()
 		}
 
-		if p.token.Type != token.Ident {
-			p.expect(token.Ident)
+		if !p.expect(token.Ident) {
 			return nil
 		}
 
-		column := p.token.Literal
+		column := ast.Column{}
+		column.Name = p.parseIdent()
+
 		p.nextToken()
 
 		switch p.token.Type {
 		case token.Integer, token.Float, token.String, token.Boolean:
-			columns = append(columns, ast.Column{
-				Name: &ast.IdentExpr{Name: column},
-				Type: p.token.Type,
-			})
+			column.Type = p.token.Type
+		default:
+			p.errorf("unexpected column type: %s", p.token.Type)
+			return nil
+		}
 
+		if p.peekToken.Type == token.Not {
+			p.nextToken()
 			p.nextToken()
 
-			// FIXME: parse constraint
-		default:
-			// p.expect(token.Ident)
-			return columns
+			if !p.expect(token.Null) {
+				return nil
+			}
+
+			column.NotNull = true
 		}
+
+		if p.peekToken.Type == token.Null {
+			p.nextToken()
+			p.nextToken()
+
+			column.NotNull = false
+		}
+
+		if p.peekToken.Type == token.Default {
+			p.nextToken()
+			p.nextToken()
+			column.Default = p.parseExprStatement()
+		}
+
+		if p.peekToken.Type == token.Primary {
+			p.nextToken()
+			p.nextToken()
+
+			if !p.expect(token.Key) {
+				return nil
+			}
+
+			column.PrimaryKey = true
+		}
+
+		columns = append(columns, column)
+
+		p.nextToken()
 	}
 
-	p.expect(token.CloseParen)
+	if !p.expect(token.CloseParen) {
+		return nil
+	}
+
+	p.nextToken()
 
 	return columns
 }
 
 func (p *Parser) parseDropDatabaseStatement() ast.Statement {
-	var table ast.Expression
-
-	switch p.token.Type {
-	case token.Ident:
-		table = p.parseIdent()
-	default:
-		// p.expect(token.Ident)
-		table = p.parseBadExpr()
+	if !p.expect(token.Ident) {
+		return nil
 	}
 
+	database := p.parseIdent()
 	p.nextToken()
 
 	return &ast.DropDatabaseStatement{
-		Name: table,
+		Name: database,
 	}
 }
 
 func (p *Parser) parseDropTableStatement() ast.Statement {
-	var table ast.Expression
-
-	switch p.token.Type {
-	case token.Ident:
-		table = p.parseIdent()
-	default:
-		// p.expect(token.Ident)
-		table = p.parseBadExpr()
+	if !p.expect(token.Ident) {
+		return nil
 	}
 
+	table := p.parseIdent()
 	p.nextToken()
 
 	return &ast.DropTableStatement{
@@ -292,29 +315,39 @@ func (p *Parser) parseResultStatement() []ast.ResultStatement {
 	var result []ast.ResultStatement
 
 	for p.token.Type != token.EOF && p.token.Type != token.From {
-		if expr := p.parseExprStatement(); expr != nil {
-			var alias ast.Expression
+		var (
+			expr  ast.Expression
+			alias ast.Expression
+		)
 
-			if p.peekToken.Type == token.As {
-				p.nextToken()
-				p.nextToken()
-
-				if p.token.Type == token.Ident {
-					alias = &ast.IdentExpr{
-						Name: p.token.Literal,
-					}
-
-					p.nextToken()
-				}
-			}
-
-			result = append(result, ast.ResultStatement{
-				Alias: alias,
-				Expr:  expr,
-			})
+		if expr = p.parseExprStatement(); expr == nil {
+			p.errorf("expression in result must be not empty")
+			return nil
 		}
 
+		if p.peekToken.Type == token.As {
+			p.nextToken()
+			p.nextToken()
+
+			if !p.expect(token.Ident) {
+				return nil
+			}
+
+			alias = p.parseIdent()
+			p.nextToken()
+		}
+
+		result = append(result, ast.ResultStatement{
+			Alias: alias,
+			Expr:  expr,
+		})
+
 		p.nextToken()
+	}
+
+	if len(result) == 0 {
+		p.errorf("no columns specified")
+		return nil
 	}
 
 	return result
@@ -327,22 +360,15 @@ func (p *Parser) parseFromStatement() *ast.FromStatement {
 
 	p.nextToken()
 
-	if p.token.Type != token.Ident {
-		return &ast.FromStatement{
-			Table: &ast.BadExpr{
-				Type:    p.token.Type,
-				Literal: p.token.Literal,
-			},
-		}
+	if !p.expect(token.Ident) {
+		return nil
 	}
 
-	table := p.token.Literal
+	table := p.parseIdent()
 	p.nextToken()
 
 	return &ast.FromStatement{
-		Table: &ast.IdentExpr{
-			Name: table,
-		},
+		Table: table,
 	}
 }
 
@@ -354,6 +380,11 @@ func (p *Parser) parseWhereStatement() *ast.WhereStatement {
 	p.nextToken()
 	expr := p.parseExprStatement()
 	p.nextToken()
+
+	if expr == nil {
+		p.errorf("WHERE expression must not be empty")
+		return nil
+	}
 
 	return &ast.WhereStatement{
 		Expr: expr,
@@ -367,33 +398,33 @@ func (p *Parser) parseOrderByStatement() *ast.OrderByStatement {
 
 	p.nextToken()
 
-	if p.token.Type != token.By {
-		p.expect(token.By)
+	if !p.expect(token.By) {
 		return nil
 	}
 
 	p.nextToken()
 
-	if p.token.Type != token.Ident {
-		p.expect(token.Ident)
+	if !p.expect(token.Ident) {
 		return nil
 	}
 
-	column := p.token.Literal
-	p.nextToken()
+	var order ast.Expression
 
-	// order (asc, desc)
-	if p.token.Type != token.Asc && p.token.Type != token.Desc {
-		p.expect(token.Asc)
-		return nil
+	column := p.parseIdent()
+
+	switch p.peekToken.Type {
+	case token.Asc, token.Desc:
+		p.nextToken()
+		order = p.parseIdent()
+	default:
+		order = &ast.IdentExpr{Name: token.Asc.String()}
 	}
 
-	order := p.token.Literal
 	p.nextToken()
 
 	return &ast.OrderByStatement{
-		Column: &ast.IdentExpr{Name: column},
-		Order:  &ast.IdentExpr{Name: order},
+		Column: column,
+		Order:  order,
 	}
 }
 
@@ -404,20 +435,15 @@ func (p *Parser) parseLimitStatement() *ast.LimitStatement {
 
 	p.nextToken()
 
-	if p.token.Type != token.Integer {
-		p.expect(token.Integer)
+	if !p.expect(token.Integer) {
 		return nil
 	}
 
-	tokenType := p.token.Type
-	literal := p.token.Literal
+	value := p.parseScalar()
 	p.nextToken()
 
 	return &ast.LimitStatement{
-		Value: &ast.ScalarExpr{
-			Type:    tokenType,
-			Literal: literal,
-		},
+		Value: value,
 	}
 }
 
@@ -428,28 +454,22 @@ func (p *Parser) parseOffsetStatement() *ast.OffsetStatement {
 
 	p.nextToken()
 
-	if p.token.Type != token.Integer {
-		p.expect(token.Integer)
+	if !p.expect(token.Integer) {
 		return nil
 	}
 
-	tokenType := p.token.Type
-	literal := p.token.Literal
+	value := p.parseScalar()
 	p.nextToken()
 
 	return &ast.OffsetStatement{
-		Value: &ast.ScalarExpr{
-			Type:    tokenType,
-			Literal: literal,
-		},
+		Value: value,
 	}
 }
 
-func (p *Parser) parseColumnsStatement() []ast.IdentExpr {
-	var columns []ast.IdentExpr
+func (p *Parser) parseColumnsStatement() []ast.Expression {
+	var columns []ast.Expression
 
-	if p.token.Type != token.OpenParen {
-		p.expect(token.OpenParen)
+	if !p.expect(token.OpenParen) {
 		return nil
 	}
 
@@ -458,22 +478,23 @@ func (p *Parser) parseColumnsStatement() []ast.IdentExpr {
 	for p.token.Type != token.EOF && p.token.Type != token.CloseParen {
 		if p.token.Type == token.Comma {
 			p.nextToken()
-			continue
 		}
 
-		if p.token.Type != token.Ident {
-			p.expect(token.Ident)
-			continue
+		if !p.expect(token.Ident) {
+			return nil
 		}
 
-		columns = append(columns, ast.IdentExpr{
-			Name: p.token.Literal,
-		})
+		column := p.parseIdent()
+		columns = append(columns, column)
 
 		p.nextToken()
 	}
 
-	p.expect(token.CloseParen)
+	if !p.expect(token.CloseParen) {
+		return nil
+	}
+
+	p.nextToken()
 
 	return columns
 }
@@ -481,67 +502,71 @@ func (p *Parser) parseColumnsStatement() []ast.IdentExpr {
 func (p *Parser) parseValuesStatement() []ast.Expression {
 	var values []ast.Expression
 
-	if p.token.Type != token.Values {
-		p.expect(token.Values)
+	if !p.expect(token.Values) {
 		return nil
 	}
 
 	p.nextToken()
 
-	if p.token.Type != token.OpenParen {
-		p.expect(token.OpenParen)
+	if !p.expect(token.OpenParen) {
 		return nil
 	}
 
 	p.nextToken()
 
 	for p.token.Type != token.EOF && p.token.Type != token.CloseParen {
-		if expr := p.parseExprStatement(); expr != nil {
-			values = append(values, expr)
+		expr := p.parseExprStatement()
+		if expr == nil {
+			p.errorf("expression must not be empty")
+			return nil
 		}
+
+		values = append(values, expr)
 
 		p.nextToken()
 	}
 
-	p.expect(token.CloseParen)
-
-	return values
-}
-
-func (p *Parser) parseSetStatement() []ast.SetStatement {
-	fields := make([]ast.SetStatement, 0)
-
-	if p.token.Type != token.Set {
-		p.expect(token.Ident)
+	if !p.expect(token.CloseParen) {
 		return nil
 	}
 
 	p.nextToken()
 
+	return values
+}
+
+func (p *Parser) parseSetStatement() []ast.SetStatement {
+	if !p.expect(token.Set) {
+		return nil
+	}
+
+	fields := make([]ast.SetStatement, 0)
+
+	p.nextToken()
+
 	for p.token.Type != token.EOF && p.token.Type != token.Where {
-		if p.token.Type != token.Ident {
-			p.expect(token.Ident)
-			break
+		if !p.expect(token.Ident) {
+			return nil
 		}
 
-		column := p.token.Literal
+		column := p.parseIdent()
 		p.nextToken()
 
-		if p.token.Type != token.Equal {
-			p.expect(token.Equal)
-			break
+		if !p.expect(token.Equal) {
+			return nil
 		}
 
 		p.nextToken()
 
-		expr := p.parseExprStatement()
-		if expr == nil {
-			break
+		value := p.parseExprStatement()
+		if value == nil {
+			p.errorf("expression must not be empty")
+			return nil
 		}
 
 		fields = append(fields, ast.SetStatement{
-			Column: &ast.IdentExpr{Name: column},
-			Value:  expr,
+			Column: column,
+			Value:  value,
 		})
 
 		p.nextToken()
@@ -590,7 +615,8 @@ func (p *Parser) parseOperand() ast.Expression {
 	case token.OpenParen:
 		return p.parseGroupExpr()
 	default:
-		return p.parseBadExpr()
+		p.errorf("unexpected operand %q", p.token.Type)
+		return nil
 	}
 }
 
@@ -615,20 +641,6 @@ func (p *Parser) isInfixOperator(t token.Type) bool {
 	}
 
 	return false
-}
-
-func (p *Parser) parseBadStatement() ast.Statement {
-	return &ast.BadStatement{
-		Type:    p.token.Type,
-		Literal: p.token.Literal,
-	}
-}
-
-func (p *Parser) parseBadExpr() ast.Expression {
-	return &ast.BadExpr{
-		Type:    p.token.Type,
-		Literal: p.token.Literal,
-	}
 }
 
 func (p *Parser) parseIdent() ast.Expression {
@@ -676,22 +688,32 @@ func (p *Parser) parseBinaryExpr(left ast.Expression) ast.Expression {
 func (p *Parser) parseGroupExpr() ast.Expression {
 	p.nextToken()
 	expr := p.parseExpr(token.LowestPrecedence)
+	p.nextToken()
 
-	if p.peekToken.Type != token.CloseParen {
-		p.expect(token.CloseParen)
+	if !p.expect(token.CloseParen) {
 		return nil
 	}
-
-	p.nextToken()
 
 	return expr
 }
 
-func (p *Parser) expect(tokenType token.Type) {
-	if p.token.Type != tokenType {
-		err := fmt.Errorf("expected: %q, but found: %q", tokenType.String(), p.token.Type.String())
-		p.errors = append(p.errors, err)
+func (p *Parser) expect(tokenType token.Type) bool {
+	if p.token.Type == tokenType {
+		return true
 	}
 
+	p.errorf(
+		"expected %q but found %q (%s) at column %d",
+		tokenType.String(),
+		p.token.Literal,
+		p.token.Type,
+		p.token.Offset,
+	)
 	p.nextToken()
+
+	return false
+}
+
+func (p *Parser) errorf(format string, a ...interface{}) {
+	p.errors = append(p.errors, fmt.Errorf(format, a...))
 }

@@ -13,8 +13,6 @@ func Print(node Node) string {
 	switch n := node.(type) {
 	case *Tree:
 		return printTree(n)
-	case *BadStatement:
-		return printBad(n)
 	case *SelectStatement:
 		return printSelect(n)
 	case *ResultStatement:
@@ -45,7 +43,7 @@ func Print(node Node) string {
 		return printCreateTable(n)
 	case *DropTableStatement:
 		return printDropTable(n)
-	case *BinaryExpr, *IdentExpr, *UnaryExpr, *BadExpr, *ScalarExpr:
+	case *BinaryExpr, *IdentExpr, *UnaryExpr, *ScalarExpr:
 		return printExpr(node.(Expression), "", "")
 	default:
 		return "<unknown>"
@@ -85,7 +83,7 @@ func printCreateTable(s *CreateTableStatement) string {
 			buf.WriteString(printExpr(c.Default, "", ""))
 		}
 
-		if c.Nullable != nil && *c.Nullable {
+		if c.NotNull {
 			buf.WriteString(" NOT NULL")
 		}
 
@@ -146,11 +144,10 @@ func printInsert(s *InsertStatement) string {
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("INSERT INTO ")
 	buf.WriteString(printExpr(s.Table, "", ""))
-	buf.WriteString("\n")
 	buf.WriteString("(\n")
 
 	for i := range s.Columns {
-		buf.WriteString(printExpr(&s.Columns[i], "", "   "))
+		buf.WriteString("  " + printExpr(s.Columns[i], "", "   "))
 	}
 
 	buf.WriteString(")\n")
@@ -158,10 +155,10 @@ func printInsert(s *InsertStatement) string {
 	buf.WriteString("(\n")
 
 	for _, v := range s.Values {
-		buf.WriteString(printExpr(v, "", "   "))
+		buf.WriteString("  " + printExpr(v, "", "   "))
 	}
 
-	buf.WriteString(")")
+	buf.WriteString(")\n")
 
 	return buf.String()
 }
@@ -174,10 +171,6 @@ func printTree(n *Tree) string {
 	}
 
 	return buf.String()
-}
-
-func printBad(s *BadStatement) string {
-	return fmt.Sprintf("BadStatement: %s::%s\n", s.Literal, s.Type.String())
 }
 
 func printSelect(s *SelectStatement) string {
@@ -250,8 +243,6 @@ func printExpr(expression Expression, prefix, childPrefix string) string {
 		return fmt.Sprintf("%s%s::ident\n", prefix, n.Name)
 	case *UnaryExpr:
 		return fmt.Sprintf("%s%s%s", prefix, n.Operator, printExpr(n.Right, "", ""))
-	case *BadExpr:
-		return fmt.Sprintf("%s%s:%s::badexpr\n", prefix, n.Type.String(), n.Literal)
 	case *ScalarExpr:
 		return fmt.Sprintf("%s%s\n", prefix, n.Literal)
 	default:

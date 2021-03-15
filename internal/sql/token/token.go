@@ -53,10 +53,6 @@ const (
 	Boolean
 	Null
 
-	// Constants
-	True
-	False
-
 	// Keywords
 	Create
 	Table
@@ -78,6 +74,9 @@ const (
 	Update
 	Set
 	Delete
+	Default
+	Primary
+	Key
 )
 
 var tokens = [...]string{
@@ -114,9 +113,6 @@ var tokens = [...]string{
 	Boolean: "BOOLEAN",
 	Null:    "NULL",
 
-	True:  "TRUE",
-	False: "FALSE",
-
 	Create:   "CREATE",
 	Table:    "TABLE",
 	Database: "DATABASE",
@@ -137,6 +133,9 @@ var tokens = [...]string{
 	Update:   "UPDATE",
 	Set:      "SET",
 	Delete:   "DELETE",
+	Default:  "DEFAULT",
+	Primary:  "PRIMARY",
+	Key:      "KEY",
 }
 
 func (t Type) String() string {
@@ -159,6 +158,8 @@ func Lookup(ident string) Type {
 		"FLOAT":    Float,
 		"STRING":   String,
 		"BOOLEAN":  Boolean,
+		"TRUE":     Boolean,
+		"FALSE":    Boolean,
 		"CREATE":   Create,
 		"TABLE":    Table,
 		"DATABASE": Database,
@@ -182,9 +183,10 @@ func Lookup(ident string) Type {
 		"AND":      And,
 		"OR":       Or,
 		"NOT":      Not,
-		"TRUE":     True,
-		"FALSE":    False,
 		"NULL":     Null,
+		"DEFAULT":  Default,
+		"PRIMARY":  Primary,
+		"KEY":      Key,
 	}
 
 	if t, ok := keywords[strings.ToUpper(ident)]; ok {

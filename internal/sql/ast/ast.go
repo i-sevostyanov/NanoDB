@@ -20,13 +20,6 @@ type Tree struct {
 	Statements []Statement
 }
 
-type BadStatement struct {
-	Type    token.Type
-	Literal string
-}
-
-func (s *BadStatement) statementNode() {}
-
 type SelectStatement struct {
 	Result  []ResultStatement
 	From    *FromStatement
@@ -78,7 +71,7 @@ func (s *OffsetStatement) statementNode() {}
 
 type InsertStatement struct {
 	Table   Expression
-	Columns []IdentExpr
+	Columns []Expression
 	Values  []Expression
 }
 
@@ -129,7 +122,7 @@ type Column struct {
 	Name       Expression
 	Type       token.Type
 	Default    Expression
-	Nullable   *bool
+	NotNull    bool
 	PrimaryKey bool
 }
 
@@ -159,13 +152,6 @@ type UnaryExpr struct {
 }
 
 func (e *UnaryExpr) expressionNode() {}
-
-type BadExpr struct {
-	Type    token.Type
-	Literal string
-}
-
-func (e *BadExpr) expressionNode() {}
 
 type ScalarExpr struct {
 	Type    token.Type
