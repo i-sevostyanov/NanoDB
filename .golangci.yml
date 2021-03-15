@@ -233,11 +233,8 @@ linters:
     - funlen
     - exhaustive
     - gochecknoglobals
-    - unused
-    - stylecheck
     - gci
     - gomnd
-    - dupl
     - cyclop
     - goerr113
   fast: false
@@ -248,12 +245,9 @@ issues:
   # it can be disabled by `exclude-use-default: false`. To list all
   # excluded by default patterns execute `golangci-lint run --help`
   exclude:
-    - should have comment or be unexported
     - exported .+ should have comment
-    - package comment should be of the form
     - exported func .+ returns unexported type
     - comment on exported const .+ should be of the form
-    - comment on exported method .+ should be of the form
 
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:

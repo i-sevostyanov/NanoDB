@@ -1,3 +1,4 @@
+// Package token defines constants representing the lexical tokens of the NanoDB's SQL dialect.
 package token
 
 import (
@@ -5,8 +6,10 @@ import (
 	"strings"
 )
 
+// Type is the set of lexical tokens.
 type Type uint
 
+// Token represents a token or text string returned from the lexer.
 type Token struct {
 	Type    Type
 	Literal string
@@ -138,6 +141,7 @@ var tokens = [...]string{
 	Key:      "KEY",
 }
 
+// String returns the string corresponding to the token t.
 func (t Type) String() string {
 	s := ""
 
@@ -152,6 +156,7 @@ func (t Type) String() string {
 	return s
 }
 
+// Lookup maps an identifier to its keyword token or IDENT (if not a keyword).
 func Lookup(ident string) Type {
 	keywords := map[string]Type{
 		"INTEGER":  Integer,
@@ -196,6 +201,7 @@ func Lookup(ident string) Type {
 	return Ident
 }
 
+// New is a short-hand method for creating the new token.
 func New(t Type, offset int) Token {
 	literal := t.String()
 	length := len(t.String())
@@ -208,9 +214,10 @@ func New(t Type, offset int) Token {
 	}
 }
 
+// LowestPrecedence is non-operators precedence.
 const LowestPrecedence = 0
 
-// Precedence returns the operator precedence of the binary operator
+// Precedence returns the operator precedence of the binary operator.
 func (t Type) Precedence() int {
 	switch t {
 	case Or:
@@ -230,6 +237,7 @@ func (t Type) Precedence() int {
 	}
 }
 
+// IsRightAssociative returns true if the operator is right associative.
 func (t Type) IsRightAssociative() bool {
 	return t == Pow
 }

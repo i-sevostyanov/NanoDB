@@ -5,13 +5,14 @@ import (
 	"fmt"
 )
 
+// Print "pretty-prints" an AST node to output.
 func Print(node Node) string {
 	if node == nil {
 		return "<nil>"
 	}
 
 	switch n := node.(type) {
-	case *Tree:
+	case *Statements:
 		return printTree(n)
 	case *SelectStatement:
 		return printSelect(n)
@@ -163,10 +164,10 @@ func printInsert(s *InsertStatement) string {
 	return buf.String()
 }
 
-func printTree(n *Tree) string {
+func printTree(n *Statements) string {
 	buf := bytes.NewBuffer(nil)
 
-	for _, s := range n.Statements {
+	for _, s := range *n {
 		buf.WriteString(Print(s))
 	}
 

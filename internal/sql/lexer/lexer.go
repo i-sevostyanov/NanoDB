@@ -1,11 +1,14 @@
+// Package lexer implements a lexer for the NanoDB's SQL dialect.
 package lexer
 
 import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/token"
 )
 
+// EOF indicates the end of the input.
 const EOF = rune(0)
 
+// Lexer converts a sequence of characters into a sequence of tokens.
 type Lexer struct {
 	input      string
 	ch         rune // current character
@@ -13,6 +16,7 @@ type Lexer struct {
 	peekOffset int  // position after current character
 }
 
+// New returns new Lexer.
 func New(input string) *Lexer {
 	lx := &Lexer{input: input}
 	lx.next()
@@ -20,6 +24,7 @@ func New(input string) *Lexer {
 	return lx
 }
 
+// NextToken returns the next token or EOF if we reached the end of the input.
 func (l *Lexer) NextToken() token.Token {
 	l.skipWhitespace()
 

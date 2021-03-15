@@ -1,3 +1,4 @@
+// Package parser implements a parser for the NanoDB's SQL dialect.
 package parser
 
 import (
@@ -7,10 +8,12 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/token"
 )
 
+// Lexer converts a sequence of characters into a sequence of tokens.
 type Lexer interface {
 	NextToken() token.Token
 }
 
+// Parser takes a Lexer and builds an abstract syntax tree.
 type Parser struct {
 	lexer     Lexer
 	token     token.Token
@@ -18,6 +21,7 @@ type Parser struct {
 	errors    []error
 }
 
+// New returns new Parser.
 func New(lx Lexer) *Parser {
 	return &Parser{
 		lexer:     lx,
@@ -26,8 +30,9 @@ func New(lx Lexer) *Parser {
 	}
 }
 
-func (p *Parser) Parse() (*ast.Tree, []error) {
-	var statements []ast.Statement
+// Parse parses the sql and returns a list of statements.
+func (p *Parser) Parse() (*ast.Statements, []error) {
+	var statements ast.Statements
 
 	for p.token.Type != token.Semicolon && p.token.Type != token.EOF {
 		if stmt := p.parseStatement(); stmt != nil {
@@ -37,11 +42,7 @@ func (p *Parser) Parse() (*ast.Tree, []error) {
 		p.nextToken()
 	}
 
-	tree := &ast.Tree{
-		Statements: statements,
-	}
-
-	return tree, p.errors
+	return &statements, p.errors
 }
 
 func (p *Parser) nextToken() {
