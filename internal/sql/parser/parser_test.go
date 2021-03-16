@@ -576,79 +576,31 @@ func TestParser_Select(t *testing.T) {
 	t.Run("returns error", func(t *testing.T) {
 		t.Parallel()
 
-		tests := []struct {
-			name  string
-			input string
-		}{
-			{
-				name:  "unexpected statement",
-				input: "SEL",
-			},
-			{
-				name:  "no columns specified",
-				input: "SELECT",
-			},
-			{
-				name:  "no column alias specified",
-				input: "SELECT id AS",
-			},
-			{
-				name:  "unexpected column alias",
-				input: "SELECT id AS 7",
-			},
-			{
-				name:  "table name not specified",
-				input: "SELECT id FROM",
-			},
-			{
-				name:  "unexpected table name",
-				input: "SELECT id FROM 9",
-			},
-			{
-				name:  "empty 'where' expression",
-				input: "SELECT id FROM customers WHERE",
-			},
-			{
-				name:  "unfinished 'order by' statement",
-				input: "SELECT id FROM customers WHERE id > 2 ORDER",
-			},
-			{
-				name:  "no column specified at 'order by' statement",
-				input: "SELECT id FROM customers ORDER BY",
-			},
-			{
-				name:  "unexpected 'order by' column type",
-				input: "SELECT id FROM customers ORDER BY 9",
-			},
-			{
-				name:  "'limit' value not specified",
-				input: "SELECT id FROM customers LIMIT",
-			},
-			{
-				name:  "unexpected 'limit' value type",
-				input: "SELECT id FROM customers LIMIT abc",
-			},
-			{
-				name:  "'offset' value not specified",
-				input: "SELECT id FROM customers OFFSET",
-			},
-			{
-				name:  "unexpected 'offset' value type",
-				input: "SELECT id FROM customers OFFSET abc",
-			},
-			{
-				name:  "no close paren in group expr",
-				input: "SELECT (10-2",
-			},
+		inputs := []string{
+			"SEL",
+			"SELECT",
+			"SELECT id AS",
+			"SELECT id AS 7",
+			"SELECT id FROM",
+			"SELECT id FROM 9",
+			"SELECT id FROM customers WHERE",
+			"SELECT id FROM customers WHERE id > 2 ORDER",
+			"SELECT id FROM customers ORDER BY",
+			"SELECT id FROM customers ORDER BY 9",
+			"SELECT id FROM customers LIMIT",
+			"SELECT id FROM customers LIMIT abc",
+			"SELECT id FROM customers OFFSET",
+			"SELECT id FROM customers OFFSET abc",
+			"SELECT (10-2",
 		}
 
-		for _, test := range tests {
-			test := test
+		for _, input := range inputs {
+			input := input
 
-			t.Run(test.name, func(t *testing.T) {
+			t.Run(input, func(t *testing.T) {
 				t.Parallel()
 
-				p := parser.New(lexer.New(test.input))
+				p := parser.New(lexer.New(input))
 				stmts, err := p.Parse()
 
 				require.NotNil(t, err)
@@ -720,6 +672,42 @@ func TestParser_Insert(t *testing.T) {
 			assert.Equal(t, test.stmts, stmts)
 		})
 	}
+
+	t.Run("returns error", func(t *testing.T) {
+		t.Parallel()
+
+		inputs := []string{
+			"INSERT",
+			"INSERT INTO",
+			"INSERT INTO +",
+			"INSERT INTO customers",
+			"INSERT INTO customers id",
+			"INSERT INTO customers (",
+			"INSERT INTO customers (id,",
+			"INSERT INTO customers (id,)",
+			"INSERT INTO customers (id, name)",
+			"INSERT INTO customers (id, name) VALUES",
+			"INSERT INTO customers (id, name) VALUES id",
+			"INSERT INTO customers (id, name) VALUES 1, 2",
+			"INSERT INTO customers (id, name) VALUES (1, ",
+			"INSERT INTO customers (id, name) VALUES (1, 'UA502',",
+			"INSERT INTO customers (id, name) VALUES (+)",
+		}
+
+		for _, input := range inputs {
+			input := input
+
+			t.Run(input, func(t *testing.T) {
+				t.Parallel()
+
+				p := parser.New(lexer.New(input))
+				stmts, err := p.Parse()
+
+				require.NotNil(t, err)
+				assert.Nil(t, stmts)
+			})
+		}
+	})
 }
 
 func TestParser_Update(t *testing.T) {
@@ -792,6 +780,41 @@ func TestParser_Update(t *testing.T) {
 			assert.Equal(t, test.stmts, stmts)
 		})
 	}
+
+	t.Run("returns error", func(t *testing.T) {
+		t.Parallel()
+
+		inputs := []string{
+			"UPDATE",
+			"UPDATE +",
+			"UPDATE customers",
+			"UPDATE customers 9",
+			"UPDATE customers WHERE id = 1",
+			"UPDATE customers name",
+			"UPDATE customers SET 9",
+			"UPDATE customers SET name + ",
+			"UPDATE customers SET name = ",
+			"UPDATE customers SET name = +",
+			"UPDATE customers SET name = 'max' id = 1",
+			"UPDATE customers SET name = 'max' WHERE",
+			"UPDATE customers SET name = 'max' WHERE id =)",
+			"UPDATE customers SET name = 'max' WHERE +",
+		}
+
+		for _, input := range inputs {
+			input := input
+
+			t.Run(input, func(t *testing.T) {
+				t.Parallel()
+
+				p := parser.New(lexer.New(input))
+				stmts, err := p.Parse()
+
+				require.NotNil(t, err)
+				assert.Nil(t, stmts)
+			})
+		}
+	})
 }
 
 func TestParser_Delete(t *testing.T) {
@@ -844,6 +867,33 @@ func TestParser_Delete(t *testing.T) {
 			assert.Equal(t, test.stmts, stmts)
 		})
 	}
+
+	t.Run("returns error", func(t *testing.T) {
+		t.Parallel()
+
+		inputs := []string{
+			"DELETE",
+			"DELETE FROM",
+			"DELETE FROM +",
+			"DELETE FROM customers WHERE SELECT",
+			"DELETE FROM customers WHERE",
+			"DELETE FROM customers WHERE (",
+		}
+
+		for _, input := range inputs {
+			input := input
+
+			t.Run(input, func(t *testing.T) {
+				t.Parallel()
+
+				p := parser.New(lexer.New(input))
+				stmts, err := p.Parse()
+
+				require.NotNil(t, err)
+				assert.Nil(t, stmts)
+			})
+		}
+	})
 }
 
 func TestParser_Create(t *testing.T) {
@@ -991,6 +1041,43 @@ func TestParser_Create(t *testing.T) {
 				assert.Equal(t, test.stmts, stmts)
 			})
 		}
+
+		t.Run("returns error", func(t *testing.T) {
+			t.Parallel()
+
+			// CREATE TABLE customers (id INTEGER, name STRING, salary FLOAT, is_active BOOLEAN)
+			inputs := []string{
+				"CREATE",
+				"CREATE TABLE",
+				"CREATE TABLE 666",
+				"CREATE TABLE customers id INTEGER",
+				"CREATE TABLE customers (99 INTEGER)",
+				"CREATE TABLE customers (id",
+				"CREATE TABLE customers (id INT)",
+				"CREATE TABLE customers (id INT)",
+				"CREATE TABLE customers (id INTEGER",
+				"CREATE TABLE customers (id INTEGER PRIMARY)",
+				"CREATE TABLE customers (id INTEGER PRIMARY NULL)",
+				"CREATE TABLE customers (id INTEGER DEFAULT &)",
+				"CREATE TABLE customers (id INTEGER NOT)",
+				"CREATE TABLE customers (id INTEGER DEFAULT NOT)",
+				"CREATE TABLE customers (id INTEGER DEFAULT NOT KEY)",
+			}
+
+			for _, input := range inputs {
+				input := input
+
+				t.Run(input, func(t *testing.T) {
+					t.Parallel()
+
+					p := parser.New(lexer.New(input))
+					stmts, err := p.Parse()
+
+					require.NotNil(t, err)
+					assert.Nil(t, stmts)
+				})
+			}
+		})
 	})
 
 	t.Run("create unexpected", func(t *testing.T) {

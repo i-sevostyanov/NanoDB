@@ -653,9 +653,9 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 		return nil, err
 	}
 
-	fields := make([]ast.SetStatement, 0)
+	columns := make([]ast.SetStatement, 0)
 
-	for p.token.Type != token.EOF && p.token.Type != token.Where {
+	for {
 		column, err := p.parseIdent()
 		if err != nil {
 			return nil, err
@@ -674,15 +674,22 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 			return nil, fmt.Errorf("expression must not be empty")
 		}
 
-		fields = append(fields, ast.SetStatement{
+		columns = append(columns, ast.SetStatement{
 			Column: column,
 			Value:  value,
 		})
 
-		p.nextToken()
+		if p.peekToken.Type == token.EOF || p.peekToken.Type == token.Where {
+			p.nextToken()
+			break
+		}
+
+		if err = p.expect(token.Comma); err != nil {
+			return nil, err
+		}
 	}
 
-	return fields, nil
+	return columns, nil
 }
 
 func (p *Parser) parseExprStatement() (ast.Expression, error) {
