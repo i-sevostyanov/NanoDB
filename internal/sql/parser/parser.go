@@ -449,10 +449,6 @@ func (p *Parser) parseResult() (ast.ResultStatement, error) {
 		return ast.ResultStatement{}, err
 	}
 
-	if result.Expr == nil {
-		return ast.ResultStatement{}, fmt.Errorf("expression in result must be not empty")
-	}
-
 	if p.peekToken.Type != token.As {
 		return result, nil
 	}
@@ -497,10 +493,6 @@ func (p *Parser) parseWhereStatement() (*ast.WhereStatement, error) {
 	expr, err := p.parseExprStatement()
 	if err != nil {
 		return nil, err
-	}
-
-	if expr == nil {
-		return nil, fmt.Errorf("WHERE expression must not be empty")
 	}
 
 	p.nextToken()
@@ -632,10 +624,6 @@ func (p *Parser) parseValuesStatement() ([]ast.Expression, error) {
 			return nil, err
 		}
 
-		if expr == nil {
-			return nil, fmt.Errorf("expression must not be empty")
-		}
-
 		values = append(values, expr)
 
 		p.nextToken()
@@ -668,10 +656,6 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 		value, err := p.parseExprStatement()
 		if err != nil {
 			return nil, err
-		}
-
-		if value == nil {
-			return nil, fmt.Errorf("expression must not be empty")
 		}
 
 		columns = append(columns, ast.SetStatement{
@@ -712,10 +696,6 @@ func (p *Parser) parseExpr(precedence int) (ast.Expression, error) {
 	}
 
 	for p.peekToken.Type != token.Comma && precedence < p.peekToken.Type.Precedence() {
-		if !p.isInfixOperator(p.peekToken.Type) {
-			return expr, nil
-		}
-
 		p.nextToken()
 
 		expr, err = p.parseBinaryExpr(expr)
@@ -740,29 +720,6 @@ func (p *Parser) parseOperand() (ast.Expression, error) {
 	default:
 		return nil, fmt.Errorf("unexpected operand %q", p.token.Type)
 	}
-}
-
-func (p *Parser) isInfixOperator(t token.Type) bool {
-	switch t {
-	case token.Add,
-		token.Sub,
-		token.Mul,
-		token.Quo,
-		token.Rem,
-		token.Pow,
-		token.Equal,
-		token.LessThan,
-		token.GreaterThan,
-		token.NotEqual,
-		token.LessThanOrEqual,
-		token.GreaterThanOrEqual,
-		token.And,
-		token.Or,
-		token.Not:
-		return true
-	}
-
-	return false
 }
 
 func (p *Parser) parseIdent() (ast.Expression, error) {
