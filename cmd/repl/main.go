@@ -20,14 +20,13 @@ func main() {
 			scanner := bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			input := scanner.Text()
-
 			p := parser.New(lexer.New(input))
-			tree, errors := p.Parse()
 
-			fmt.Print(ast.Print(tree))
-
-			for _, err := range errors {
+			tree, err := p.Parse()
+			if err != nil {
 				fmt.Printf("%v\n", err)
+			} else {
+				fmt.Print(ast.Print(tree))
 			}
 		}
 	}()

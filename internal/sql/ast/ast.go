@@ -51,8 +51,8 @@ type WhereStatement struct {
 
 // OrderByStatement node represents an ORDER BY statement.
 type OrderByStatement struct {
-	Column Expression
-	Order  Expression
+	Column    Expression
+	Direction Expression
 }
 
 // LimitStatement node represents a LIMIT statement.

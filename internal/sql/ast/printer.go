@@ -214,7 +214,7 @@ func printWhere(s *WhereStatement) string {
 }
 
 func printOrderBy(s *OrderByStatement) string {
-	return fmt.Sprintf("ORDER BY\n  %s %s", printExpr(s.Column, "", ""), printExpr(s.Order, "", ""))
+	return fmt.Sprintf("ORDER BY\n  %s %s", printExpr(s.Column, "", ""), printExpr(s.Direction, "", ""))
 }
 
 func printLimit(s *LimitStatement) string {

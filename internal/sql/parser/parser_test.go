@@ -367,8 +367,8 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					OrderBy: &ast.OrderByStatement{
-						Column: &ast.IdentExpr{Name: "id"},
-						Order:  &ast.IdentExpr{Name: "ASC"},
+						Column:    &ast.IdentExpr{Name: "id"},
+						Direction: &ast.IdentExpr{Name: "ASC"},
 					},
 				},
 			},
@@ -411,8 +411,8 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					OrderBy: &ast.OrderByStatement{
-						Column: &ast.IdentExpr{Name: "id"},
-						Order:  &ast.IdentExpr{Name: "ASC"},
+						Column:    &ast.IdentExpr{Name: "id"},
+						Direction: &ast.IdentExpr{Name: "ASC"},
 					},
 					Limit: &ast.LimitStatement{
 						Value: &ast.ScalarExpr{
@@ -461,8 +461,8 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					OrderBy: &ast.OrderByStatement{
-						Column: &ast.IdentExpr{Name: "id"},
-						Order:  &ast.IdentExpr{Name: "ASC"},
+						Column:    &ast.IdentExpr{Name: "id"},
+						Direction: &ast.IdentExpr{Name: "ASC"},
 					},
 					Limit: &ast.LimitStatement{
 						Value: &ast.ScalarExpr{
@@ -552,8 +552,8 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					OrderBy: &ast.OrderByStatement{
-						Column: &ast.IdentExpr{Name: "id"},
-						Order:  &ast.IdentExpr{Name: "ASC"},
+						Column:    &ast.IdentExpr{Name: "id"},
+						Direction: &ast.IdentExpr{Name: "ASC"},
 					},
 				},
 			},
@@ -567,258 +567,78 @@ func TestParser_Select(t *testing.T) {
 			t.Parallel()
 
 			p := parser.New(lexer.New(test.input))
-			stmts, errors := p.Parse()
+			stmts, err := p.Parse()
+			require.NoError(t, err)
 			assert.Equal(t, test.stmts, stmts)
-
-			for _, err := range errors {
-				assert.NoError(t, err)
-			}
 		})
 	}
 
 	t.Run("returns error", func(t *testing.T) {
 		t.Parallel()
 
-		expected := ast.Statements(nil)
 		tests := []struct {
 			name  string
 			input string
-			stmts *ast.Statements
 		}{
 			{
 				name:  "unexpected statement",
 				input: "SEL",
-				stmts: &expected,
 			},
 			{
 				name:  "no columns specified",
 				input: "SELECT",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{},
-				},
 			},
 			{
 				name:  "no column alias specified",
 				input: "SELECT id AS",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{},
-				},
 			},
 			{
 				name:  "unexpected column alias",
 				input: "SELECT id AS 7",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{},
-				},
 			},
 			{
 				name:  "table name not specified",
 				input: "SELECT id FROM",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "unexpected table name",
 				input: "SELECT id FROM 9",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "empty 'where' expression",
 				input: "SELECT id FROM customers WHERE",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.IdentExpr{
-								Name: "customers",
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "unfinished 'order by' statement",
 				input: "SELECT id FROM customers WHERE id > 2 ORDER",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.IdentExpr{
-								Name: "customers",
-							},
-						},
-						Where: &ast.WhereStatement{
-							Expr: &ast.BinaryExpr{
-								Left: &ast.IdentExpr{
-									Name: "id",
-								},
-								Operator: token.GreaterThan,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "2",
-								},
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "no column specified at 'order by' statement",
 				input: "SELECT id FROM customers ORDER BY",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.IdentExpr{
-								Name: "customers",
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "unexpected 'order by' column type",
 				input: "SELECT id FROM customers ORDER BY 9",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.IdentExpr{
-								Name: "customers",
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "'limit' value not specified",
 				input: "SELECT id FROM customers LIMIT",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.IdentExpr{
-								Name: "customers",
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "unexpected 'limit' value type",
 				input: "SELECT id FROM customers LIMIT abc",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.IdentExpr{
-								Name: "customers",
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "'offset' value not specified",
 				input: "SELECT id FROM customers OFFSET",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.IdentExpr{
-								Name: "customers",
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "unexpected 'offset' value type",
 				input: "SELECT id FROM customers OFFSET abc",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{
-						Result: []ast.ResultStatement{
-							{
-								Expr: &ast.IdentExpr{
-									Name: "id",
-								},
-							},
-						},
-						From: &ast.FromStatement{
-							Table: &ast.IdentExpr{
-								Name: "customers",
-							},
-						},
-					},
-				},
 			},
 			{
 				name:  "no close paren in group expr",
 				input: "SELECT (10-2",
-				stmts: &ast.Statements{
-					&ast.SelectStatement{},
-				},
 			},
 		}
 
@@ -829,14 +649,10 @@ func TestParser_Select(t *testing.T) {
 				t.Parallel()
 
 				p := parser.New(lexer.New(test.input))
-				stmts, errors := p.Parse()
+				stmts, err := p.Parse()
 
-				assert.Equal(t, test.stmts, stmts)
-				require.NotEmpty(t, errors)
-
-				for _, err := range errors {
-					assert.NotNil(t, err)
-				}
+				require.NotNil(t, err)
+				assert.Nil(t, stmts)
 			})
 		}
 	})
@@ -899,12 +715,9 @@ func TestParser_Insert(t *testing.T) {
 			t.Parallel()
 
 			p := parser.New(lexer.New(test.input))
-			stmts, errors := p.Parse()
+			stmts, err := p.Parse()
+			require.NoError(t, err)
 			assert.Equal(t, test.stmts, stmts)
-
-			for _, err := range errors {
-				assert.NoError(t, err)
-			}
 		})
 	}
 }
@@ -974,12 +787,9 @@ func TestParser_Update(t *testing.T) {
 			t.Parallel()
 
 			p := parser.New(lexer.New(test.input))
-			stmts, errors := p.Parse()
+			stmts, err := p.Parse()
+			require.NoError(t, err)
 			assert.Equal(t, test.stmts, stmts)
-
-			for _, err := range errors {
-				assert.NoError(t, err)
-			}
 		})
 	}
 }
@@ -1029,12 +839,9 @@ func TestParser_Delete(t *testing.T) {
 			t.Parallel()
 
 			p := parser.New(lexer.New(test.input))
-			stmts, errors := p.Parse()
+			stmts, err := p.Parse()
+			require.NoError(t, err)
 			assert.Equal(t, test.stmts, stmts)
-
-			for _, err := range errors {
-				assert.NoError(t, err)
-			}
 		})
 	}
 }
@@ -1058,26 +865,21 @@ func TestParser_Create(t *testing.T) {
 			}
 
 			p := parser.New(lexer.New(input))
-			stmts, errors := p.Parse()
-			assert.Equal(t, expected, stmts)
+			stmts, err := p.Parse()
 
-			for _, err := range errors {
-				assert.NoError(t, err)
-			}
+			require.NoError(t, err)
+			assert.Equal(t, expected, stmts)
 		})
 
 		t.Run("wrong query", func(t *testing.T) {
 			t.Parallel()
 
 			input := "CREATE DATABASE ^"
-			expected := ast.Statements(nil)
-
 			p := parser.New(lexer.New(input))
-			stmts, errors := p.Parse()
+			stmts, err := p.Parse()
 
-			assert.Equal(t, &expected, stmts)
-			assert.Len(t, errors, 1)
-			assert.NotNil(t, errors[0])
+			assert.Nil(t, stmts)
+			assert.NotNil(t, err)
 		})
 	})
 
@@ -1127,9 +929,9 @@ func TestParser_Create(t *testing.T) {
 			{
 				input: `
 				CREATE TABLE customers (
-					id INTEGER PRIMARY KEY, 
-					name STRING NULL, 
-					salary FLOAT NOT NULL, 
+					id INTEGER PRIMARY KEY,
+					name STRING NULL,
+					salary FLOAT NOT NULL,
 					is_active BOOLEAN NOT NULL DEFAULT true,
 				)
 			`,
@@ -1183,12 +985,10 @@ func TestParser_Create(t *testing.T) {
 				t.Parallel()
 
 				p := parser.New(lexer.New(test.input))
-				stmts, errors := p.Parse()
-				assert.Equal(t, test.stmts, stmts)
+				stmts, err := p.Parse()
 
-				for _, err := range errors {
-					assert.NoError(t, err)
-				}
+				require.NoError(t, err)
+				assert.Equal(t, test.stmts, stmts)
 			})
 		}
 	})
@@ -1197,14 +997,11 @@ func TestParser_Create(t *testing.T) {
 		t.Parallel()
 
 		input := "CREATE abc"
-		expected := ast.Statements(nil)
-
 		p := parser.New(lexer.New(input))
-		stmts, errors := p.Parse()
+		stmts, err := p.Parse()
 
-		assert.Equal(t, &expected, stmts)
-		assert.Len(t, errors, 1)
-		assert.NotNil(t, errors[0])
+		require.NotNil(t, err)
+		assert.Nil(t, stmts)
 	})
 }
 
@@ -1227,26 +1024,21 @@ func TestParser_Drop(t *testing.T) {
 			}
 
 			p := parser.New(lexer.New(input))
-			stmts, errors := p.Parse()
-			assert.Equal(t, expected, stmts)
+			stmts, err := p.Parse()
 
-			for _, err := range errors {
-				assert.NoError(t, err)
-			}
+			require.NoError(t, err)
+			assert.Equal(t, expected, stmts)
 		})
 
 		t.Run("wrong database name", func(t *testing.T) {
 			t.Parallel()
 
 			input := "DROP DATABASE 9"
-			expected := ast.Statements(nil)
-
 			p := parser.New(lexer.New(input))
-			stmts, errors := p.Parse()
+			stmts, err := p.Parse()
 
-			assert.Equal(t, &expected, stmts)
-			assert.Len(t, errors, 1)
-			assert.NotNil(t, errors[0])
+			require.NotNil(t, err)
+			assert.Nil(t, stmts)
 		})
 	})
 
@@ -1266,26 +1058,21 @@ func TestParser_Drop(t *testing.T) {
 			}
 
 			p := parser.New(lexer.New(input))
-			stmts, errors := p.Parse()
-			assert.Equal(t, expected, stmts)
+			stmts, err := p.Parse()
 
-			for _, err := range errors {
-				assert.NoError(t, err)
-			}
+			require.NoError(t, err)
+			assert.Equal(t, expected, stmts)
 		})
 
 		t.Run("wrong table name", func(t *testing.T) {
 			t.Parallel()
 
 			input := "DROP TABLE +"
-			expected := ast.Statements(nil)
-
 			p := parser.New(lexer.New(input))
-			stmts, errors := p.Parse()
+			stmts, err := p.Parse()
 
-			assert.Equal(t, &expected, stmts)
-			assert.Len(t, errors, 1)
-			assert.NotNil(t, errors[0])
+			require.NotNil(t, err)
+			assert.Nil(t, stmts)
 		})
 	})
 
@@ -1293,13 +1080,10 @@ func TestParser_Drop(t *testing.T) {
 		t.Parallel()
 
 		input := "DROP abc"
-		expected := ast.Statements(nil)
-
 		p := parser.New(lexer.New(input))
-		stmts, errors := p.Parse()
+		stmts, err := p.Parse()
 
-		assert.Equal(t, &expected, stmts)
-		assert.Len(t, errors, 1)
-		assert.NotNil(t, errors[0])
+		require.NotNil(t, err)
+		assert.Nil(t, stmts)
 	})
 }
