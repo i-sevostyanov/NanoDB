@@ -160,8 +160,6 @@ func (p *Parser) parseInsertStatement() (ast.Statement, error) {
 		return nil, err
 	}
 
-	p.nextToken()
-
 	columns, err := p.parseColumnsStatement()
 	if err != nil {
 		return nil, err
@@ -188,8 +186,6 @@ func (p *Parser) parseUpdateStatement() (ast.Statement, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	p.nextToken()
 
 	set, err := p.parseSetStatement()
 	if err != nil {
@@ -222,8 +218,6 @@ func (p *Parser) parseDeleteStatement() (ast.Statement, error) {
 		return nil, err
 	}
 
-	p.nextToken()
-
 	where, err := p.parseWhereStatement()
 	if err != nil {
 		return nil, err
@@ -243,8 +237,6 @@ func (p *Parser) parseCreateDatabaseStatement() (ast.Statement, error) {
 		return nil, err
 	}
 
-	p.nextToken()
-
 	create := ast.CreateDatabaseStatement{
 		Name: database,
 	}
@@ -257,8 +249,6 @@ func (p *Parser) parseCreateTableStatement() (ast.Statement, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	p.nextToken()
 
 	columns, err := p.parseColumnsDefinition()
 	if err != nil {
@@ -305,8 +295,6 @@ func (p *Parser) parseColumnDefinition() (ast.Column, error) {
 	if err != nil {
 		return ast.Column{}, err
 	}
-
-	p.nextToken()
 
 	columnType, err := p.parseColumnType()
 	if err != nil {
@@ -409,8 +397,6 @@ func (p *Parser) parseDropDatabaseStatement() (ast.Statement, error) {
 		return nil, err
 	}
 
-	p.nextToken()
-
 	drop := ast.DropDatabaseStatement{
 		Name: database,
 	}
@@ -423,8 +409,6 @@ func (p *Parser) parseDropTableStatement() (ast.Statement, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	p.nextToken()
 
 	drop := ast.DropTableStatement{
 		Table: table,
@@ -481,8 +465,6 @@ func (p *Parser) parseResult() (ast.ResultStatement, error) {
 		return ast.ResultStatement{}, err
 	}
 
-	p.nextToken()
-
 	return result, nil
 }
 
@@ -497,8 +479,6 @@ func (p *Parser) parseFromStatement() (*ast.FromStatement, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	p.nextToken()
 
 	from := ast.FromStatement{
 		Table: table,
@@ -547,8 +527,6 @@ func (p *Parser) parseOrderByStatement() (*ast.OrderByStatement, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	p.nextToken()
 
 	direction := &ast.IdentExpr{
 		Name: token.Asc.String(),
@@ -628,8 +606,6 @@ func (p *Parser) parseColumnsStatement() ([]ast.Expression, error) {
 		}
 
 		columns = append(columns, column)
-
-		p.nextToken()
 	}
 
 	if err := p.expect(token.CloseParen); err != nil {
@@ -684,8 +660,6 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 		if err != nil {
 			return nil, err
 		}
-
-		p.nextToken()
 
 		if err = p.expect(token.Equal); err != nil {
 			return nil, err
@@ -749,7 +723,7 @@ func (p *Parser) parseExpr(precedence int) (ast.Expression, error) {
 func (p *Parser) parseOperand() (ast.Expression, error) {
 	switch p.token.Type {
 	case token.Ident:
-		return p.parseIdent()
+		return &ast.IdentExpr{Name: p.token.Literal}, nil
 	case token.Integer, token.Float, token.String, token.Boolean:
 		return p.parseScalar(p.token.Type)
 	case token.Add, token.Sub:
@@ -792,6 +766,8 @@ func (p *Parser) parseIdent() (ast.Expression, error) {
 	ident := ast.IdentExpr{
 		Name: p.token.Literal,
 	}
+
+	p.nextToken()
 
 	return &ident, nil
 }
