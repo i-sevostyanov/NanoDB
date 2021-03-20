@@ -365,7 +365,7 @@ func (p *Parser) parseColumnDefault() (ast.Expression, error) {
 
 	p.nextToken()
 
-	expr, err := p.parseExprStatement()
+	expr, err := p.parsePrimaryExpr()
 	if err != nil {
 		return nil, err
 	}
@@ -444,7 +444,7 @@ func (p *Parser) parseResult() (ast.ResultStatement, error) {
 		err    error
 	)
 
-	result.Expr, err = p.parseExprStatement()
+	result.Expr, err = p.parsePrimaryExpr()
 	if err != nil {
 		return ast.ResultStatement{}, err
 	}
@@ -490,7 +490,7 @@ func (p *Parser) parseWhereStatement() (*ast.WhereStatement, error) {
 
 	p.nextToken()
 
-	expr, err := p.parseExprStatement()
+	expr, err := p.parsePrimaryExpr()
 	if err != nil {
 		return nil, err
 	}
@@ -619,7 +619,7 @@ func (p *Parser) parseValuesStatement() ([]ast.Expression, error) {
 	}
 
 	for p.token.Type != token.EOF && p.token.Type != token.CloseParen {
-		expr, err := p.parseExprStatement()
+		expr, err := p.parsePrimaryExpr()
 		if err != nil {
 			return nil, err
 		}
@@ -653,7 +653,7 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 			return nil, err
 		}
 
-		value, err := p.parseExprStatement()
+		value, err := p.parsePrimaryExpr()
 		if err != nil {
 			return nil, err
 		}
@@ -676,7 +676,7 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 	return columns, nil
 }
 
-func (p *Parser) parseExprStatement() (ast.Expression, error) {
+func (p *Parser) parsePrimaryExpr() (ast.Expression, error) {
 	expr, err := p.parseExpr(token.LowestPrecedence + 1)
 	if err != nil {
 		return nil, err

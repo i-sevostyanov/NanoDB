@@ -1045,7 +1045,6 @@ func TestParser_Create(t *testing.T) {
 		t.Run("returns error", func(t *testing.T) {
 			t.Parallel()
 
-			// CREATE TABLE customers (id INTEGER, name STRING, salary FLOAT, is_active BOOLEAN)
 			inputs := []string{
 				"CREATE",
 				"CREATE TABLE",
