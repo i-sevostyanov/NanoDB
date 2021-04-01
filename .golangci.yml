@@ -237,6 +237,7 @@ linters:
     - gomnd
     - cyclop
     - goerr113
+    - stylecheck
   fast: false
 
 issues:
