@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/i-sevostyanov/NanoDB/internal/sql/lexer"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/token"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/lexer"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 )
 
 func TestLexer_NextToken(t *testing.T) {
@@ -134,13 +134,13 @@ func TestLexer_NextToken(t *testing.T) {
 		},
 		{
 			input:     "/",
-			tokenType: token.Quo,
-			literal:   token.Quo.String(),
+			tokenType: token.Div,
+			literal:   token.Div.String(),
 		},
 		{
 			input:     "%",
-			tokenType: token.Rem,
-			literal:   token.Rem.String(),
+			tokenType: token.Mod,
+			literal:   token.Mod.String(),
 		},
 		{
 			input:     "^",

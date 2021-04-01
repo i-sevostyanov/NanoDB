@@ -6,10 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/i-sevostyanov/NanoDB/internal/sql/ast"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/lexer"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/parser"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/token"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/lexer"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/parser"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 )
 
 func TestParser_Select(t *testing.T) {
@@ -245,7 +245,7 @@ func TestParser_Select(t *testing.T) {
 											Type:    token.Integer,
 											Literal: "4",
 										},
-										Operator: token.Quo,
+										Operator: token.Div,
 										Right: &ast.BinaryExpr{
 											Left: &ast.ScalarExpr{
 												Type:    token.Integer,
@@ -258,7 +258,7 @@ func TestParser_Select(t *testing.T) {
 											},
 										},
 									},
-									Operator: token.Rem,
+									Operator: token.Mod,
 									Right: &ast.ScalarExpr{
 										Type:    token.Integer,
 										Literal: "3",
@@ -368,7 +368,7 @@ func TestParser_Select(t *testing.T) {
 					},
 					OrderBy: &ast.OrderByStatement{
 						Column:    &ast.IdentExpr{Name: "id"},
-						Direction: &ast.IdentExpr{Name: "ASC"},
+						Direction: token.Asc,
 					},
 				},
 			},
@@ -412,7 +412,7 @@ func TestParser_Select(t *testing.T) {
 					},
 					OrderBy: &ast.OrderByStatement{
 						Column:    &ast.IdentExpr{Name: "id"},
-						Direction: &ast.IdentExpr{Name: "ASC"},
+						Direction: token.Asc,
 					},
 					Limit: &ast.LimitStatement{
 						Value: &ast.ScalarExpr{
@@ -462,7 +462,7 @@ func TestParser_Select(t *testing.T) {
 					},
 					OrderBy: &ast.OrderByStatement{
 						Column:    &ast.IdentExpr{Name: "id"},
-						Direction: &ast.IdentExpr{Name: "ASC"},
+						Direction: token.Asc,
 					},
 					Limit: &ast.LimitStatement{
 						Value: &ast.ScalarExpr{
@@ -553,7 +553,7 @@ func TestParser_Select(t *testing.T) {
 					},
 					OrderBy: &ast.OrderByStatement{
 						Column:    &ast.IdentExpr{Name: "id"},
-						Direction: &ast.IdentExpr{Name: "ASC"},
+						Direction: token.Asc,
 					},
 				},
 			},

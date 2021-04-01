@@ -45,8 +45,8 @@ const (
 	Add // +
 	Sub // -
 	Mul // *
-	Quo // /
-	Rem // %
+	Div // /
+	Mod // %
 	Pow // ^
 
 	// Types
@@ -106,8 +106,8 @@ var tokens = [...]string{
 	Add: "+",
 	Sub: "-",
 	Mul: "*",
-	Quo: "/",
-	Rem: "%",
+	Div: "/",
+	Mod: "%",
 	Pow: "^",
 
 	Integer: "INTEGER",
@@ -228,7 +228,7 @@ func (t Type) Precedence() int {
 		return 3
 	case Add, Sub:
 		return 4
-	case Mul, Quo, Rem:
+	case Mul, Div, Mod:
 		return 5
 	case Pow:
 		return 6

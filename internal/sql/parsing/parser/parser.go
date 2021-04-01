@@ -4,8 +4,8 @@ package parser
 import (
 	"fmt"
 
-	"github.com/i-sevostyanov/NanoDB/internal/sql/ast"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/token"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 )
 
 // Lexer converts a sequence of characters into a sequence of tokens.
@@ -520,13 +520,11 @@ func (p *Parser) parseOrderByStatement() (*ast.OrderByStatement, error) {
 		return nil, err
 	}
 
-	direction := &ast.IdentExpr{
-		Name: token.Asc.String(),
-	}
+	direction := token.Asc
 
 	switch p.token.Type {
 	case token.Asc, token.Desc:
-		direction.Name = p.token.Type.String()
+		direction = p.token.Type
 		p.nextToken()
 	}
 

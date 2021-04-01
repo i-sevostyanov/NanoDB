@@ -2,7 +2,7 @@
 package lexer
 
 import (
-	"github.com/i-sevostyanov/NanoDB/internal/sql/token"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 )
 
 // EOF indicates the end of the input.
@@ -60,9 +60,9 @@ func (l *Lexer) NextToken() token.Token {
 	case '*':
 		return token.New(token.Mul, l.offset)
 	case '/':
-		return token.New(token.Quo, l.offset)
+		return token.New(token.Div, l.offset)
 	case '%':
-		return token.New(token.Rem, l.offset)
+		return token.New(token.Mod, l.offset)
 	case '^':
 		return token.New(token.Pow, l.offset)
 	case '<':

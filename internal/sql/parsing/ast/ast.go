@@ -2,7 +2,7 @@
 package ast
 
 import (
-	"github.com/i-sevostyanov/NanoDB/internal/sql/token"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 )
 
 // Node represents AST-node of the syntax tree for SQL query.
@@ -52,7 +52,7 @@ type WhereStatement struct {
 // OrderByStatement node represents an ORDER BY statement.
 type OrderByStatement struct {
 	Column    Expression
-	Direction Expression
+	Direction token.Type
 }
 
 // LimitStatement node represents a LIMIT statement.
