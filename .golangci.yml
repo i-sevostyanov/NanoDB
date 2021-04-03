@@ -16,7 +16,7 @@ run:
   tests: true
 
   # list of build tags, all linters use it. Default is empty list.
-  build-tags: []
+  build-tags: [ ]
 
   # which dirs to skip: issues from them won't be reported;
   # can use regexp here: generated.*, regexp is applied on full path;
@@ -101,8 +101,8 @@ linters-settings:
     enable:
       - atomicalign
     enable-all: false
-#    disable:
-#      - shadow
+    #    disable:
+    #      - shadow
     disable-all: false
   golint:
     # minimal confidence for issues, default is 0.8
@@ -111,9 +111,9 @@ linters-settings:
     # simplify code: gofmt with `-s` option, true by default
     simplify: true
   goimports:
-    # put imports beginning with prefix after 3rd-party packages;
-    # it's a comma-separated list of prefixes
-    # local-prefixes:
+  # put imports beginning with prefix after 3rd-party packages;
+  # it's a comma-separated list of prefixes
+  # local-prefixes:
   gocyclo:
     # minimal code complexity to report, 30 by default (but we recommend 10-20)
     min-complexity: 30
@@ -240,6 +240,8 @@ linters:
     - stylecheck
     - maligned
     - interfacer
+    - scopelint
+    - wrapcheck
   fast: false
 
 issues:
