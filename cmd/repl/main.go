@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/i-sevostyanov/NanoDB/internal/sql/ast"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/lexer"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/parser"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/lexer"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/parser"
 )
 
 func main() {
