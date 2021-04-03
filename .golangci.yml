@@ -238,6 +238,8 @@ linters:
     - cyclop
     - goerr113
     - stylecheck
+    - maligned
+    - interfacer
   fast: false
 
 issues:
