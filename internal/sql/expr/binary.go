@@ -75,6 +75,6 @@ func (b Binary) Eval(row sql.Row) (sql.Value, error) {
 	case Pow:
 		return lvalue.Pow(rvalue)
 	default:
-		return nil, fmt.Errorf("unknown binary Operator: %q", b.Operator)
+		return nil, fmt.Errorf("unknown binary operator: %q", b.Operator)
 	}
 }
