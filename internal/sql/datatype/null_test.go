@@ -55,6 +55,12 @@ func TestNull_Compare(t *testing.T) {
 			b:    datatype.NewString("xyz"),
 			cmp:  sql.Less,
 		},
+		{
+			name: "null vs boolean",
+			a:    datatype.NewNull(),
+			b:    datatype.NewBoolean(true),
+			cmp:  sql.Less,
+		},
 	}
 
 	for _, test := range tests {

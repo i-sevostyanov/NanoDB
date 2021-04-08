@@ -8,7 +8,7 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 )
 
-//go:generate mockgen -source=expression.go -destination ./expression_mock_test.go -package expr_test
+//go:generate mockgen -source=expression.go -destination ./expression_mock.go -package expr
 
 var binaryOperators = map[token.Type]BinaryOp{
 	token.Equal:              Equal,
@@ -53,7 +53,7 @@ func walk(node ast.Expression, scheme sql.Scheme) (Node, error) {
 
 func columnExpr(expr *ast.IdentExpr, scheme sql.Scheme) (Node, error) {
 	if scheme == nil {
-		return nil, fmt.Errorf("couldn't resolve identifier %q, because table schema not provided", expr.Name)
+		return nil, fmt.Errorf("schema not provided")
 	}
 
 	column, ok := scheme[expr.Name]

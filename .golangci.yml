@@ -242,6 +242,8 @@ linters:
     - interfacer
     - scopelint
     - wrapcheck
+    - unparam
+    - wsl
   fast: false
 
 issues:

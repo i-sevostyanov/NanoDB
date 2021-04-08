@@ -27,8 +27,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Equal,
@@ -57,8 +57,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Equal,
@@ -91,8 +91,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.NotEqual,
@@ -121,8 +121,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.NotEqual,
@@ -155,8 +155,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.GreaterThan,
@@ -185,8 +185,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.GreaterThan,
@@ -219,8 +219,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.LessThan,
@@ -249,8 +249,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.LessThan,
@@ -283,8 +283,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.GreaterThanOrEqual,
@@ -313,8 +313,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.GreaterThanOrEqual,
@@ -347,8 +347,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.LessThanOrEqual,
@@ -377,8 +377,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.LessThanOrEqual,
@@ -411,8 +411,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.And,
@@ -441,8 +441,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.And,
@@ -475,8 +475,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Or,
@@ -505,8 +505,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Or,
@@ -539,8 +539,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Add,
@@ -569,8 +569,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Add,
@@ -603,8 +603,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Sub,
@@ -633,8 +633,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Sub,
@@ -667,8 +667,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Mul,
@@ -697,8 +697,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Mul,
@@ -731,8 +731,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Div,
@@ -761,8 +761,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Div,
@@ -795,8 +795,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Mod,
@@ -825,8 +825,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Mod,
@@ -859,8 +859,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Pow,
@@ -889,8 +889,8 @@ func TestBinary_Eval(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			leftNode := NewMockNode(ctrl)
-			rightNode := NewMockNode(ctrl)
+			leftNode := expr.NewMockNode(ctrl)
+			rightNode := expr.NewMockNode(ctrl)
 
 			binaryExpr := expr.Binary{
 				Operator: expr.Pow,
@@ -920,8 +920,8 @@ func TestBinary_Eval(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		leftNode := NewMockNode(ctrl)
-		rightNode := NewMockNode(ctrl)
+		leftNode := expr.NewMockNode(ctrl)
+		rightNode := expr.NewMockNode(ctrl)
 
 		equal := expr.Binary{
 			Operator: expr.Equal,
@@ -943,8 +943,8 @@ func TestBinary_Eval(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		leftNode := NewMockNode(ctrl)
-		rightNode := NewMockNode(ctrl)
+		leftNode := expr.NewMockNode(ctrl)
+		rightNode := expr.NewMockNode(ctrl)
 
 		binaryExpr := expr.Binary{
 			Operator: expr.Equal,
@@ -971,8 +971,8 @@ func TestBinary_Eval(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		leftNode := NewMockNode(ctrl)
-		rightNode := NewMockNode(ctrl)
+		leftNode := expr.NewMockNode(ctrl)
+		rightNode := expr.NewMockNode(ctrl)
 
 		binaryExpr := expr.Binary{
 			Operator: expr.BinaryOp(math.MaxUint64),
