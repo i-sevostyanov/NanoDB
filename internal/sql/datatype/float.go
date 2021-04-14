@@ -19,6 +19,10 @@ func (f Float) Raw() interface{} {
 	return f.value
 }
 
+func (f Float) DataType() sql.DataType {
+	return sql.Float
+}
+
 func (f Float) Compare(v sql.Value) (sql.CompareType, error) {
 	switch value := v.Raw().(type) {
 	case float64:

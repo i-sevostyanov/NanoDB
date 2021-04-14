@@ -1,22 +1,6 @@
 package sql
 
-// Column is the definition of a table column.
-type Column struct {
-	Position   uint8
-	Name       string
-	DataType   DataType
-	PrimaryKey bool
-	Nullable   bool
-	Default    interface{}
-}
-
-// Scheme is the definition of a table.
-type Scheme map[string]Column
-
-// Sequence returns a sequentially increasing value every time you call Next.
-type Sequence interface {
-	Next() int64
-}
+//go:generate mockgen -source=type.go -destination ./type_mock.go -package sql
 
 // Catalog holds meta-information about databases.
 type Catalog interface {
@@ -26,22 +10,41 @@ type Catalog interface {
 	DropDatabase(name string) error
 }
 
+// Database represents the backend of a SQL database.
 type Database interface {
 	Name() string
-	CreateTable(name string, scheme Scheme) error
+	GetTable(name string) (Table, error)
+	ListTables() []Table
+	CreateTable(name string, scheme Scheme) (Table, error)
 	DropTable(name string) error
-	Tables() []Table
-	Table(name string) (Table, error)
 }
 
 // Table represents the backend of a SQL table.
 type Table interface {
 	Name() string
 	Scheme() Scheme
+	PrimaryKey() Column
+	Sequence() Sequence
 	RowIter() (RowIter, error)
-	Insert(row Row) (Row, error)
+	Insert(row Row) error
+	Delete(key int64) error
+	Update(key int64, row Row) error
+}
 
-	// Insert(columns []string, values []Raw) (RowIter, error)
-	// Update(columns map[string]Raw, filter Expr) (RowIter, error)
-	// Delete(filter Expr) (RowIter, error)
+// Sequence returns a sequentially increasing value every time you call Next.
+type Sequence interface {
+	Next() int64
+}
+
+// Scheme is the definition of a table (column-name => definition).
+type Scheme map[string]Column
+
+// Column is the definition of a table column.
+type Column struct {
+	Position   uint8
+	Name       string
+	DataType   DataType
+	PrimaryKey bool
+	Nullable   bool
+	Default    Value
 }

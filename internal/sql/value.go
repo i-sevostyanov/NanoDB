@@ -44,8 +44,8 @@ func (t DataType) String() string {
 
 type Value interface {
 	Raw() interface{}
+	DataType() DataType
 	Compare(x Value) (CompareType, error)
-	// Mathematical operators
 	UnaryPlus() (Value, error)
 	UnaryMinus() (Value, error)
 	Add(Value) (Value, error)
@@ -54,14 +54,12 @@ type Value interface {
 	Div(Value) (Value, error)
 	Pow(Value) (Value, error)
 	Mod(Value) (Value, error)
-	// Comparison operators
 	Equal(Value) (Value, error)
 	NotEqual(Value) (Value, error)
 	GreaterThan(Value) (Value, error)
 	LessThan(Value) (Value, error)
 	GreaterOrEqual(Value) (Value, error)
 	LessOrEqual(Value) (Value, error)
-	// Logical operators
 	And(Value) (Value, error)
 	Or(Value) (Value, error)
 }

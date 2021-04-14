@@ -4,12 +4,13 @@ import (
 	"io"
 )
 
+//go:generate mockgen -source=rows.go -destination ./rows_mock.go -package sql
+
 type Row []Value
 
 // RowIter is an iterator that produces rows.
 type RowIter interface {
 	// Next retrieves the next row. It will return io.EOF if it's the last row.
-	// After retrieving the last row, Close will be automatically closed.
 	Next() (Row, error)
 	// Close the iterator.
 	Close() error

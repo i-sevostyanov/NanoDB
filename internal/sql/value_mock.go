@@ -46,6 +46,20 @@ func (mr *MockValueMockRecorder) Raw() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Raw", reflect.TypeOf((*MockValue)(nil).Raw))
 }
 
+// DataType mocks base method
+func (m *MockValue) DataType() DataType {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DataType")
+	ret0, _ := ret[0].(DataType)
+	return ret0
+}
+
+// DataType indicates an expected call of DataType
+func (mr *MockValueMockRecorder) DataType() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DataType", reflect.TypeOf((*MockValue)(nil).DataType))
+}
+
 // Compare mocks base method
 func (m *MockValue) Compare(x Value) (CompareType, error) {
 	m.ctrl.T.Helper()

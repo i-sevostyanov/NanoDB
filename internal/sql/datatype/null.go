@@ -8,12 +8,16 @@ import (
 
 type Null struct{}
 
+func NewNull() Null {
+	return Null{}
+}
+
 func (n Null) Raw() interface{} {
 	return nil
 }
 
-func NewNull() Null {
-	return Null{}
+func (n Null) DataType() sql.DataType {
+	return sql.Null
 }
 
 func (n Null) Compare(v sql.Value) (sql.CompareType, error) {

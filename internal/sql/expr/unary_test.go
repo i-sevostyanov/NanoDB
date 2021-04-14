@@ -24,7 +24,7 @@ func TestUnary_Eval(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		operand := NewMockNode(ctrl)
+		operand := expr.NewMockNode(ctrl)
 		sqlValue := sql.NewMockValue(ctrl)
 
 		expected := datatype.NewInteger(10)
@@ -47,7 +47,7 @@ func TestUnary_Eval(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		operand := NewMockNode(ctrl)
+		operand := expr.NewMockNode(ctrl)
 		sqlValue := sql.NewMockValue(ctrl)
 
 		expected := datatype.NewInteger(-10)
@@ -70,7 +70,7 @@ func TestUnary_Eval(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		operand := NewMockNode(ctrl)
+		operand := expr.NewMockNode(ctrl)
 		unaryExpr := expr.Unary{
 			Operator: expr.UnaryOp(math.MaxUint64),
 			Operand:  operand,
@@ -89,7 +89,7 @@ func TestUnary_Eval(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		operand := NewMockNode(ctrl)
+		operand := expr.NewMockNode(ctrl)
 		expected := fmt.Errorf("something went wrong")
 		unaryExpr := expr.Unary{
 			Operator: expr.UnaryMinus,

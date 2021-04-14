@@ -22,6 +22,13 @@ func TestNull_Raw(t *testing.T) {
 	}
 }
 
+func TestNull_DataType(t *testing.T) {
+	t.Parallel()
+
+	n := datatype.NewNull()
+	assert.Equal(t, sql.Null, n.DataType())
+}
+
 func TestNull_Compare(t *testing.T) {
 	t.Parallel()
 
@@ -53,6 +60,12 @@ func TestNull_Compare(t *testing.T) {
 			name: "null vs string",
 			a:    datatype.NewNull(),
 			b:    datatype.NewString("xyz"),
+			cmp:  sql.Less,
+		},
+		{
+			name: "null vs boolean",
+			a:    datatype.NewNull(),
+			b:    datatype.NewBoolean(true),
 			cmp:  sql.Less,
 		},
 	}

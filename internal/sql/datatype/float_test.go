@@ -24,6 +24,13 @@ func TestFloat_Raw(t *testing.T) {
 	}
 }
 
+func TestFloat_DataType(t *testing.T) {
+	t.Parallel()
+
+	f := datatype.NewFloat(10)
+	assert.Equal(t, sql.Float, f.DataType())
+}
+
 func TestFloat_Compare(t *testing.T) {
 	t.Parallel()
 

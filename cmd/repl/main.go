@@ -7,7 +7,6 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/lexer"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/parser"
 )
@@ -26,7 +25,7 @@ func main() {
 			if err != nil {
 				fmt.Printf("%v\n", err)
 			} else {
-				fmt.Print(ast.Print(tree))
+				fmt.Print(tree)
 			}
 		}
 	}()

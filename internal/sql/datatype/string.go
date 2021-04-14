@@ -18,6 +18,10 @@ func (s String) Raw() interface{} {
 	return s.value
 }
 
+func (s String) DataType() sql.DataType {
+	return sql.String
+}
+
 func (s String) Compare(v sql.Value) (sql.CompareType, error) {
 	switch value := v.Raw().(type) {
 	case string:
