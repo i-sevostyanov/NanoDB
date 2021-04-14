@@ -19,6 +19,10 @@ func (i Integer) Raw() interface{} {
 	return i.value
 }
 
+func (i Integer) DataType() sql.DataType {
+	return sql.Integer
+}
+
 func (i Integer) Compare(v sql.Value) (sql.CompareType, error) {
 	switch value := v.Raw().(type) {
 	case int64:

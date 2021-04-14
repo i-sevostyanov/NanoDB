@@ -24,6 +24,13 @@ func TestString_Raw(t *testing.T) {
 	}
 }
 
+func TestString_DataType(t *testing.T) {
+	t.Parallel()
+
+	n := datatype.NewString("xyz")
+	assert.Equal(t, sql.String, n.DataType())
+}
+
 func TestString_Compare(t *testing.T) {
 	t.Parallel()
 

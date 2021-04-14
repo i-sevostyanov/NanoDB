@@ -171,7 +171,7 @@ func (p *Parser) parseInsertStatement() (ast.Statement, error) {
 	}
 
 	insert := ast.InsertStatement{
-		Table:   table,
+		Table:   table.Name,
 		Columns: columns,
 		Values:  values,
 	}
@@ -198,7 +198,7 @@ func (p *Parser) parseUpdateStatement() (ast.Statement, error) {
 	}
 
 	update := ast.UpdateStatement{
-		Table: table,
+		Table: table.Name,
 		Set:   set,
 		Where: where,
 	}
@@ -224,7 +224,7 @@ func (p *Parser) parseDeleteStatement() (ast.Statement, error) {
 	}
 
 	deleteStmt := ast.DeleteStatement{
-		Table: table,
+		Table: table.Name,
 		Where: where,
 	}
 
@@ -238,7 +238,7 @@ func (p *Parser) parseCreateDatabaseStatement() (ast.Statement, error) {
 	}
 
 	create := ast.CreateDatabaseStatement{
-		Name: database,
+		Database: database.Name,
 	}
 
 	return &create, nil
@@ -256,7 +256,7 @@ func (p *Parser) parseCreateTableStatement() (ast.Statement, error) {
 	}
 
 	create := ast.CreateTableStatement{
-		Table:   table,
+		Table:   table.Name,
 		Columns: columns,
 	}
 
@@ -291,7 +291,7 @@ func (p *Parser) parseColumnsDefinition() ([]ast.Column, error) {
 }
 
 func (p *Parser) parseColumnDefinition() (ast.Column, error) {
-	name, err := p.parseIdent()
+	columnName, err := p.parseIdent()
 	if err != nil {
 		return ast.Column{}, err
 	}
@@ -301,7 +301,7 @@ func (p *Parser) parseColumnDefinition() (ast.Column, error) {
 		return ast.Column{}, err
 	}
 
-	notNull, err := p.parseColumnNullable()
+	nullable, err := p.parseColumnNullable()
 	if err != nil {
 		return ast.Column{}, err
 	}
@@ -317,10 +317,10 @@ func (p *Parser) parseColumnDefinition() (ast.Column, error) {
 	}
 
 	column := ast.Column{
-		Name:       name,
+		Name:       columnName.Name,
 		Type:       columnType,
 		Default:    defaultExpr,
-		NotNull:    notNull,
+		Nullable:   nullable,
 		PrimaryKey: pk,
 	}
 
@@ -342,7 +342,7 @@ func (p *Parser) parseColumnType() (token.Type, error) {
 func (p *Parser) parseColumnNullable() (bool, error) {
 	if p.token.Type == token.Null {
 		p.nextToken()
-		return false, nil
+		return true, nil
 	}
 
 	if p.token.Type == token.Not {
@@ -352,7 +352,7 @@ func (p *Parser) parseColumnNullable() (bool, error) {
 			return false, err
 		}
 
-		return true, nil
+		return false, nil
 	}
 
 	return false, nil
@@ -398,7 +398,7 @@ func (p *Parser) parseDropDatabaseStatement() (ast.Statement, error) {
 	}
 
 	drop := ast.DropDatabaseStatement{
-		Name: database,
+		Database: database.Name,
 	}
 
 	return &drop, nil
@@ -411,7 +411,7 @@ func (p *Parser) parseDropTableStatement() (ast.Statement, error) {
 	}
 
 	drop := ast.DropTableStatement{
-		Table: table,
+		Table: table.Name,
 	}
 
 	return &drop, nil
@@ -477,7 +477,7 @@ func (p *Parser) parseFromStatement() (*ast.FromStatement, error) {
 	}
 
 	from := ast.FromStatement{
-		Table: table,
+		Table: table.Name,
 	}
 
 	return &from, nil
@@ -529,7 +529,7 @@ func (p *Parser) parseOrderByStatement() (*ast.OrderByStatement, error) {
 	}
 
 	order := ast.OrderByStatement{
-		Column:    column,
+		Column:    column.Name,
 		Direction: direction,
 	}
 
@@ -578,8 +578,8 @@ func (p *Parser) parseOffsetStatement() (*ast.OffsetStatement, error) {
 	return &offset, nil
 }
 
-func (p *Parser) parseColumnsStatement() ([]ast.Expression, error) {
-	var columns []ast.Expression
+func (p *Parser) parseColumnsStatement() ([]string, error) {
+	var columns []string
 
 	if err := p.expect(token.OpenParen); err != nil {
 		return nil, err
@@ -595,7 +595,7 @@ func (p *Parser) parseColumnsStatement() ([]ast.Expression, error) {
 			return nil, err
 		}
 
-		columns = append(columns, column)
+		columns = append(columns, column.Name)
 	}
 
 	if err := p.expect(token.CloseParen); err != nil {
@@ -657,7 +657,7 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 		}
 
 		columns = append(columns, ast.SetStatement{
-			Column: column,
+			Column: column.Name,
 			Value:  value,
 		})
 
@@ -675,7 +675,7 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 }
 
 func (p *Parser) parsePrimaryExpr() (ast.Expression, error) {
-	expr, err := p.parseExpr(token.LowestPrecedence + 1)
+	expr, err := p.parseExpr(token.LowestPrecedence)
 	if err != nil {
 		return nil, err
 	}
@@ -709,7 +709,7 @@ func (p *Parser) parseOperand() (ast.Expression, error) {
 	switch p.token.Type {
 	case token.Ident:
 		return &ast.IdentExpr{Name: p.token.Literal}, nil
-	case token.Integer, token.Float, token.String, token.Boolean:
+	case token.Integer, token.Float, token.String, token.Boolean, token.Null:
 		return p.parseScalar(p.token.Type)
 	case token.Add, token.Sub:
 		return p.parseUnaryExpr()
@@ -720,7 +720,7 @@ func (p *Parser) parseOperand() (ast.Expression, error) {
 	}
 }
 
-func (p *Parser) parseIdent() (ast.Expression, error) {
+func (p *Parser) parseIdent() (*ast.IdentExpr, error) {
 	if p.token.Type != token.Ident {
 		return nil, fmt.Errorf("unexpected token %q", p.token.Type)
 	}

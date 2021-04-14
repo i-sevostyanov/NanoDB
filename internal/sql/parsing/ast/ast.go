@@ -41,7 +41,7 @@ type ResultStatement struct {
 
 // FromStatement node represents a FROM statement.
 type FromStatement struct {
-	Table Expression
+	Table string
 }
 
 // WhereStatement node represents a WHERE statement.
@@ -51,7 +51,7 @@ type WhereStatement struct {
 
 // OrderByStatement node represents an ORDER BY statement.
 type OrderByStatement struct {
-	Column    Expression
+	Column    string
 	Direction token.Type
 }
 
@@ -67,58 +67,58 @@ type OffsetStatement struct {
 
 // InsertStatement node represents a INSERT statement.
 type InsertStatement struct {
-	Table   Expression
-	Columns []Expression
+	Table   string
+	Columns []string
 	Values  []Expression
 }
 
 // UpdateStatement node represents a UPDATE statement.
 type UpdateStatement struct {
-	Table Expression
+	Table string
 	Set   []SetStatement
 	Where *WhereStatement
 }
 
 // SetStatement node represents a key-value pair (column => value) in UPDATE statement.
 type SetStatement struct {
-	Column Expression
+	Column string
 	Value  Expression
 }
 
 // DeleteStatement node represents a DELETE statement.
 type DeleteStatement struct {
-	Table Expression
+	Table string
 	Where *WhereStatement
 }
 
 // CreateDatabaseStatement node represents a CREATE DATABASE statement.
 type CreateDatabaseStatement struct {
-	Name Expression
+	Database string
 }
 
 // DropDatabaseStatement node represents a DROP DATABASE statement.
 type DropDatabaseStatement struct {
-	Name Expression
+	Database string
 }
 
 // CreateTableStatement node represents a CREATE TABLE statement.
 type CreateTableStatement struct {
-	Table   Expression
+	Table   string
 	Columns []Column
 }
 
 // Column node represents a table column definition.
 type Column struct {
-	Name       Expression
+	Name       string
 	Type       token.Type
 	Default    Expression
-	NotNull    bool
+	Nullable   bool
 	PrimaryKey bool
 }
 
 // DropTableStatement node represents a DROP TABLE statement.
 type DropTableStatement struct {
-	Table Expression
+	Table string
 }
 
 func (s *Statements) statementNode()              {}

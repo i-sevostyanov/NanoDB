@@ -24,6 +24,13 @@ func TestInteger_Raw(t *testing.T) {
 	}
 }
 
+func TestInteger_DataType(t *testing.T) {
+	t.Parallel()
+
+	i := datatype.NewInteger(10)
+	assert.Equal(t, sql.Integer, i.DataType())
+}
+
 func TestInteger_Compare(t *testing.T) {
 	t.Parallel()
 

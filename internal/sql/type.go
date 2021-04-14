@@ -45,6 +45,6 @@ type Column struct {
 	Name       string
 	DataType   DataType
 	PrimaryKey bool
-	NotNull    bool
+	Nullable   bool
 	Default    Value
 }

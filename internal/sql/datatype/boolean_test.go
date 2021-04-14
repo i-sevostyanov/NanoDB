@@ -28,6 +28,13 @@ func TestBoolean_Raw(t *testing.T) {
 	fn(false)
 }
 
+func TestBoolean_DataType(t *testing.T) {
+	t.Parallel()
+
+	b := datatype.NewBoolean(true)
+	assert.Equal(t, sql.Boolean, b.DataType())
+}
+
 func TestBoolean_Compare(t *testing.T) {
 	t.Parallel()
 

@@ -10,10 +10,10 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
-func TestEmpty_RowIter(t *testing.T) {
+func TestRows_RowIter(t *testing.T) {
 	t.Parallel()
 
-	emptyPlan := plan.NewEmpty()
+	emptyPlan := plan.NewRows()
 	iter, err := emptyPlan.RowIter()
 	require.NoError(t, err)
 	assert.NotNil(t, iter)

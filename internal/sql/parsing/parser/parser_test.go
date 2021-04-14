@@ -282,9 +282,7 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					From: &ast.FromStatement{
-						Table: &ast.IdentExpr{
-							Name: "table_name",
-						},
+						Table: "table_name",
 					},
 				},
 			},
@@ -301,9 +299,7 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					From: &ast.FromStatement{
-						Table: &ast.IdentExpr{
-							Name: "customers",
-						},
+						Table: "customers",
 					},
 					Where: &ast.WhereStatement{
 						Expr: &ast.BinaryExpr{
@@ -341,9 +337,7 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					From: &ast.FromStatement{
-						Table: &ast.IdentExpr{
-							Name: "customers",
-						},
+						Table: "customers",
 					},
 					Where: &ast.WhereStatement{
 						Expr: &ast.BinaryExpr{
@@ -367,7 +361,7 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					OrderBy: &ast.OrderByStatement{
-						Column:    &ast.IdentExpr{Name: "id"},
+						Column:    "id",
 						Direction: token.Asc,
 					},
 				},
@@ -385,9 +379,7 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					From: &ast.FromStatement{
-						Table: &ast.IdentExpr{
-							Name: "customers",
-						},
+						Table: "customers",
 					},
 					Where: &ast.WhereStatement{
 						Expr: &ast.BinaryExpr{
@@ -411,7 +403,7 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					OrderBy: &ast.OrderByStatement{
-						Column:    &ast.IdentExpr{Name: "id"},
+						Column:    "id",
 						Direction: token.Asc,
 					},
 					Limit: &ast.LimitStatement{
@@ -435,9 +427,7 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					From: &ast.FromStatement{
-						Table: &ast.IdentExpr{
-							Name: "customers",
-						},
+						Table: "customers",
 					},
 					Where: &ast.WhereStatement{
 						Expr: &ast.BinaryExpr{
@@ -461,7 +451,7 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					OrderBy: &ast.OrderByStatement{
-						Column:    &ast.IdentExpr{Name: "id"},
+						Column:    "id",
 						Direction: token.Asc,
 					},
 					Limit: &ast.LimitStatement{
@@ -547,12 +537,10 @@ func TestParser_Select(t *testing.T) {
 						},
 					},
 					From: &ast.FromStatement{
-						Table: &ast.IdentExpr{
-							Name: "customers",
-						},
+						Table: "customers",
 					},
 					OrderBy: &ast.OrderByStatement{
-						Column:    &ast.IdentExpr{Name: "id"},
+						Column:    "id",
 						Direction: token.Asc,
 					},
 				},
@@ -621,11 +609,11 @@ func TestParser_Insert(t *testing.T) {
 			input: "INSERT INTO customers (id, name, salary) VALUES (10, 'ivan', 10*2+1000)",
 			stmts: &ast.Statements{
 				&ast.InsertStatement{
-					Table: &ast.IdentExpr{Name: "customers"},
-					Columns: []ast.Expression{
-						&ast.IdentExpr{Name: "id"},
-						&ast.IdentExpr{Name: "name"},
-						&ast.IdentExpr{Name: "salary"},
+					Table: "customers",
+					Columns: []string{
+						"id",
+						"name",
+						"salary",
 					},
 					Values: []ast.Expression{
 						&ast.ScalarExpr{
@@ -721,23 +709,17 @@ func TestParser_Update(t *testing.T) {
 			input: "UPDATE customers SET name = 'vlad', salary = 10*100 WHERE id = 1",
 			stmts: &ast.Statements{
 				&ast.UpdateStatement{
-					Table: &ast.IdentExpr{
-						Name: "customers",
-					},
+					Table: "customers",
 					Set: []ast.SetStatement{
 						{
-							Column: &ast.IdentExpr{
-								Name: "name",
-							},
+							Column: "name",
 							Value: &ast.ScalarExpr{
 								Type:    token.String,
 								Literal: "vlad",
 							},
 						},
 						{
-							Column: &ast.IdentExpr{
-								Name: "salary",
-							},
+							Column: "salary",
 							Value: &ast.BinaryExpr{
 								Left: &ast.ScalarExpr{
 									Type:    token.Integer,
@@ -828,9 +810,7 @@ func TestParser_Delete(t *testing.T) {
 			input: "DELETE FROM customers WHERE salary < 10*100",
 			stmts: &ast.Statements{
 				&ast.DeleteStatement{
-					Table: &ast.IdentExpr{
-						Name: "customers",
-					},
+					Table: "customers",
 					Where: &ast.WhereStatement{
 						Expr: &ast.BinaryExpr{
 							Left: &ast.IdentExpr{
@@ -908,9 +888,7 @@ func TestParser_Create(t *testing.T) {
 			input := "CREATE DATABASE customers"
 			expected := &ast.Statements{
 				&ast.CreateDatabaseStatement{
-					Name: &ast.IdentExpr{
-						Name: "customers",
-					},
+					Database: "customers",
 				},
 			}
 
@@ -944,32 +922,22 @@ func TestParser_Create(t *testing.T) {
 				input: "CREATE TABLE customers (id INTEGER, name STRING, salary FLOAT, is_active BOOLEAN)",
 				stmts: &ast.Statements{
 					&ast.CreateTableStatement{
-						Table: &ast.IdentExpr{
-							Name: "customers",
-						},
+						Table: "customers",
 						Columns: []ast.Column{
 							{
-								Name: &ast.IdentExpr{
-									Name: "id",
-								},
+								Name: "id",
 								Type: token.Integer,
 							},
 							{
-								Name: &ast.IdentExpr{
-									Name: "name",
-								},
+								Name: "name",
 								Type: token.String,
 							},
 							{
-								Name: &ast.IdentExpr{
-									Name: "salary",
-								},
+								Name: "salary",
 								Type: token.Float,
 							},
 							{
-								Name: &ast.IdentExpr{
-									Name: "is_active",
-								},
+								Name: "is_active",
 								Type: token.Boolean,
 							},
 						},
@@ -987,36 +955,28 @@ func TestParser_Create(t *testing.T) {
 			`,
 				stmts: &ast.Statements{
 					&ast.CreateTableStatement{
-						Table: &ast.IdentExpr{
-							Name: "customers",
-						},
+						Table: "customers",
 						Columns: []ast.Column{
 							{
-								Name: &ast.IdentExpr{
-									Name: "id",
-								},
+								Name:       "id",
 								Type:       token.Integer,
 								PrimaryKey: true,
+								Nullable:   false,
 							},
 							{
-								Name: &ast.IdentExpr{
-									Name: "name",
-								},
-								Type: token.String,
+								Name:     "name",
+								Type:     token.String,
+								Nullable: true,
 							},
 							{
-								Name: &ast.IdentExpr{
-									Name: "salary",
-								},
-								Type:    token.Float,
-								NotNull: true,
+								Name:     "salary",
+								Type:     token.Float,
+								Nullable: false,
 							},
 							{
-								Name: &ast.IdentExpr{
-									Name: "is_active",
-								},
-								Type:    token.Boolean,
-								NotNull: true,
+								Name:     "is_active",
+								Type:     token.Boolean,
+								Nullable: false,
 								Default: &ast.ScalarExpr{
 									Type:    token.Boolean,
 									Literal: "true",
@@ -1103,9 +1063,7 @@ func TestParser_Drop(t *testing.T) {
 			input := "DROP DATABASE customers"
 			expected := &ast.Statements{
 				&ast.DropDatabaseStatement{
-					Name: &ast.IdentExpr{
-						Name: "customers",
-					},
+					Database: "customers",
 				},
 			}
 
@@ -1137,9 +1095,7 @@ func TestParser_Drop(t *testing.T) {
 			input := "DROP TABLE customers"
 			expected := &ast.Statements{
 				&ast.DropTableStatement{
-					Table: &ast.IdentExpr{
-						Name: "customers",
-					},
+					Table: "customers",
 				},
 			}
 

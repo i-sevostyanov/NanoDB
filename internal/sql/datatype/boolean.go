@@ -18,6 +18,10 @@ func (b Boolean) Raw() interface{} {
 	return b.value
 }
 
+func (b Boolean) DataType() sql.DataType {
+	return sql.Boolean
+}
+
 func (b Boolean) Compare(v sql.Value) (sql.CompareType, error) {
 	switch value := v.Raw().(type) {
 	case bool:
