@@ -17,176 +17,131 @@ func TestParser_Select(t *testing.T) {
 
 	tests := []struct {
 		input string
-		stmts *ast.Statements
+		stmt  ast.Statement
 	}{
 		{
 			input: "SELECT id AS alias",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr:  &ast.IdentExpr{Name: "id"},
-							Alias: &ast.IdentExpr{Name: "alias"},
-						},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr:  &ast.IdentExpr{Name: "id"},
+						Alias: &ast.IdentExpr{Name: "alias"},
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT id AS alias, name",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr:  &ast.IdentExpr{Name: "id"},
-							Alias: &ast.IdentExpr{Name: "alias"},
-						},
-						{
-							Expr: &ast.IdentExpr{Name: "name"},
-						},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr:  &ast.IdentExpr{Name: "id"},
+						Alias: &ast.IdentExpr{Name: "alias"},
+					},
+					{
+						Expr: &ast.IdentExpr{Name: "name"},
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT id, salary, name AS alias",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{Name: "id"},
-						},
-						{
-							Expr: &ast.IdentExpr{Name: "salary"},
-						},
-						{
-							Expr:  &ast.IdentExpr{Name: "name"},
-							Alias: &ast.IdentExpr{Name: "alias"},
-						},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{Name: "id"},
+					},
+					{
+						Expr: &ast.IdentExpr{Name: "salary"},
+					},
+					{
+						Expr:  &ast.IdentExpr{Name: "name"},
+						Alias: &ast.IdentExpr{Name: "alias"},
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT id AS PK, salary AS salary, name AS first_name",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr:  &ast.IdentExpr{Name: "id"},
-							Alias: &ast.IdentExpr{Name: "PK"},
-						},
-						{
-							Expr:  &ast.IdentExpr{Name: "salary"},
-							Alias: &ast.IdentExpr{Name: "salary"},
-						},
-						{
-							Expr:  &ast.IdentExpr{Name: "name"},
-							Alias: &ast.IdentExpr{Name: "first_name"},
-						},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr:  &ast.IdentExpr{Name: "id"},
+						Alias: &ast.IdentExpr{Name: "PK"},
+					},
+					{
+						Expr:  &ast.IdentExpr{Name: "salary"},
+						Alias: &ast.IdentExpr{Name: "salary"},
+					},
+					{
+						Expr:  &ast.IdentExpr{Name: "name"},
+						Alias: &ast.IdentExpr{Name: "first_name"},
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT id, 10*2 AS expr",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{Name: "id"},
-						},
-						{
-							Expr: &ast.BinaryExpr{
-								Left: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "10",
-								},
-								Operator: token.Mul,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "2",
-								},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{Name: "id"},
+					},
+					{
+						Expr: &ast.BinaryExpr{
+							Left: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
 							},
-							Alias: &ast.IdentExpr{Name: "expr"},
+							Operator: token.Mul,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "2",
+							},
 						},
+						Alias: &ast.IdentExpr{Name: "expr"},
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT id",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{Name: "id"},
-						},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{Name: "id"},
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT id, name",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{Name: "id"},
-						},
-						{
-							Expr: &ast.IdentExpr{Name: "name"},
-						},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{Name: "id"},
+					},
+					{
+						Expr: &ast.IdentExpr{Name: "name"},
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT 10+2*3",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.BinaryExpr{
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.BinaryExpr{
+							Left: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
+							},
+							Operator: token.Add,
+							Right: &ast.BinaryExpr{
 								Left: &ast.ScalarExpr{
 									Type:    token.Integer,
-									Literal: "10",
-								},
-								Operator: token.Add,
-								Right: &ast.BinaryExpr{
-									Left: &ast.ScalarExpr{
-										Type:    token.Integer,
-										Literal: "2",
-									},
-									Operator: token.Mul,
-									Right: &ast.ScalarExpr{
-										Type:    token.Integer,
-										Literal: "3",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		{
-			input: "SELECT (10+2)*3",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.BinaryExpr{
-								Left: &ast.BinaryExpr{
-									Left: &ast.ScalarExpr{
-										Type:    token.Integer,
-										Literal: "10",
-									},
-									Operator: token.Add,
-									Right: &ast.ScalarExpr{
-										Type:    token.Integer,
-										Literal: "2",
-									},
+									Literal: "2",
 								},
 								Operator: token.Mul,
 								Right: &ast.ScalarExpr{
@@ -200,69 +155,94 @@ func TestParser_Select(t *testing.T) {
 			},
 		},
 		{
-			input: "SELECT 6+2^3*5-3+4/(10-2)%3",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.BinaryExpr{
-								Left: &ast.BinaryExpr{
-									Left: &ast.BinaryExpr{
-										Left: &ast.ScalarExpr{
-											Type:    token.Integer,
-											Literal: "6",
-										},
-										Operator: token.Add,
-										Right: &ast.BinaryExpr{
-											Left: &ast.BinaryExpr{
-												Left: &ast.ScalarExpr{
-													Type:    token.Integer,
-													Literal: "2",
-												},
-												Operator: token.Pow,
-												Right: &ast.ScalarExpr{
-													Type:    token.Integer,
-													Literal: "3",
-												},
-											},
-											Operator: token.Mul,
-											Right: &ast.ScalarExpr{
-												Type:    token.Integer,
-												Literal: "5",
-											},
-										},
-									},
-									Operator: token.Sub,
-									Right: &ast.ScalarExpr{
-										Type:    token.Integer,
-										Literal: "3",
-									},
+			input: "SELECT (10+2)*3",
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.BinaryExpr{
+							Left: &ast.BinaryExpr{
+								Left: &ast.ScalarExpr{
+									Type:    token.Integer,
+									Literal: "10",
 								},
 								Operator: token.Add,
-								Right: &ast.BinaryExpr{
-									Left: &ast.BinaryExpr{
-										Left: &ast.ScalarExpr{
-											Type:    token.Integer,
-											Literal: "4",
-										},
-										Operator: token.Div,
-										Right: &ast.BinaryExpr{
+								Right: &ast.ScalarExpr{
+									Type:    token.Integer,
+									Literal: "2",
+								},
+							},
+							Operator: token.Mul,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "3",
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			input: "SELECT 6+2^3*5-3+4/(10-2)%3",
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.BinaryExpr{
+							Left: &ast.BinaryExpr{
+								Left: &ast.BinaryExpr{
+									Left: &ast.ScalarExpr{
+										Type:    token.Integer,
+										Literal: "6",
+									},
+									Operator: token.Add,
+									Right: &ast.BinaryExpr{
+										Left: &ast.BinaryExpr{
 											Left: &ast.ScalarExpr{
-												Type:    token.Integer,
-												Literal: "10",
-											},
-											Operator: token.Sub,
-											Right: &ast.ScalarExpr{
 												Type:    token.Integer,
 												Literal: "2",
 											},
+											Operator: token.Pow,
+											Right: &ast.ScalarExpr{
+												Type:    token.Integer,
+												Literal: "3",
+											},
+										},
+										Operator: token.Mul,
+										Right: &ast.ScalarExpr{
+											Type:    token.Integer,
+											Literal: "5",
 										},
 									},
-									Operator: token.Mod,
-									Right: &ast.ScalarExpr{
+								},
+								Operator: token.Sub,
+								Right: &ast.ScalarExpr{
+									Type:    token.Integer,
+									Literal: "3",
+								},
+							},
+							Operator: token.Add,
+							Right: &ast.BinaryExpr{
+								Left: &ast.BinaryExpr{
+									Left: &ast.ScalarExpr{
 										Type:    token.Integer,
-										Literal: "3",
+										Literal: "4",
 									},
+									Operator: token.Div,
+									Right: &ast.BinaryExpr{
+										Left: &ast.ScalarExpr{
+											Type:    token.Integer,
+											Literal: "10",
+										},
+										Operator: token.Sub,
+										Right: &ast.ScalarExpr{
+											Type:    token.Integer,
+											Literal: "2",
+										},
+									},
+								},
+								Operator: token.Mod,
+								Right: &ast.ScalarExpr{
+									Type:    token.Integer,
+									Literal: "3",
 								},
 							},
 						},
@@ -272,53 +252,49 @@ func TestParser_Select(t *testing.T) {
 		},
 		{
 			input: "SELECT id FROM table_name",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{
-								Name: "id",
-							},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{
+							Name: "id",
 						},
 					},
-					From: &ast.FromStatement{
-						Table: "table_name",
-					},
+				},
+				From: &ast.FromStatement{
+					Table: "table_name",
 				},
 			},
 		},
 		{
 			input: "SELECT id FROM customers WHERE id = 10 AND name = 'vlad'",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{
-								Name: "id",
-							},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{
+							Name: "id",
 						},
 					},
-					From: &ast.FromStatement{
-						Table: "customers",
-					},
-					Where: &ast.WhereStatement{
-						Expr: &ast.BinaryExpr{
-							Left: &ast.BinaryExpr{
-								Left:     &ast.IdentExpr{Name: "id"},
-								Operator: token.Equal,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "10",
-								},
+				},
+				From: &ast.FromStatement{
+					Table: "customers",
+				},
+				Where: &ast.WhereStatement{
+					Expr: &ast.BinaryExpr{
+						Left: &ast.BinaryExpr{
+							Left:     &ast.IdentExpr{Name: "id"},
+							Operator: token.Equal,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
 							},
-							Operator: token.And,
-							Right: &ast.BinaryExpr{
-								Left:     &ast.IdentExpr{Name: "name"},
-								Operator: token.Equal,
-								Right: &ast.ScalarExpr{
-									Type:    token.String,
-									Literal: "vlad",
-								},
+						},
+						Operator: token.And,
+						Right: &ast.BinaryExpr{
+							Left:     &ast.IdentExpr{Name: "name"},
+							Operator: token.Equal,
+							Right: &ast.ScalarExpr{
+								Type:    token.String,
+								Literal: "vlad",
 							},
 						},
 					},
@@ -327,170 +303,162 @@ func TestParser_Select(t *testing.T) {
 		},
 		{
 			input: "SELECT id FROM customers WHERE id = 10 AND name = 'vlad' ORDER BY id ASC",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{
-								Name: "id",
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{
+							Name: "id",
+						},
+					},
+				},
+				From: &ast.FromStatement{
+					Table: "customers",
+				},
+				Where: &ast.WhereStatement{
+					Expr: &ast.BinaryExpr{
+						Left: &ast.BinaryExpr{
+							Left:     &ast.IdentExpr{Name: "id"},
+							Operator: token.Equal,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
+							},
+						},
+						Operator: token.And,
+						Right: &ast.BinaryExpr{
+							Left:     &ast.IdentExpr{Name: "name"},
+							Operator: token.Equal,
+							Right: &ast.ScalarExpr{
+								Type:    token.String,
+								Literal: "vlad",
 							},
 						},
 					},
-					From: &ast.FromStatement{
-						Table: "customers",
-					},
-					Where: &ast.WhereStatement{
-						Expr: &ast.BinaryExpr{
-							Left: &ast.BinaryExpr{
-								Left:     &ast.IdentExpr{Name: "id"},
-								Operator: token.Equal,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "10",
-								},
-							},
-							Operator: token.And,
-							Right: &ast.BinaryExpr{
-								Left:     &ast.IdentExpr{Name: "name"},
-								Operator: token.Equal,
-								Right: &ast.ScalarExpr{
-									Type:    token.String,
-									Literal: "vlad",
-								},
-							},
-						},
-					},
-					OrderBy: &ast.OrderByStatement{
-						Column:    "id",
-						Direction: token.Asc,
-					},
+				},
+				OrderBy: &ast.OrderByStatement{
+					Column:    "id",
+					Direction: token.Asc,
 				},
 			},
 		},
 		{
 			input: "SELECT id FROM customers WHERE id = 10 AND name = 'vlad' ORDER BY id ASC LIMIT 99",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{
-								Name: "id",
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{
+							Name: "id",
+						},
+					},
+				},
+				From: &ast.FromStatement{
+					Table: "customers",
+				},
+				Where: &ast.WhereStatement{
+					Expr: &ast.BinaryExpr{
+						Left: &ast.BinaryExpr{
+							Left:     &ast.IdentExpr{Name: "id"},
+							Operator: token.Equal,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
+							},
+						},
+						Operator: token.And,
+						Right: &ast.BinaryExpr{
+							Left:     &ast.IdentExpr{Name: "name"},
+							Operator: token.Equal,
+							Right: &ast.ScalarExpr{
+								Type:    token.String,
+								Literal: "vlad",
 							},
 						},
 					},
-					From: &ast.FromStatement{
-						Table: "customers",
-					},
-					Where: &ast.WhereStatement{
-						Expr: &ast.BinaryExpr{
-							Left: &ast.BinaryExpr{
-								Left:     &ast.IdentExpr{Name: "id"},
-								Operator: token.Equal,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "10",
-								},
-							},
-							Operator: token.And,
-							Right: &ast.BinaryExpr{
-								Left:     &ast.IdentExpr{Name: "name"},
-								Operator: token.Equal,
-								Right: &ast.ScalarExpr{
-									Type:    token.String,
-									Literal: "vlad",
-								},
-							},
-						},
-					},
-					OrderBy: &ast.OrderByStatement{
-						Column:    "id",
-						Direction: token.Asc,
-					},
-					Limit: &ast.LimitStatement{
-						Value: &ast.ScalarExpr{
-							Type:    token.Integer,
-							Literal: "99",
-						},
+				},
+				OrderBy: &ast.OrderByStatement{
+					Column:    "id",
+					Direction: token.Asc,
+				},
+				Limit: &ast.LimitStatement{
+					Value: &ast.ScalarExpr{
+						Type:    token.Integer,
+						Literal: "99",
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT id FROM customers WHERE id = 10 AND name = 'vlad' ORDER BY id ASC LIMIT 99 OFFSET 10",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{
-								Name: "id",
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{
+							Name: "id",
+						},
+					},
+				},
+				From: &ast.FromStatement{
+					Table: "customers",
+				},
+				Where: &ast.WhereStatement{
+					Expr: &ast.BinaryExpr{
+						Left: &ast.BinaryExpr{
+							Left:     &ast.IdentExpr{Name: "id"},
+							Operator: token.Equal,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
+							},
+						},
+						Operator: token.And,
+						Right: &ast.BinaryExpr{
+							Left:     &ast.IdentExpr{Name: "name"},
+							Operator: token.Equal,
+							Right: &ast.ScalarExpr{
+								Type:    token.String,
+								Literal: "vlad",
 							},
 						},
 					},
-					From: &ast.FromStatement{
-						Table: "customers",
+				},
+				OrderBy: &ast.OrderByStatement{
+					Column:    "id",
+					Direction: token.Asc,
+				},
+				Limit: &ast.LimitStatement{
+					Value: &ast.ScalarExpr{
+						Type:    token.Integer,
+						Literal: "99",
 					},
-					Where: &ast.WhereStatement{
-						Expr: &ast.BinaryExpr{
-							Left: &ast.BinaryExpr{
-								Left:     &ast.IdentExpr{Name: "id"},
-								Operator: token.Equal,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "10",
-								},
-							},
-							Operator: token.And,
-							Right: &ast.BinaryExpr{
-								Left:     &ast.IdentExpr{Name: "name"},
-								Operator: token.Equal,
-								Right: &ast.ScalarExpr{
-									Type:    token.String,
-									Literal: "vlad",
-								},
-							},
-						},
-					},
-					OrderBy: &ast.OrderByStatement{
-						Column:    "id",
-						Direction: token.Asc,
-					},
-					Limit: &ast.LimitStatement{
-						Value: &ast.ScalarExpr{
-							Type:    token.Integer,
-							Literal: "99",
-						},
-					},
-					Offset: &ast.OffsetStatement{
-						Value: &ast.ScalarExpr{
-							Type:    token.Integer,
-							Literal: "10",
-						},
+				},
+				Offset: &ast.OffsetStatement{
+					Value: &ast.ScalarExpr{
+						Type:    token.Integer,
+						Literal: "10",
 					},
 				},
 			},
 		},
 		{
 			input: "SELECT 2 ^ 3 ^ 4",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.BinaryExpr{
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.BinaryExpr{
+							Left: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "2",
+							},
+							Operator: token.Pow,
+							Right: &ast.BinaryExpr{
 								Left: &ast.ScalarExpr{
 									Type:    token.Integer,
-									Literal: "2",
+									Literal: "3",
 								},
 								Operator: token.Pow,
-								Right: &ast.BinaryExpr{
-									Left: &ast.ScalarExpr{
-										Type:    token.Integer,
-										Literal: "3",
-									},
-									Operator: token.Pow,
-									Right: &ast.ScalarExpr{
-										Type:    token.Integer,
-										Literal: "4",
-									},
+								Right: &ast.ScalarExpr{
+									Type:    token.Integer,
+									Literal: "4",
 								},
 							},
 						},
@@ -500,25 +468,23 @@ func TestParser_Select(t *testing.T) {
 		},
 		{
 			input: "SELECT -2, +2",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.UnaryExpr{
-								Operator: token.Sub,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "2",
-								},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.UnaryExpr{
+							Operator: token.Sub,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "2",
 							},
 						},
-						{
-							Expr: &ast.UnaryExpr{
-								Operator: token.Add,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "2",
-								},
+					},
+					{
+						Expr: &ast.UnaryExpr{
+							Operator: token.Add,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "2",
 							},
 						},
 					},
@@ -527,22 +493,20 @@ func TestParser_Select(t *testing.T) {
 		},
 		{
 			input: "SELECT id FROM customers ORDER BY id",
-			stmts: &ast.Statements{
-				&ast.SelectStatement{
-					Result: []ast.ResultStatement{
-						{
-							Expr: &ast.IdentExpr{
-								Name: "id",
-							},
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.IdentExpr{
+							Name: "id",
 						},
 					},
-					From: &ast.FromStatement{
-						Table: "customers",
-					},
-					OrderBy: &ast.OrderByStatement{
-						Column:    "id",
-						Direction: token.Asc,
-					},
+				},
+				From: &ast.FromStatement{
+					Table: "customers",
+				},
+				OrderBy: &ast.OrderByStatement{
+					Column:    "id",
+					Direction: token.Asc,
 				},
 			},
 		},
@@ -557,7 +521,7 @@ func TestParser_Select(t *testing.T) {
 			p := parser.New(lexer.New(test.input))
 			stmts, err := p.Parse()
 			require.NoError(t, err)
-			assert.Equal(t, test.stmts, stmts)
+			assert.Equal(t, test.stmt, stmts)
 		})
 	}
 
@@ -603,44 +567,42 @@ func TestParser_Insert(t *testing.T) {
 
 	tests := []struct {
 		input string
-		stmts *ast.Statements
+		stmt  ast.Statement
 	}{
 		{
 			input: "INSERT INTO customers (id, name, salary) VALUES (10, 'ivan', 10*2+1000)",
-			stmts: &ast.Statements{
-				&ast.InsertStatement{
-					Table: "customers",
-					Columns: []string{
-						"id",
-						"name",
-						"salary",
+			stmt: &ast.InsertStatement{
+				Table: "customers",
+				Columns: []string{
+					"id",
+					"name",
+					"salary",
+				},
+				Values: []ast.Expression{
+					&ast.ScalarExpr{
+						Type:    token.Integer,
+						Literal: "10",
 					},
-					Values: []ast.Expression{
-						&ast.ScalarExpr{
-							Type:    token.Integer,
-							Literal: "10",
-						},
-						&ast.ScalarExpr{
-							Type:    token.String,
-							Literal: "ivan",
-						},
-						&ast.BinaryExpr{
-							Left: &ast.BinaryExpr{
-								Left: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "10",
-								},
-								Operator: token.Mul,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "2",
-								},
+					&ast.ScalarExpr{
+						Type:    token.String,
+						Literal: "ivan",
+					},
+					&ast.BinaryExpr{
+						Left: &ast.BinaryExpr{
+							Left: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
 							},
-							Operator: token.Add,
+							Operator: token.Mul,
 							Right: &ast.ScalarExpr{
 								Type:    token.Integer,
-								Literal: "1000",
+								Literal: "2",
 							},
+						},
+						Operator: token.Add,
+						Right: &ast.ScalarExpr{
+							Type:    token.Integer,
+							Literal: "1000",
 						},
 					},
 				},
@@ -657,7 +619,7 @@ func TestParser_Insert(t *testing.T) {
 			p := parser.New(lexer.New(test.input))
 			stmts, err := p.Parse()
 			require.NoError(t, err)
-			assert.Equal(t, test.stmts, stmts)
+			assert.Equal(t, test.stmt, stmts)
 		})
 	}
 
@@ -703,46 +665,44 @@ func TestParser_Update(t *testing.T) {
 
 	tests := []struct {
 		input string
-		stmts *ast.Statements
+		stmt  ast.Statement
 	}{
 		{
 			input: "UPDATE customers SET name = 'vlad', salary = 10*100 WHERE id = 1",
-			stmts: &ast.Statements{
-				&ast.UpdateStatement{
-					Table: "customers",
-					Set: []ast.SetStatement{
-						{
-							Column: "name",
-							Value: &ast.ScalarExpr{
-								Type:    token.String,
-								Literal: "vlad",
-							},
+			stmt: &ast.UpdateStatement{
+				Table: "customers",
+				Set: []ast.SetStatement{
+					{
+						Column: "name",
+						Value: &ast.ScalarExpr{
+							Type:    token.String,
+							Literal: "vlad",
 						},
-						{
-							Column: "salary",
-							Value: &ast.BinaryExpr{
-								Left: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "10",
-								},
-								Operator: token.Mul,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "100",
-								},
+					},
+					{
+						Column: "salary",
+						Value: &ast.BinaryExpr{
+							Left: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
+							},
+							Operator: token.Mul,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "100",
 							},
 						},
 					},
-					Where: &ast.WhereStatement{
-						Expr: &ast.BinaryExpr{
-							Left: &ast.IdentExpr{
-								Name: "id",
-							},
-							Operator: token.Equal,
-							Right: &ast.ScalarExpr{
-								Type:    token.Integer,
-								Literal: "1",
-							},
+				},
+				Where: &ast.WhereStatement{
+					Expr: &ast.BinaryExpr{
+						Left: &ast.IdentExpr{
+							Name: "id",
+						},
+						Operator: token.Equal,
+						Right: &ast.ScalarExpr{
+							Type:    token.Integer,
+							Literal: "1",
 						},
 					},
 				},
@@ -759,7 +719,7 @@ func TestParser_Update(t *testing.T) {
 			p := parser.New(lexer.New(test.input))
 			stmts, err := p.Parse()
 			require.NoError(t, err)
-			assert.Equal(t, test.stmts, stmts)
+			assert.Equal(t, test.stmt, stmts)
 		})
 	}
 
@@ -804,29 +764,27 @@ func TestParser_Delete(t *testing.T) {
 
 	tests := []struct {
 		input string
-		stmts *ast.Statements
+		stmt  ast.Statement
 	}{
 		{
 			input: "DELETE FROM customers WHERE salary < 10*100",
-			stmts: &ast.Statements{
-				&ast.DeleteStatement{
-					Table: "customers",
-					Where: &ast.WhereStatement{
-						Expr: &ast.BinaryExpr{
-							Left: &ast.IdentExpr{
-								Name: "salary",
+			stmt: &ast.DeleteStatement{
+				Table: "customers",
+				Where: &ast.WhereStatement{
+					Expr: &ast.BinaryExpr{
+						Left: &ast.IdentExpr{
+							Name: "salary",
+						},
+						Operator: token.LessThan,
+						Right: &ast.BinaryExpr{
+							Left: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "10",
 							},
-							Operator: token.LessThan,
-							Right: &ast.BinaryExpr{
-								Left: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "10",
-								},
-								Operator: token.Mul,
-								Right: &ast.ScalarExpr{
-									Type:    token.Integer,
-									Literal: "100",
-								},
+							Operator: token.Mul,
+							Right: &ast.ScalarExpr{
+								Type:    token.Integer,
+								Literal: "100",
 							},
 						},
 					},
@@ -844,7 +802,7 @@ func TestParser_Delete(t *testing.T) {
 			p := parser.New(lexer.New(test.input))
 			stmts, err := p.Parse()
 			require.NoError(t, err)
-			assert.Equal(t, test.stmts, stmts)
+			assert.Equal(t, test.stmt, stmts)
 		})
 	}
 
@@ -886,10 +844,8 @@ func TestParser_Create(t *testing.T) {
 			t.Parallel()
 
 			input := "CREATE DATABASE customers"
-			expected := &ast.Statements{
-				&ast.CreateDatabaseStatement{
-					Database: "customers",
-				},
+			expected := &ast.CreateDatabaseStatement{
+				Database: "customers",
 			}
 
 			p := parser.New(lexer.New(input))
@@ -916,30 +872,28 @@ func TestParser_Create(t *testing.T) {
 
 		tests := []struct {
 			input string
-			stmts *ast.Statements
+			stmt  ast.Statement
 		}{
 			{
 				input: "CREATE TABLE customers (id INTEGER, name STRING, salary FLOAT, is_active BOOLEAN)",
-				stmts: &ast.Statements{
-					&ast.CreateTableStatement{
-						Table: "customers",
-						Columns: []ast.Column{
-							{
-								Name: "id",
-								Type: token.Integer,
-							},
-							{
-								Name: "name",
-								Type: token.String,
-							},
-							{
-								Name: "salary",
-								Type: token.Float,
-							},
-							{
-								Name: "is_active",
-								Type: token.Boolean,
-							},
+				stmt: &ast.CreateTableStatement{
+					Table: "customers",
+					Columns: []ast.Column{
+						{
+							Name: "id",
+							Type: token.Integer,
+						},
+						{
+							Name: "name",
+							Type: token.String,
+						},
+						{
+							Name: "salary",
+							Type: token.Float,
+						},
+						{
+							Name: "is_active",
+							Type: token.Boolean,
 						},
 					},
 				},
@@ -953,34 +907,32 @@ func TestParser_Create(t *testing.T) {
 					is_active BOOLEAN NOT NULL DEFAULT true,
 				)
 			`,
-				stmts: &ast.Statements{
-					&ast.CreateTableStatement{
-						Table: "customers",
-						Columns: []ast.Column{
-							{
-								Name:       "id",
-								Type:       token.Integer,
-								PrimaryKey: true,
-								Nullable:   false,
-							},
-							{
-								Name:     "name",
-								Type:     token.String,
-								Nullable: true,
-							},
-							{
-								Name:     "salary",
-								Type:     token.Float,
-								Nullable: false,
-							},
-							{
-								Name:     "is_active",
-								Type:     token.Boolean,
-								Nullable: false,
-								Default: &ast.ScalarExpr{
-									Type:    token.Boolean,
-									Literal: "true",
-								},
+				stmt: &ast.CreateTableStatement{
+					Table: "customers",
+					Columns: []ast.Column{
+						{
+							Name:       "id",
+							Type:       token.Integer,
+							PrimaryKey: true,
+							Nullable:   false,
+						},
+						{
+							Name:     "name",
+							Type:     token.String,
+							Nullable: true,
+						},
+						{
+							Name:     "salary",
+							Type:     token.Float,
+							Nullable: false,
+						},
+						{
+							Name:     "is_active",
+							Type:     token.Boolean,
+							Nullable: false,
+							Default: &ast.ScalarExpr{
+								Type:    token.Boolean,
+								Literal: "true",
 							},
 						},
 					},
@@ -998,7 +950,7 @@ func TestParser_Create(t *testing.T) {
 				stmts, err := p.Parse()
 
 				require.NoError(t, err)
-				assert.Equal(t, test.stmts, stmts)
+				assert.Equal(t, test.stmt, stmts)
 			})
 		}
 
@@ -1061,10 +1013,8 @@ func TestParser_Drop(t *testing.T) {
 			t.Parallel()
 
 			input := "DROP DATABASE customers"
-			expected := &ast.Statements{
-				&ast.DropDatabaseStatement{
-					Database: "customers",
-				},
+			expected := &ast.DropDatabaseStatement{
+				Database: "customers",
 			}
 
 			p := parser.New(lexer.New(input))
@@ -1093,10 +1043,8 @@ func TestParser_Drop(t *testing.T) {
 			t.Parallel()
 
 			input := "DROP TABLE customers"
-			expected := &ast.Statements{
-				&ast.DropTableStatement{
-					Table: "customers",
-				},
+			expected := &ast.DropTableStatement{
+				Table: "customers",
 			}
 
 			p := parser.New(lexer.New(input))

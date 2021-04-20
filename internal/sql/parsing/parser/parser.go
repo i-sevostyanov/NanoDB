@@ -29,22 +29,11 @@ func New(lx Lexer) *Parser {
 	}
 }
 
-// Parse parses the sql and returns a list of statements.
-func (p *Parser) Parse() (*ast.Statements, error) {
-	var statements ast.Statements
-
-	for p.token.Type != token.EOF {
-		stmt, err := p.parseStatement()
-		if err != nil {
-			return nil, err
-		}
-
-		statements = append(statements, stmt)
-
-		p.nextToken()
-	}
-
-	return &statements, nil
+// Parse parses the sql and returns a statement.
+func (p *Parser) Parse() (ast.Statement, error) {
+	// For simplicity, we parse one statement at a time but in the next release,
+	// we should implement parsing multiple statements separated semicolon.
+	return p.parseStatement()
 }
 
 func (p *Parser) nextToken() {
@@ -68,8 +57,10 @@ func (p *Parser) parseStatement() (ast.Statement, error) {
 		return p.parseCreateStatement()
 	case token.Drop:
 		return p.parseDropStatement()
+	case token.EOF:
+		return nil, nil
 	default:
-		return nil, fmt.Errorf("unexpected statement %q", p.token.Type)
+		return nil, fmt.Errorf("unexpected statement: %s(%q)", p.token.Type, p.token.Literal)
 	}
 }
 

@@ -20,9 +20,6 @@ type Expression interface {
 	expressionNode()
 }
 
-// Statements is a list of parsed statements.
-type Statements []Statement
-
 // SelectStatement node represents a SELECT statement.
 type SelectStatement struct {
 	Result  []ResultStatement
@@ -121,7 +118,6 @@ type DropTableStatement struct {
 	Table string
 }
 
-func (s *Statements) statementNode()              {}
 func (s *SelectStatement) statementNode()         {}
 func (s *ResultStatement) statementNode()         {}
 func (s *FromStatement) statementNode()           {}
