@@ -23,15 +23,16 @@ func TestInsert_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
+		key := int64(1)
 		row := sql.Row{
-			datatype.NewInteger(1),
+			datatype.NewInteger(key),
 			datatype.NewString("Max"),
 		}
 
 		inserter := NewMockTableInserter(ctrl)
-		inserter.EXPECT().Insert(row).Return(nil)
+		inserter.EXPECT().Insert(key, row).Return(nil)
 
-		insertPlan := plan.NewInsert(inserter, row)
+		insertPlan := plan.NewInsert(inserter, key, row)
 		iter, err := insertPlan.RowIter()
 		require.NoError(t, err)
 
@@ -46,16 +47,17 @@ func TestInsert_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
+		key := int64(1)
 		expectedErr := fmt.Errorf("something went wrong")
 		row := sql.Row{
-			datatype.NewInteger(1),
+			datatype.NewInteger(key),
 			datatype.NewString("Max"),
 		}
 
 		inserter := NewMockTableInserter(ctrl)
-		inserter.EXPECT().Insert(row).Return(expectedErr)
+		inserter.EXPECT().Insert(key, row).Return(expectedErr)
 
-		createPlan := plan.NewInsert(inserter, row)
+		createPlan := plan.NewInsert(inserter, key, row)
 		iter, err := createPlan.RowIter()
 		require.ErrorIs(t, err, expectedErr)
 		assert.Nil(t, iter)
