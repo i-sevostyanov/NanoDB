@@ -1095,3 +1095,17 @@ func TestParser_Drop(t *testing.T) {
 		assert.Nil(t, stmts)
 	})
 }
+
+func TestParser_Parse(t *testing.T) {
+	t.Parallel()
+
+	t.Run("returns nil if input is empty", func(t *testing.T) {
+		t.Parallel()
+
+		p := parser.New(lexer.New(""))
+		stmt, err := p.Parse()
+
+		require.Nil(t, err)
+		assert.Nil(t, stmt)
+	})
+}

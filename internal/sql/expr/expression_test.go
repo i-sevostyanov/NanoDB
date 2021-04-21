@@ -346,4 +346,13 @@ func TestNewExpr(t *testing.T) {
 			assert.Nil(t, node)
 		})
 	})
+
+	t.Run("return error on unexpected expression type", func(t *testing.T) {
+		t.Parallel()
+
+		astExpr := &ast.AsteriskExpr{}
+		node, err := expr.New(astExpr, nil)
+		require.NotNil(t, err)
+		assert.Nil(t, node)
+	})
 }

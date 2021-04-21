@@ -384,6 +384,12 @@ func TestFloat_Div(t *testing.T) {
 			err:  true,
 		},
 		{
+			name: "10.0 / 0",
+			a:    datatype.NewFloat(10),
+			b:    datatype.NewInteger(0),
+			err:  true,
+		},
+		{
 			name: "float / string",
 			a:    datatype.NewFloat(10),
 			b:    datatype.NewString("xyz"),
@@ -525,6 +531,12 @@ func TestFloat_Mod(t *testing.T) {
 			name: "10.0 % 0.0",
 			a:    datatype.NewFloat(10),
 			b:    datatype.NewFloat(0),
+			err:  true,
+		},
+		{
+			name: "10.0 % 0",
+			a:    datatype.NewFloat(10),
+			b:    datatype.NewInteger(0),
 			err:  true,
 		},
 		{

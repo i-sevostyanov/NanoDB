@@ -51,6 +51,42 @@ func TestEngine_Query(t *testing.T) {
 		require.NotNil(t, iter)
 	})
 
+	t.Run("parse fn", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		input := "select true"
+		database := "playground"
+		astNode := &ast.SelectStatement{
+			Result: []ast.ResultStatement{
+				{
+					Alias: nil,
+					Expr: &ast.ScalarExpr{
+						Type:    token.Boolean,
+						Literal: "true",
+					},
+				},
+			},
+		}
+
+		parser := NewMockParser(ctrl)
+		planner := NewMockPlanner(ctrl)
+		rowIter := sql.NewMockRowIter(ctrl)
+		planNode := plan.NewMockNode(ctrl)
+
+		parser.EXPECT().Parse(input).Return(astNode, nil)
+		planner.EXPECT().Plan(database, astNode).Return(planNode, nil)
+		planNode.EXPECT().RowIter().Return(rowIter, nil)
+
+		parserFn := engine.ParseFn(parser.Parse)
+		ng := engine.New(parserFn, planner)
+		iter, err := ng.Exec(database, input)
+		require.NoError(t, err)
+		require.NotNil(t, iter)
+	})
+
 	t.Run("returns an error if the parse fails", func(t *testing.T) {
 		t.Parallel()
 

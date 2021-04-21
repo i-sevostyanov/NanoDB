@@ -22,7 +22,7 @@ type SliceRowsIter struct {
 }
 
 func (i *SliceRowsIter) Next() (Row, error) {
-	if i.index >= len(i.rows) {
+	if i.index > len(i.rows)-1 {
 		return nil, io.EOF
 	}
 

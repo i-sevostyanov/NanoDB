@@ -44,4 +44,20 @@ func TestColumn_Eval(t *testing.T) {
 		require.NotNil(t, err)
 		assert.Nil(t, value)
 	})
+
+	t.Run("returns error if position out of range", func(t *testing.T) {
+		t.Parallel()
+
+		row := sql.Row{
+			datatype.NewInteger(1),
+			datatype.NewString("Max"),
+			datatype.NewFloat(1500.5),
+		}
+
+		column := expr.Column{Position: uint8(len(row) + 1)}
+		value, err := column.Eval(row)
+
+		require.NotNil(t, err)
+		assert.Nil(t, value)
+	})
 }

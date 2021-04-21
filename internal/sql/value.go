@@ -26,15 +26,15 @@ const (
 func (t DataType) String() string {
 	switch t {
 	case Integer:
-		return "Integer"
+		return "integer"
 	case Float:
-		return "Float"
+		return "float"
 	case String:
-		return "String"
+		return "string"
 	case Boolean:
-		return "Boolean"
+		return "boolean"
 	case Null:
-		return "Null"
+		return "null"
 	default:
 		return fmt.Sprintf("DataType<%s>", strconv.Itoa(int(t)))
 	}

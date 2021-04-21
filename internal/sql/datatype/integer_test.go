@@ -384,6 +384,12 @@ func TestInteger_Div(t *testing.T) {
 			err:  true,
 		},
 		{
+			name: "10 / 0.0",
+			a:    datatype.NewInteger(10),
+			b:    datatype.NewFloat(0),
+			err:  true,
+		},
+		{
 			name: "integer / string",
 			a:    datatype.NewInteger(10),
 			b:    datatype.NewString("xyz"),
@@ -445,7 +451,7 @@ func TestInteger_Pow(t *testing.T) {
 		},
 		{
 			name:   "10.0 ^ null",
-			a:      datatype.NewFloat(10),
+			a:      datatype.NewInteger(10),
 			b:      datatype.NewNull(),
 			result: datatype.NewNull(),
 		},
@@ -528,6 +534,12 @@ func TestInteger_Mod(t *testing.T) {
 			err:  true,
 		},
 		{
+			name: "10 % 0.0",
+			a:    datatype.NewInteger(10),
+			b:    datatype.NewFloat(0),
+			err:  true,
+		},
+		{
 			name: "integer % string",
 			a:    datatype.NewInteger(10),
 			b:    datatype.NewString("xyz"),
@@ -589,7 +601,7 @@ func TestInteger_Equal(t *testing.T) {
 		},
 		{
 			name:   "10 == null",
-			a:      datatype.NewFloat(10),
+			a:      datatype.NewInteger(10),
 			b:      datatype.NewNull(),
 			result: datatype.NewNull(),
 		},
@@ -655,7 +667,7 @@ func TestInteger_NotEqual(t *testing.T) {
 		},
 		{
 			name:   "10 != null",
-			a:      datatype.NewFloat(10),
+			a:      datatype.NewInteger(10),
 			b:      datatype.NewNull(),
 			result: datatype.NewNull(),
 		},
@@ -721,7 +733,7 @@ func TestInteger_GreaterThan(t *testing.T) {
 		},
 		{
 			name:   "10 > null",
-			a:      datatype.NewFloat(10),
+			a:      datatype.NewInteger(10),
 			b:      datatype.NewNull(),
 			result: datatype.NewNull(),
 		},
@@ -787,7 +799,7 @@ func TestInteger_LessThan(t *testing.T) {
 		},
 		{
 			name:   "10 < null",
-			a:      datatype.NewFloat(10),
+			a:      datatype.NewInteger(10),
 			b:      datatype.NewNull(),
 			result: datatype.NewNull(),
 		},
@@ -859,7 +871,7 @@ func TestInteger_GreaterOrEqual(t *testing.T) {
 		},
 		{
 			name:   "10 >= null",
-			a:      datatype.NewFloat(10),
+			a:      datatype.NewInteger(10),
 			b:      datatype.NewNull(),
 			result: datatype.NewNull(),
 		},
@@ -931,7 +943,7 @@ func TestInteger_LessOrEqual(t *testing.T) {
 		},
 		{
 			name:   "10 <= null",
-			a:      datatype.NewFloat(10),
+			a:      datatype.NewInteger(10),
 			b:      datatype.NewNull(),
 			result: datatype.NewNull(),
 		},
