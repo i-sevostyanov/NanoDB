@@ -1,6 +1,6 @@
 CREATE DATABASE demo;
 
-\c demo;
+\use demo;
 
 CREATE TABLE airports (
     id INTEGER PRIMARY KEY,
