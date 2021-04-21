@@ -345,28 +345,58 @@ func (p *Planner) planDropTable(database string, stmt *ast.DropTableStatement) (
 }
 
 func (p *Planner) planProject(table sql.Table, stmt []ast.ResultStatement, child plan.Node) (plan.Node, error) {
+	var (
+		scheme      sql.Scheme
+		projections []expr.Node
+		err         error
+	)
+
 	if len(stmt) == 0 {
 		return nil, fmt.Errorf("projections list should be not empty")
 	}
-
-	var scheme sql.Scheme
 
 	if table != nil {
 		scheme = table.Scheme()
 	}
 
-	projections := make([]expr.Node, 0, len(stmt))
-
-	for i := range stmt {
-		node, err := expr.New(stmt[i].Expr, scheme)
-		if err != nil {
-			return nil, err
-		}
-
-		projections = append(projections, node)
+	if projections, err = p.planProjections(scheme, stmt); err != nil {
+		return nil, err
 	}
 
 	return plan.NewProject(projections, child), nil
+}
+
+func (p *Planner) planProjections(scheme sql.Scheme, stmt []ast.ResultStatement) ([]expr.Node, error) {
+	projections := make([]expr.Node, 0, len(stmt))
+
+	for i := range stmt {
+		switch stmt[i].Expr.(type) {
+		case *ast.AsteriskExpr:
+			if scheme == nil {
+				return nil, fmt.Errorf("table not specified")
+			}
+
+			columns := make([]struct{}, len(scheme))
+
+			for name := range scheme {
+				columns[scheme[name].Position] = struct{}{}
+			}
+
+			for position := range columns {
+				columnExpr := expr.Column{Position: uint8(position)}
+				projections = append(projections, columnExpr)
+			}
+		default:
+			node, err := expr.New(stmt[i].Expr, scheme)
+			if err != nil {
+				return nil, err
+			}
+
+			projections = append(projections, node)
+		}
+	}
+
+	return projections, nil
 }
 
 func (p *Planner) planFilter(table sql.Table, stmt *ast.WhereStatement, child plan.Node) (plan.Node, error) {

@@ -745,6 +745,158 @@ func TestPlanner_Select(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, expected, planNode)
 	})
+
+	t.Run("select *", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		tableName := "users"
+		databaseName := "playground"
+
+		scheme := sql.Scheme{
+			"id": sql.Column{
+				Position:   0,
+				Name:       "id",
+				DataType:   sql.Integer,
+				PrimaryKey: true,
+				Nullable:   false,
+				Default:    nil,
+			},
+			"name": sql.Column{
+				Position:   1,
+				Name:       "name",
+				DataType:   sql.String,
+				PrimaryKey: false,
+				Nullable:   false,
+				Default:    nil,
+			},
+			"salary": sql.Column{
+				Position:   2,
+				Name:       "salary",
+				DataType:   sql.Float,
+				PrimaryKey: false,
+				Nullable:   false,
+				Default:    nil,
+			},
+		}
+
+		catalog := sql.NewMockCatalog(ctrl)
+		database := sql.NewMockDatabase(ctrl)
+		table := sql.NewMockTable(ctrl)
+
+		catalog.EXPECT().GetDatabase(databaseName).Return(database, nil)
+		database.EXPECT().GetTable(tableName).Return(table, nil)
+		table.EXPECT().Scheme().Return(scheme)
+
+		stmt := &ast.SelectStatement{
+			Result: []ast.ResultStatement{
+				{
+					Expr: &ast.AsteriskExpr{},
+				},
+			},
+			From: &ast.FromStatement{
+				Table: tableName,
+			},
+		}
+
+		projections := []expr.Node{
+			expr.Column{Position: 0},
+			expr.Column{Position: 1},
+			expr.Column{Position: 2},
+		}
+
+		expected := plan.NewProject(
+			projections,
+			plan.NewScan(
+				table,
+			),
+		)
+
+		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
+		require.NoError(t, err)
+		assert.Equal(t, expected, planNode)
+	})
+
+	t.Run("select *, id", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		tableName := "users"
+		databaseName := "playground"
+
+		scheme := sql.Scheme{
+			"id": sql.Column{
+				Position:   0,
+				Name:       "id",
+				DataType:   sql.Integer,
+				PrimaryKey: true,
+				Nullable:   false,
+				Default:    nil,
+			},
+			"name": sql.Column{
+				Position:   1,
+				Name:       "name",
+				DataType:   sql.String,
+				PrimaryKey: false,
+				Nullable:   false,
+				Default:    nil,
+			},
+			"salary": sql.Column{
+				Position:   2,
+				Name:       "salary",
+				DataType:   sql.Float,
+				PrimaryKey: false,
+				Nullable:   false,
+				Default:    nil,
+			},
+		}
+
+		catalog := sql.NewMockCatalog(ctrl)
+		database := sql.NewMockDatabase(ctrl)
+		table := sql.NewMockTable(ctrl)
+
+		catalog.EXPECT().GetDatabase(databaseName).Return(database, nil)
+		database.EXPECT().GetTable(tableName).Return(table, nil)
+		table.EXPECT().Scheme().Return(scheme)
+
+		stmt := &ast.SelectStatement{
+			Result: []ast.ResultStatement{
+				{
+					Expr: &ast.AsteriskExpr{},
+				},
+				{
+					Expr: &ast.IdentExpr{
+						Name: "id",
+					},
+				},
+			},
+			From: &ast.FromStatement{
+				Table: tableName,
+			},
+		}
+
+		projections := []expr.Node{
+			expr.Column{Position: 0},
+			expr.Column{Position: 1},
+			expr.Column{Position: 2},
+			expr.Column{Position: 0},
+		}
+
+		expected := plan.NewProject(
+			projections,
+			plan.NewScan(
+				table,
+			),
+		)
+
+		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
+		require.NoError(t, err)
+		assert.Equal(t, expected, planNode)
+	})
 }
 
 func TestPlanner_Insert(t *testing.T) {
