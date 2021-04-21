@@ -245,6 +245,7 @@ linters:
     - unparam
     - wsl
     - dupl
+    - revive
   fast: false
 
 issues:
