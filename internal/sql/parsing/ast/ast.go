@@ -158,7 +158,11 @@ type ScalarExpr struct {
 	Literal string
 }
 
-func (e *IdentExpr) expressionNode()  {}
-func (e *BinaryExpr) expressionNode() {}
-func (e *UnaryExpr) expressionNode()  {}
-func (e *ScalarExpr) expressionNode() {}
+// AsteriskExpr node represents asterisk at `SELECT *` expression.
+type AsteriskExpr struct{}
+
+func (e *IdentExpr) expressionNode()    {}
+func (e *BinaryExpr) expressionNode()   {}
+func (e *UnaryExpr) expressionNode()    {}
+func (e *ScalarExpr) expressionNode()   {}
+func (e *AsteriskExpr) expressionNode() {}

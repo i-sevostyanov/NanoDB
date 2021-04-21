@@ -700,6 +700,8 @@ func (p *Parser) parseOperand() (ast.Expression, error) {
 	switch p.token.Type {
 	case token.Ident:
 		return &ast.IdentExpr{Name: p.token.Literal}, nil
+	case token.Mul:
+		return &ast.AsteriskExpr{}, nil
 	case token.Integer, token.Float, token.String, token.Boolean, token.Null:
 		return p.parseScalar(p.token.Type)
 	case token.Add, token.Sub:

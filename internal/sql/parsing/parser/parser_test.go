@@ -31,6 +31,24 @@ func TestParser_Select(t *testing.T) {
 			},
 		},
 		{
+			input: "SELECT *, id FROM users",
+			stmt: &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Expr: &ast.AsteriskExpr{},
+					},
+					{
+						Expr: &ast.IdentExpr{
+							Name: "id",
+						},
+					},
+				},
+				From: &ast.FromStatement{
+					Table: "users",
+				},
+			},
+		},
+		{
 			input: "SELECT id AS alias, name",
 			stmt: &ast.SelectStatement{
 				Result: []ast.ResultStatement{
