@@ -69,7 +69,7 @@ func (u *updateIter) Next() (sql.Row, error) {
 
 		for i, expression := range u.columns {
 			if updatedRow[i], err = expression.Eval(row); err != nil {
-				return nil, fmt.Errorf("failted to eval expr: %w", err)
+				return nil, fmt.Errorf("failed to eval expr: %w", err)
 			}
 		}
 
@@ -79,7 +79,7 @@ func (u *updateIter) Next() (sql.Row, error) {
 		}
 
 		if err = u.updater.Update(key, updatedRow); err != nil {
-			return nil, fmt.Errorf("failted to update row: %w", err)
+			return nil, fmt.Errorf("failed to update row: %w", err)
 		}
 	}
 }

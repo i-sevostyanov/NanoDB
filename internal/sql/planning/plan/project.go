@@ -62,7 +62,7 @@ func (i *projectIter) projection(row sql.Row) (sql.Row, error) {
 	for _, p := range i.projections {
 		value, err := p.Eval(row)
 		if err != nil {
-			return nil, fmt.Errorf("failted to eval projection: %w", err)
+			return nil, fmt.Errorf("failed to eval projection: %w", err)
 		}
 
 		project = append(project, value)

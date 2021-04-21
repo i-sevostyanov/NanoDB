@@ -5,8 +5,9 @@
 package sql
 
 import (
-	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
+	"reflect"
+
+	"github.com/golang/mock/gomock"
 )
 
 // MockCatalog is a mock of Catalog interface
@@ -281,17 +282,17 @@ func (mr *MockTableMockRecorder) RowIter() *gomock.Call {
 }
 
 // Insert mocks base method
-func (m *MockTable) Insert(row Row) error {
+func (m *MockTable) Insert(key int64, row Row) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", row)
+	ret := m.ctrl.Call(m, "Insert", key, row)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockTableMockRecorder) Insert(row interface{}) *gomock.Call {
+func (mr *MockTableMockRecorder) Insert(key, row interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockTable)(nil).Insert), row)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockTable)(nil).Insert), key, row)
 }
 
 // Delete mocks base method

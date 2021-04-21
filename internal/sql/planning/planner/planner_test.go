@@ -815,13 +815,14 @@ func TestPlanner_Insert(t *testing.T) {
 			},
 		}
 
+		key := int64(1)
 		row := sql.Row{
-			datatype.NewInteger(1),
+			datatype.NewInteger(key),
 			datatype.NewString("Mad Max"),
 			datatype.NewFloat(200.2),
 		}
 
-		expected := plan.NewInsert(table, row)
+		expected := plan.NewInsert(table, key, row)
 
 		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
 		require.NoError(t, err)

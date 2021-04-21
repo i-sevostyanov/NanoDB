@@ -56,7 +56,7 @@ func (p *Planner) planSelect(database string, stmt *ast.SelectStatement) (plan.N
 	)
 
 	if table, node, err = p.planScan(database, stmt.From); err != nil {
-		return nil, fmt.Errorf("failed to plan filter: %w", err)
+		return nil, fmt.Errorf("failed to plan scan: %w", err)
 	}
 
 	if node, err = p.planFilter(table, stmt.Where, node); err != nil {
@@ -105,6 +105,8 @@ func (p *Planner) planInsert(database string, stmt *ast.InsertStatement) (plan.N
 		return nil, fmt.Errorf("number of expressions should be equal to the number of columns")
 	}
 
+	var key int64
+
 	scheme := table.Scheme()
 	row := make(sql.Row, len(scheme))
 
@@ -112,8 +114,8 @@ func (p *Planner) planInsert(database string, stmt *ast.InsertStatement) (plan.N
 		value := scheme[i].Default
 
 		if scheme[i].PrimaryKey {
-			next := table.Sequence().Next()
-			value = datatype.NewInteger(next)
+			key = table.Sequence().Next()
+			value = datatype.NewInteger(key)
 		}
 
 		row[scheme[i].Position] = value
@@ -144,10 +146,16 @@ func (p *Planner) planInsert(database string, stmt *ast.InsertStatement) (plan.N
 			}
 		}
 
+		if column.PrimaryKey {
+			if key, ok = value.Raw().(int64); !ok {
+				return nil, fmt.Errorf("unsupported primary key type %T", value.Raw())
+			}
+		}
+
 		row[column.Position] = value
 	}
 
-	return plan.NewInsert(table, row), nil
+	return plan.NewInsert(table, key, row), nil
 }
 
 func (p *Planner) planUpdate(database string, stmt *ast.UpdateStatement) (plan.Node, error) {
@@ -461,6 +469,14 @@ func (p *Planner) planLimit(stmt *ast.LimitStatement, child plan.Node) (plan.Nod
 }
 
 func (p *Planner) getTable(databaseName, tableName string) (sql.Table, error) {
+	if databaseName == "" {
+		return nil, fmt.Errorf("database not specified")
+	}
+
+	if tableName == "" {
+		return nil, fmt.Errorf("table not specified")
+	}
+
 	db, err := p.catalog.GetDatabase(databaseName)
 	if err != nil {
 		return nil, err
