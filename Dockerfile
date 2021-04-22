@@ -30,6 +30,6 @@ FROM alpine:3.13
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 # Copy binary into PATH
-COPY --from=build-env /go/bin/cli /usr/local/bin/repl
+COPY --from=build-env /go/bin/repl /usr/local/bin/repl
 
 ENTRYPOINT ["repl"]
