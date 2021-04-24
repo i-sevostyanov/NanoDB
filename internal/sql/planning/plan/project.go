@@ -9,16 +9,37 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/expr"
 )
 
+type Projection struct {
+	Alias string
+	Expr  expr.Node
+}
+
 type Project struct {
-	projections []expr.Node
+	projections []Projection
 	child       Node
 }
 
-func NewProject(projections []expr.Node, child Node) *Project {
+func NewProject(projections []Projection, child Node) *Project {
 	return &Project{
 		projections: projections,
 		child:       child,
 	}
+}
+
+func (p *Project) Columns() []string {
+	columns := make([]string, 0, len(p.projections))
+
+	for i := range p.projections {
+		column := p.projections[i].Alias
+
+		if column == "" {
+			column = p.projections[i].Expr.String()
+		}
+
+		columns = append(columns, column)
+	}
+
+	return columns
 }
 
 func (p *Project) RowIter() (sql.RowIter, error) {
@@ -27,8 +48,14 @@ func (p *Project) RowIter() (sql.RowIter, error) {
 		return nil, fmt.Errorf("failed to get row iter: %w", err)
 	}
 
+	projections := make([]expr.Node, 0, len(p.projections))
+
+	for i := range p.projections {
+		projections = append(projections, p.projections[i].Expr)
+	}
+
 	iter = &projectIter{
-		projections: p.projections,
+		projections: projections,
 		iter:        iter,
 	}
 

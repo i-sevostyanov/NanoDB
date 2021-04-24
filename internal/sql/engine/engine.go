@@ -36,16 +36,21 @@ func New(parser Parser, planner Planner) *Engine {
 	}
 }
 
-func (e *Engine) Exec(database, input string) (sql.RowIter, error) {
+func (e *Engine) Exec(database, input string) ([]string, sql.RowIter, error) {
 	astNode, err := e.parser.Parse(input)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse sql query: %w", err)
+		return nil, nil, fmt.Errorf("failed to parse sql query: %w", err)
 	}
 
 	planNode, err := e.planner.Plan(database, astNode)
 	if err != nil {
-		return nil, fmt.Errorf("failed to build query plan: %w", err)
+		return nil, nil, fmt.Errorf("failed to build query plan: %w", err)
 	}
 
-	return planNode.RowIter()
+	iter, err := planNode.RowIter()
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to get rows iter: %w", err)
+	}
+
+	return planNode.Columns(), iter, nil
 }

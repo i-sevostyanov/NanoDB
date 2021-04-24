@@ -33,6 +33,20 @@ func (m *MockNode) EXPECT() *MockNodeMockRecorder {
 	return m.recorder
 }
 
+// String mocks base method
+func (m *MockNode) String() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "String")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// String indicates an expected call of String
+func (mr *MockNodeMockRecorder) String() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "String", reflect.TypeOf((*MockNode)(nil).String))
+}
+
 // Eval mocks base method
 func (m *MockNode) Eval(row sql.Row) (sql.Value, error) {
 	m.ctrl.T.Helper()

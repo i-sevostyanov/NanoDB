@@ -10,6 +10,13 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestRows_Columns(t *testing.T) {
+	t.Parallel()
+
+	emptyPlan := plan.NewRows()
+	assert.Nil(t, emptyPlan.Columns())
+}
+
 func TestRows_RowIter(t *testing.T) {
 	t.Parallel()
 

@@ -32,7 +32,7 @@ type SelectStatement struct {
 
 // ResultStatement node represents a returning expression in a SELECT statement.
 type ResultStatement struct {
-	Alias Expression
+	Alias string
 	Expr  Expression
 }
 

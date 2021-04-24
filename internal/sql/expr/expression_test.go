@@ -34,6 +34,7 @@ func TestNewExpr(t *testing.T) {
 			}
 
 			expected := expr.Column{
+				Name:     "name",
 				Position: scheme[column].Position,
 			}
 
@@ -284,26 +285,6 @@ func TestNewExpr(t *testing.T) {
 			node, err := expr.New(astExpr, nil)
 			require.NoError(t, err)
 			assert.Equal(t, expected, node)
-		})
-
-		t.Run("unexpected binary operator", func(t *testing.T) {
-			t.Parallel()
-
-			astExpr := &ast.BinaryExpr{
-				Left: &ast.ScalarExpr{
-					Type:    token.Integer,
-					Literal: "10",
-				},
-				Operator: token.Illegal,
-				Right: &ast.ScalarExpr{
-					Type:    token.Integer,
-					Literal: "100",
-				},
-			}
-
-			node, err := expr.New(astExpr, nil)
-			require.NotNil(t, err)
-			assert.Nil(t, node)
 		})
 
 		t.Run("unexpected scalar type on the left", func(t *testing.T) {

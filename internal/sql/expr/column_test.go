@@ -11,6 +11,18 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/expr"
 )
 
+func TestColumn_String(t *testing.T) {
+	t.Parallel()
+
+	name := "id"
+	column := expr.Column{
+		Name:     name,
+		Position: 1,
+	}
+
+	assert.Equal(t, name, column.String())
+}
+
 func TestColumn_Eval(t *testing.T) {
 	t.Parallel()
 

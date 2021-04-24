@@ -19,6 +19,10 @@ func NewLimit(value int64, child Node) *Limit {
 	}
 }
 
+func (l *Limit) Columns() []string {
+	return l.child.Columns()
+}
+
 func (l *Limit) RowIter() (sql.RowIter, error) {
 	iter, err := l.child.RowIter()
 	if err != nil {

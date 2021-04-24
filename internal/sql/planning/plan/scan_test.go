@@ -5,11 +5,46 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
+
+func TestScan_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	scheme := sql.Scheme{
+		"id": sql.Column{
+			Position:   0,
+			Name:       "id",
+			DataType:   sql.Integer,
+			PrimaryKey: true,
+			Nullable:   false,
+			Default:    nil,
+		},
+		"name": sql.Column{
+			Position:   1,
+			Name:       "name",
+			DataType:   sql.String,
+			PrimaryKey: false,
+			Nullable:   false,
+			Default:    nil,
+		},
+	}
+
+	columns := []string{"id", "name"}
+
+	table := sql.NewMockTable(ctrl)
+	table.EXPECT().Scheme().Return(scheme)
+
+	scan := plan.NewScan(table)
+	assert.Equal(t, columns, scan.Columns())
+}
 
 func TestScan_RowIter(t *testing.T) {
 	t.Parallel()

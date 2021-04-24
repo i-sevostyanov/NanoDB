@@ -15,6 +15,22 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestUpdate_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	columns := []string{"id", "name"}
+
+	updater := NewMockRowUpdater(ctrl)
+	child := plan.NewMockNode(ctrl)
+	child.EXPECT().Columns().Return(columns)
+
+	update := plan.NewUpdate(updater, 1, nil, child)
+	assert.Equal(t, columns, update.Columns())
+}
+
 func TestUpdate_RowIter(t *testing.T) {
 	t.Parallel()
 

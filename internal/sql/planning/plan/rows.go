@@ -14,6 +14,10 @@ func NewRows(row ...sql.Row) Rows {
 	}
 }
 
+func (e Rows) Columns() []string {
+	return nil
+}
+
 func (e Rows) RowIter() (sql.RowIter, error) {
 	return sql.RowsIter(e.rows...), nil
 }

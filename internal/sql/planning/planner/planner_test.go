@@ -712,10 +712,19 @@ func TestPlanner_Select(t *testing.T) {
 			},
 		}
 
-		projections := []expr.Node{
-			expr.Column{Position: 0},
-			expr.Column{Position: 1},
-			expr.Column{Position: 2},
+		projections := []plan.Projection{
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "id", Position: 0},
+			},
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "name", Position: 1},
+			},
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "salary", Position: 2},
+			},
 		}
 
 		cond, err := expr.New(stmt.Where.Expr, scheme)
@@ -801,10 +810,19 @@ func TestPlanner_Select(t *testing.T) {
 			},
 		}
 
-		projections := []expr.Node{
-			expr.Column{Position: 0},
-			expr.Column{Position: 1},
-			expr.Column{Position: 2},
+		projections := []plan.Projection{
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "id", Position: 0},
+			},
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "name", Position: 1},
+			},
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "salary", Position: 2},
+			},
 		}
 
 		expected := plan.NewProject(
@@ -879,11 +897,23 @@ func TestPlanner_Select(t *testing.T) {
 			},
 		}
 
-		projections := []expr.Node{
-			expr.Column{Position: 0},
-			expr.Column{Position: 1},
-			expr.Column{Position: 2},
-			expr.Column{Position: 0},
+		projections := []plan.Projection{
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "id", Position: 0},
+			},
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "name", Position: 1},
+			},
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "salary", Position: 2},
+			},
+			{
+				Alias: "",
+				Expr:  expr.Column{Name: "id", Position: 0},
+			},
 		}
 
 		expected := plan.NewProject(

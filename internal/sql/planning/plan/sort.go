@@ -30,6 +30,10 @@ func NewSort(columnPos uint8, order Order, child Node) *Sort {
 	}
 }
 
+func (s *Sort) Columns() []string {
+	return s.child.Columns()
+}
+
 func (s *Sort) RowIter() (sql.RowIter, error) {
 	iter, err := s.child.RowIter()
 	if err != nil {

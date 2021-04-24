@@ -7,7 +7,12 @@ import (
 )
 
 type Column struct {
+	Name     string
 	Position uint8
+}
+
+func (c Column) String() string {
+	return c.Name
 }
 
 func (c Column) Eval(row sql.Row) (sql.Value, error) {

@@ -18,6 +18,50 @@ import (
 func TestUnary_Eval(t *testing.T) {
 	t.Parallel()
 
+	t.Run("string()", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("unary plus", func(t *testing.T) {
+			t.Parallel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			expected := "(operand)"
+
+			operand := expr.NewMockNode(ctrl)
+			operand.EXPECT().String().Return("operand")
+
+			unaryExpr := expr.Unary{
+				Operator: expr.UnaryPlus,
+				Operand:  operand,
+			}
+
+			value := unaryExpr.String()
+			assert.Equal(t, expected, value)
+		})
+
+		t.Run("unary minus", func(t *testing.T) {
+			t.Parallel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			expected := "(-operand)"
+
+			operand := expr.NewMockNode(ctrl)
+			operand.EXPECT().String().Return("operand")
+
+			unaryExpr := expr.Unary{
+				Operator: expr.UnaryMinus,
+				Operand:  operand,
+			}
+
+			value := unaryExpr.String()
+			assert.Equal(t, expected, value)
+		})
+	})
+
 	t.Run("unary plus", func(t *testing.T) {
 		t.Parallel()
 

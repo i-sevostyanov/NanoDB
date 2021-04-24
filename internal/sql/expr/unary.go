@@ -13,9 +13,22 @@ const (
 	UnaryMinus
 )
 
+func (o UnaryOp) String() string {
+	switch o {
+	case UnaryPlus:
+		return ""
+	default:
+		return "-"
+	}
+}
+
 type Unary struct {
 	Operator UnaryOp
 	Operand  Node
+}
+
+func (e *Unary) String() string {
+	return fmt.Sprintf("(%s%s)", e.Operator.String(), e.Operand.String())
 }
 
 func (e *Unary) Eval(row sql.Row) (sql.Value, error) {

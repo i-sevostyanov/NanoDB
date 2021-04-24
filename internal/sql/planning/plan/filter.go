@@ -21,6 +21,10 @@ func NewFilter(cond expr.Node, child Node) *Filter {
 	}
 }
 
+func (f *Filter) Columns() []string {
+	return f.child.Columns()
+}
+
 func (f *Filter) RowIter() (sql.RowIter, error) {
 	iter, err := f.child.RowIter()
 	if err != nil {

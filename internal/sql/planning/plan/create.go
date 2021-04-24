@@ -24,6 +24,10 @@ func NewCreateDatabase(creator DatabaseCreator, name string) *CreateDatabase {
 	}
 }
 
+func (d *CreateDatabase) Columns() []string {
+	return nil
+}
+
 func (d *CreateDatabase) RowIter() (sql.RowIter, error) {
 	if _, err := d.creator.CreateDatabase(d.name); err != nil {
 		return nil, fmt.Errorf("failed to create database: %w", err)
@@ -50,8 +54,12 @@ func NewCreateTable(creator TableCreator, name string, scheme sql.Scheme) *Creat
 	}
 }
 
-func (d *CreateTable) RowIter() (sql.RowIter, error) {
-	if _, err := d.creator.CreateTable(d.name, d.scheme); err != nil {
+func (t *CreateTable) Columns() []string {
+	return nil
+}
+
+func (t *CreateTable) RowIter() (sql.RowIter, error) {
+	if _, err := t.creator.CreateTable(t.name, t.scheme); err != nil {
 		return nil, fmt.Errorf("failed to create table: %w", err)
 	}
 

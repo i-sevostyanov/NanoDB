@@ -14,6 +14,23 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestInsert_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	key := int64(1)
+	row := sql.Row{
+		datatype.NewInteger(key),
+		datatype.NewString("Max"),
+	}
+
+	inserter := NewMockTableInserter(ctrl)
+	insertPlan := plan.NewInsert(inserter, key, row)
+	assert.Nil(t, insertPlan.Columns())
+}
+
 func TestInsert_RowIter(t *testing.T) {
 	t.Parallel()
 

@@ -22,6 +22,10 @@ func NewOffset(n int64, child Node) *Offset {
 	}
 }
 
+func (o *Offset) Columns() []string {
+	return o.child.Columns()
+}
+
 func (o *Offset) RowIter() (sql.RowIter, error) {
 	iter, err := o.child.RowIter()
 	if err != nil {

@@ -14,6 +14,21 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestOffset_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	columns := []string{"id", "name"}
+
+	child := plan.NewMockNode(ctrl)
+	child.EXPECT().Columns().Return(columns)
+
+	offset := plan.NewOffset(10, child)
+	assert.Equal(t, columns, offset.Columns())
+}
+
 func TestOffset_RowIter(t *testing.T) {
 	t.Parallel()
 

@@ -419,6 +419,10 @@ func (p *Parser) parseResultStatement() ([]ast.ResultStatement, error) {
 
 		results = append(results, result)
 
+		if p.token.Type == token.EOF || p.token.Type == token.From {
+			break
+		}
+
 		p.nextToken()
 	}
 
@@ -447,10 +451,12 @@ func (p *Parser) parseResult() (ast.ResultStatement, error) {
 	p.nextToken()
 	p.nextToken()
 
-	result.Alias, err = p.parseIdent()
+	alias, err := p.parseIdent()
 	if err != nil {
 		return ast.ResultStatement{}, err
 	}
+
+	result.Alias = alias.Name
 
 	return result, nil
 }

@@ -7,5 +7,6 @@ import (
 //go:generate mockgen -source=plan.go -destination ./plan_mock.go -package plan
 
 type Node interface {
+	Columns() []string
 	RowIter() (sql.RowIter, error)
 }
