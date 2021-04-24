@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
@@ -13,6 +14,23 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/expr"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
+
+func TestFilter_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	columns := []string{"id", "name"}
+
+	child := plan.NewMockNode(ctrl)
+	cond := expr.NewMockNode(ctrl)
+
+	child.EXPECT().Columns().Return(columns)
+
+	filter := plan.NewFilter(cond, child)
+	assert.Equal(t, columns, filter.Columns())
+}
 
 func TestFilter_RowIter(t *testing.T) {
 	t.Parallel()

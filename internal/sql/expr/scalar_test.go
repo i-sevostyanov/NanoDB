@@ -12,6 +12,14 @@ import (
 func TestInteger(t *testing.T) {
 	t.Parallel()
 
+	t.Run("string()", func(t *testing.T) {
+		t.Parallel()
+
+		integer, err := expr.NewInteger("10")
+		require.NoError(t, err)
+		assert.Equal(t, "10", integer.String())
+	})
+
 	t.Run("no error", func(t *testing.T) {
 		t.Parallel()
 
@@ -46,6 +54,14 @@ func TestInteger(t *testing.T) {
 
 func TestFloat(t *testing.T) {
 	t.Parallel()
+
+	t.Run("string()", func(t *testing.T) {
+		t.Parallel()
+
+		float, err := expr.NewFloat("10")
+		require.NoError(t, err)
+		assert.Equal(t, "10", float.String())
+	})
 
 	t.Run("no error", func(t *testing.T) {
 		t.Parallel()
@@ -82,6 +98,14 @@ func TestFloat(t *testing.T) {
 func TestString(t *testing.T) {
 	t.Parallel()
 
+	t.Run("string()", func(t *testing.T) {
+		t.Parallel()
+
+		str, err := expr.NewString("xyz")
+		require.NoError(t, err)
+		assert.Equal(t, "xyz", str.String())
+	})
+
 	t.Run("no error", func(t *testing.T) {
 		t.Parallel()
 
@@ -109,6 +133,14 @@ func TestString(t *testing.T) {
 
 func TestBoolean(t *testing.T) {
 	t.Parallel()
+
+	t.Run("string()", func(t *testing.T) {
+		t.Parallel()
+
+		boolean, err := expr.NewBoolean("true")
+		require.NoError(t, err)
+		assert.Equal(t, "true", boolean.String())
+	})
 
 	t.Run("no error", func(t *testing.T) {
 		t.Parallel()
@@ -144,6 +176,13 @@ func TestBoolean(t *testing.T) {
 
 func TestNull(t *testing.T) {
 	t.Parallel()
+
+	t.Run("string()", func(t *testing.T) {
+		t.Parallel()
+
+		null := expr.NewNull()
+		assert.Equal(t, "null", null.String())
+	})
 
 	t.Run("eval", func(t *testing.T) {
 		t.Parallel()

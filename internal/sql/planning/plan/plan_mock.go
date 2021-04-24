@@ -33,6 +33,20 @@ func (m *MockNode) EXPECT() *MockNodeMockRecorder {
 	return m.recorder
 }
 
+// Columns mocks base method
+func (m *MockNode) Columns() []string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Columns")
+	ret0, _ := ret[0].([]string)
+	return ret0
+}
+
+// Columns indicates an expected call of Columns
+func (mr *MockNodeMockRecorder) Columns() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Columns", reflect.TypeOf((*MockNode)(nil).Columns))
+}
+
 // RowIter mocks base method
 func (m *MockNode) RowIter() (sql.RowIter, error) {
 	m.ctrl.T.Helper()

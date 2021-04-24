@@ -5,9 +5,8 @@
 package sql
 
 import (
-	"reflect"
-
-	"github.com/golang/mock/gomock"
+	gomock "github.com/golang/mock/gomock"
+	reflect "reflect"
 )
 
 // MockCatalog is a mock of Catalog interface

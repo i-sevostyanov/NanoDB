@@ -21,7 +21,7 @@ const prompt = "#> "
 var ErrQuit = errors.New("quit")
 
 type Engine interface {
-	Exec(database, sql string) (sql.RowIter, error)
+	Exec(database, sql string) ([]string, sql.RowIter, error)
 }
 
 // Repl is a terminal-based front-end to NanoDB.
@@ -140,10 +140,7 @@ func (r *Repl) listDatabases() (string, error) {
 		data = append(data, []string{databases[i].Name()})
 	}
 
-	table := tablewriter.NewWriter(buf)
-	table.AppendBulk(data)
-	table.SetHeader([]string{"Database"})
-	table.Render()
+	drawTable(buf, []string{"Database"}, data)
 	buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
 
 	return buf.String(), nil
@@ -162,10 +159,7 @@ func (r *Repl) listTables() (string, error) {
 		data = append(data, []string{tables[i].Name()})
 	}
 
-	table := tablewriter.NewWriter(buf)
-	table.AppendBulk(data)
-	table.SetHeader([]string{"Table"})
-	table.Render()
+	drawTable(buf, []string{"Table"}, data)
 	buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
 
 	return buf.String(), nil
@@ -220,11 +214,7 @@ func (r *Repl) describeTable(params []string) (string, error) {
 		data = append(data, row)
 	}
 
-	tw := tablewriter.NewWriter(buf)
-	tw.AppendBulk(data)
-	tw.SetHeader([]string{"Column", "Type", "Nullable", "Default"})
-	tw.Render()
-
+	drawTable(buf, []string{"Column", "Type", "Nullable", "Default"}, data)
 	buf.WriteString("Indexes:\n")
 	buf.WriteString(fmt.Sprintf("   PRIMARY KEY (%s) autoincrement\n\n", primaryKey.Name))
 
@@ -289,7 +279,7 @@ func (r *Repl) execQuery(input string) (string, error) {
 		database = r.database.Name()
 	}
 
-	rowIter, err := r.engine.Exec(database, input)
+	columns, rowIter, err := r.engine.Exec(database, input)
 	if err != nil {
 		return "", err
 	}
@@ -329,12 +319,19 @@ loop:
 	buf := bytes.NewBuffer(nil)
 
 	if len(data) > 0 {
-		table := tablewriter.NewWriter(buf)
-		table.SetColWidth(75)
-		table.AppendBulk(data)
-		table.Render()
+		drawTable(buf, columns, data)
 		buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
 	}
 
 	return buf.String(), nil
+}
+
+func drawTable(buf io.Writer, headers []string, data [][]string) {
+	tw := tablewriter.NewWriter(buf)
+	tw.SetColWidth(75)
+	tw.AppendBulk(data)
+	tw.SetAutoFormatHeaders(false)
+	tw.SetAlignment(tablewriter.ALIGN_LEFT)
+	tw.SetHeader(headers)
+	tw.Render()
 }

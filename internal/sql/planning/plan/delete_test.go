@@ -14,6 +14,19 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestDelete_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	child := plan.NewMockNode(ctrl)
+	deleter := NewMockRowDeleter(ctrl)
+
+	deletePlan := plan.NewDelete(deleter, uint8(0), child)
+	assert.Nil(t, deletePlan.Columns())
+}
+
 func TestDelete_RowIter(t *testing.T) {
 	t.Parallel()
 

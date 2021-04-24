@@ -347,7 +347,7 @@ func (p *Planner) planDropTable(database string, stmt *ast.DropTableStatement) (
 func (p *Planner) planProject(table sql.Table, stmt []ast.ResultStatement, child plan.Node) (plan.Node, error) {
 	var (
 		scheme      sql.Scheme
-		projections []expr.Node
+		projections []plan.Projection
 		err         error
 	)
 
@@ -366,8 +366,8 @@ func (p *Planner) planProject(table sql.Table, stmt []ast.ResultStatement, child
 	return plan.NewProject(projections, child), nil
 }
 
-func (p *Planner) planProjections(scheme sql.Scheme, stmt []ast.ResultStatement) ([]expr.Node, error) {
-	projections := make([]expr.Node, 0, len(stmt))
+func (p *Planner) planProjections(scheme sql.Scheme, stmt []ast.ResultStatement) ([]plan.Projection, error) {
+	projections := make([]plan.Projection, 0, len(stmt))
 
 	for i := range stmt {
 		switch stmt[i].Expr.(type) {
@@ -376,15 +376,19 @@ func (p *Planner) planProjections(scheme sql.Scheme, stmt []ast.ResultStatement)
 				return nil, fmt.Errorf("table not specified")
 			}
 
-			columns := make([]struct{}, len(scheme))
+			columns := make([]string, len(scheme))
 
 			for name := range scheme {
-				columns[scheme[name].Position] = struct{}{}
+				columns[scheme[name].Position] = name
 			}
 
 			for position := range columns {
-				columnExpr := expr.Column{Position: uint8(position)}
-				projections = append(projections, columnExpr)
+				projections = append(projections, plan.Projection{
+					Expr: expr.Column{
+						Name:     columns[position],
+						Position: uint8(position),
+					},
+				})
 			}
 		default:
 			node, err := expr.New(stmt[i].Expr, scheme)
@@ -392,7 +396,10 @@ func (p *Planner) planProjections(scheme sql.Scheme, stmt []ast.ResultStatement)
 				return nil, err
 			}
 
-			projections = append(projections, node)
+			projections = append(projections, plan.Projection{
+				Alias: stmt[i].Alias,
+				Expr:  node,
+			})
 		}
 	}
 

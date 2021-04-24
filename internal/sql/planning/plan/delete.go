@@ -28,6 +28,10 @@ func NewDelete(deleter RowDeleter, pkIndex uint8, child Node) *Delete {
 	}
 }
 
+func (d *Delete) Columns() []string {
+	return nil
+}
+
 func (d *Delete) RowIter() (sql.RowIter, error) {
 	iter, err := d.child.RowIter()
 	if err != nil {

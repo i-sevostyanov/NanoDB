@@ -3,7 +3,6 @@ package expr_test
 import (
 	"errors"
 	"fmt"
-	"math"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -14,6 +13,30 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/datatype"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/expr"
 )
+
+func TestBinary_String(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	leftNode := expr.NewMockNode(ctrl)
+	rightNode := expr.NewMockNode(ctrl)
+
+	operator := expr.And
+	expected := fmt.Sprintf("(left %s right)", operator.String())
+	binaryExpr := expr.Binary{
+		Operator: operator,
+		Left:     leftNode,
+		Right:    rightNode,
+	}
+
+	leftNode.EXPECT().String().Return("left")
+	rightNode.EXPECT().String().Return("right")
+
+	value := binaryExpr.String()
+	assert.Equal(t, expected, value)
+}
 
 func TestBinary_Eval(t *testing.T) {
 	t.Parallel()
@@ -975,7 +998,7 @@ func TestBinary_Eval(t *testing.T) {
 		rightNode := expr.NewMockNode(ctrl)
 
 		binaryExpr := expr.Binary{
-			Operator: expr.BinaryOp(math.MaxUint64),
+			Operator: expr.BinaryOp("p"),
 			Left:     leftNode,
 			Right:    rightNode,
 		}

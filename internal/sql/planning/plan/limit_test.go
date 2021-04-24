@@ -14,6 +14,21 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestLimit_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	columns := []string{"id", "name"}
+
+	child := plan.NewMockNode(ctrl)
+	child.EXPECT().Columns().Return(columns)
+
+	limit := plan.NewLimit(10, child)
+	assert.Equal(t, columns, limit.Columns())
+}
+
 func TestLimit_RowIter(t *testing.T) {
 	t.Parallel()
 

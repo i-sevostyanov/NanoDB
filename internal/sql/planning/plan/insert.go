@@ -26,6 +26,10 @@ func NewInsert(inserter TableInserter, key int64, row sql.Row) *Insert {
 	}
 }
 
+func (i *Insert) Columns() []string {
+	return nil
+}
+
 func (i *Insert) RowIter() (sql.RowIter, error) {
 	if err := i.inserter.Insert(i.key, i.row); err != nil {
 		return nil, fmt.Errorf("failed to insert row: %w", err)

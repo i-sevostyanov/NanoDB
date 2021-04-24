@@ -6,32 +6,37 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
 
-type BinaryOp uint
+type BinaryOp string
 
 const (
-	// Comparison
-	Equal BinaryOp = iota
-	NotEqual
-	LessThan
-	GreaterThan
-	LessThanOrEqual
-	GreaterThanOrEqual
-	// Logical
-	And
-	Or
-	// Mathematical
-	Add
-	Sub
-	Mul
-	Div
-	Mod
-	Pow
+	Equal              BinaryOp = "="
+	NotEqual           BinaryOp = "!="
+	LessThan           BinaryOp = "<"
+	GreaterThan        BinaryOp = ">"
+	LessThanOrEqual    BinaryOp = "<="
+	GreaterThanOrEqual BinaryOp = ">="
+	And                BinaryOp = "AND"
+	Or                 BinaryOp = "OR"
+	Add                BinaryOp = "+"
+	Sub                BinaryOp = "-"
+	Mul                BinaryOp = "*"
+	Div                BinaryOp = "/"
+	Mod                BinaryOp = "%"
+	Pow                BinaryOp = "^"
 )
+
+func (o BinaryOp) String() string {
+	return string(o)
+}
 
 type Binary struct {
 	Operator BinaryOp
 	Left     Node
 	Right    Node
+}
+
+func (b Binary) String() string {
+	return fmt.Sprintf("(%s %s %s)", b.Left.String(), b.Operator.String(), b.Right.String())
 }
 
 func (b Binary) Eval(row sql.Row) (sql.Value, error) {

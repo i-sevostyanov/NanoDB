@@ -14,6 +14,18 @@ func NewScan(table sql.Table) *Scan {
 	}
 }
 
-func (t *Scan) RowIter() (sql.RowIter, error) {
-	return t.table.RowIter()
+func (s *Scan) Columns() []string {
+	scheme := s.table.Scheme()
+	columns := make([]string, len(scheme))
+
+	for name := range scheme {
+		position := int(scheme[name].Position)
+		columns[position] = name
+	}
+
+	return columns
+}
+
+func (s *Scan) RowIter() (sql.RowIter, error) {
+	return s.table.RowIter()
 }

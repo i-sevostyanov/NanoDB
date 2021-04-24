@@ -31,6 +31,10 @@ func NewUpdate(updater RowUpdater, pkIndex uint8, columns map[uint8]expr.Node, c
 	}
 }
 
+func (u *Update) Columns() []string {
+	return u.child.Columns()
+}
+
 func (u *Update) RowIter() (sql.RowIter, error) {
 	iter, err := u.child.RowIter()
 	if err != nil {

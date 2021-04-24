@@ -25,6 +25,10 @@ func NewInteger(literal string) (Integer, error) {
 	return node, nil
 }
 
+func (i Integer) String() string {
+	return strconv.FormatInt(i.value, 10)
+}
+
 func (i Integer) Eval(_ sql.Row) (sql.Value, error) {
 	return datatype.NewInteger(i.value), nil
 }
@@ -44,6 +48,10 @@ func NewFloat(literal string) (Node, error) {
 	}
 
 	return node, nil
+}
+
+func (f Float) String() string {
+	return strconv.FormatFloat(f.value, 'f', -1, 64)
 }
 
 func (f Float) Eval(_ sql.Row) (sql.Value, error) {
@@ -66,6 +74,10 @@ func (s String) Eval(_ sql.Row) (sql.Value, error) {
 	return datatype.NewString(s.value), nil
 }
 
+func (s String) String() string {
+	return s.value
+}
+
 type Boolean struct {
 	value bool
 }
@@ -83,6 +95,10 @@ func NewBoolean(literal string) (Node, error) {
 	return node, nil
 }
 
+func (b Boolean) String() string {
+	return strconv.FormatBool(b.value)
+}
+
 func (b Boolean) Eval(_ sql.Row) (sql.Value, error) {
 	return datatype.NewBoolean(b.value), nil
 }
@@ -91,6 +107,10 @@ type Null struct{}
 
 func NewNull() Null {
 	return Null{}
+}
+
+func (b Null) String() string {
+	return "null"
 }
 
 func (b Null) Eval(_ sql.Row) (sql.Value, error) {

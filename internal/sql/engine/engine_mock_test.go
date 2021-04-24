@@ -5,11 +5,10 @@
 package engine_test
 
 import (
-	"reflect"
-
-	"github.com/golang/mock/gomock"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
+	gomock "github.com/golang/mock/gomock"
+	ast "github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
+	plan "github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
+	reflect "reflect"
 )
 
 // MockParser is a mock of Parser interface

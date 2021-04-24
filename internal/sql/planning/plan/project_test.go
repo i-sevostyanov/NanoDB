@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
@@ -13,6 +14,37 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/expr"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
+
+func TestProject_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	child := plan.NewMockNode(ctrl)
+	id := expr.NewMockNode(ctrl)
+	name := expr.NewMockNode(ctrl)
+
+	id.EXPECT().String().Return("id")
+
+	projections := []plan.Projection{
+		{
+			Expr: id,
+		},
+		{
+			Alias: "X",
+			Expr:  name,
+		},
+	}
+
+	columns := []string{
+		"id",
+		"X",
+	}
+
+	project := plan.NewProject(projections, child)
+	assert.Equal(t, columns, project.Columns())
+}
 
 func TestProject_RowIter(t *testing.T) {
 	t.Parallel()
@@ -53,7 +85,16 @@ func TestProject_RowIter(t *testing.T) {
 			rowIter.EXPECT().Close().Return(nil),
 		)
 
-		project := plan.NewProject([]expr.Node{id, name}, child)
+		projections := []plan.Projection{
+			{
+				Expr: id,
+			},
+			{
+				Expr: name,
+			},
+		}
+
+		project := plan.NewProject(projections, child)
 		iter, err := project.RowIter()
 		require.NoError(t, err)
 		require.NotNil(t, iter)
@@ -90,7 +131,16 @@ func TestProject_RowIter(t *testing.T) {
 			rowIter.EXPECT().Next().Return(nil, io.EOF),
 		)
 
-		project := plan.NewProject([]expr.Node{id, name}, child)
+		projections := []plan.Projection{
+			{
+				Expr: id,
+			},
+			{
+				Expr: name,
+			},
+		}
+
+		project := plan.NewProject(projections, child)
 		iter, err := project.RowIter()
 		require.NoError(t, err)
 		require.NotNil(t, iter)
@@ -124,7 +174,16 @@ func TestProject_RowIter(t *testing.T) {
 			id.EXPECT().Eval(rows[0]).Return(nil, expectedErr),
 		)
 
-		project := plan.NewProject([]expr.Node{id, name}, child)
+		projections := []plan.Projection{
+			{
+				Expr: id,
+			},
+			{
+				Expr: name,
+			},
+		}
+
+		project := plan.NewProject(projections, child)
 		iter, err := project.RowIter()
 		require.NoError(t, err)
 		require.NotNil(t, iter)
@@ -148,7 +207,16 @@ func TestProject_RowIter(t *testing.T) {
 
 		child.EXPECT().RowIter().Return(nil, expectedErr)
 
-		project := plan.NewProject([]expr.Node{id, name}, child)
+		projections := []plan.Projection{
+			{
+				Expr: id,
+			},
+			{
+				Expr: name,
+			},
+		}
+
+		project := plan.NewProject(projections, child)
 		iter, err := project.RowIter()
 		require.ErrorIs(t, err, expectedErr)
 		require.Nil(t, iter)
@@ -172,7 +240,16 @@ func TestProject_RowIter(t *testing.T) {
 			rowIter.EXPECT().Next().Return(nil, expectedErr),
 		)
 
-		project := plan.NewProject([]expr.Node{id, name}, child)
+		projections := []plan.Projection{
+			{
+				Expr: id,
+			},
+			{
+				Expr: name,
+			},
+		}
+
+		project := plan.NewProject(projections, child)
 		iter, err := project.RowIter()
 		require.NoError(t, err)
 		require.NotNil(t, iter)

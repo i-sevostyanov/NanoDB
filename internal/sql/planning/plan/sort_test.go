@@ -15,6 +15,21 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestSort_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	columns := []string{"id", "name"}
+
+	child := plan.NewMockNode(ctrl)
+	child.EXPECT().Columns().Return(columns)
+
+	sort := plan.NewSort(1, plan.Descending, child)
+	assert.Equal(t, columns, sort.Columns())
+}
+
 func TestSort_RowIter(t *testing.T) {
 	t.Parallel()
 

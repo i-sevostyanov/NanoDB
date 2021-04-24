@@ -12,6 +12,17 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestDropDatabase_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	dropper := NewMockDatabaseDropper(ctrl)
+	dropPlan := plan.NewDropDatabase(dropper, "test")
+	assert.Nil(t, dropPlan.Columns())
+}
+
 func TestDropDatabase_RowIter(t *testing.T) {
 	t.Parallel()
 
@@ -52,6 +63,17 @@ func TestDropDatabase_RowIter(t *testing.T) {
 		require.ErrorIs(t, err, expectedErr)
 		assert.Nil(t, iter)
 	})
+}
+
+func TestDropTable_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	dropper := NewMockTableDropper(ctrl)
+	dropPlan := plan.NewDropTable(dropper, "test")
+	assert.Nil(t, dropPlan.Columns())
 }
 
 func TestDropTable_RowIter(t *testing.T) {

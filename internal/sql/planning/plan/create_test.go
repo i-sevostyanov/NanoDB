@@ -13,6 +13,17 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
+func TestCreateDatabase_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	creator := NewMockDatabaseCreator(ctrl)
+	createPlan := plan.NewCreateDatabase(creator, "test")
+	assert.Nil(t, createPlan.Columns())
+}
+
 func TestCreateDatabase_RowIter(t *testing.T) {
 	t.Parallel()
 
@@ -52,6 +63,17 @@ func TestCreateDatabase_RowIter(t *testing.T) {
 		require.ErrorIs(t, err, expectedErr)
 		assert.Nil(t, iter)
 	})
+}
+
+func TestCreateTable_Columns(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	creator := NewMockTableCreator(ctrl)
+	createPlan := plan.NewCreateTable(creator, "test", nil)
+	assert.Nil(t, createPlan.Columns())
 }
 
 func TestCreateTable_RowIter(t *testing.T) {

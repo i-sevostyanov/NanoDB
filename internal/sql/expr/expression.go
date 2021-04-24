@@ -10,25 +10,9 @@ import (
 
 //go:generate mockgen -source=expression.go -destination ./expression_mock.go -package expr
 
-var binaryOperators = map[token.Type]BinaryOp{
-	token.Equal:              Equal,
-	token.NotEqual:           NotEqual,
-	token.LessThan:           LessThan,
-	token.GreaterThan:        GreaterThan,
-	token.LessThanOrEqual:    LessThanOrEqual,
-	token.GreaterThanOrEqual: GreaterThanOrEqual,
-	token.And:                And,
-	token.Or:                 Or,
-	token.Add:                Add,
-	token.Sub:                Sub,
-	token.Mul:                Mul,
-	token.Div:                Div,
-	token.Mod:                Mod,
-	token.Pow:                Pow,
-}
-
 // Node is a combination of one or more SQL expressions.
 type Node interface {
+	String() string
 	Eval(row sql.Row) (sql.Value, error)
 }
 
@@ -56,24 +40,20 @@ func columnExpr(expr *ast.IdentExpr, scheme sql.Scheme) (Node, error) {
 		return nil, fmt.Errorf("schema not provided")
 	}
 
-	column, ok := scheme[expr.Name]
+	definition, ok := scheme[expr.Name]
 	if !ok {
 		return nil, fmt.Errorf("column %q not exists", expr.Name)
 	}
 
-	return Column{Position: column.Position}, nil
+	column := Column{
+		Name:     definition.Name,
+		Position: definition.Position,
+	}
+
+	return column, nil
 }
 
 func binaryExpr(expr *ast.BinaryExpr, scheme sql.Scheme) (Node, error) {
-	var (
-		operator BinaryOp
-		ok       bool
-	)
-
-	if operator, ok = binaryOperators[expr.Operator]; !ok {
-		return nil, fmt.Errorf("unknown binary operator: %q", expr.Operator)
-	}
-
 	left, err := walk(expr.Left, scheme)
 	if err != nil {
 		return nil, fmt.Errorf("failed to walk left arg of binary expr: %w", err)
@@ -85,7 +65,7 @@ func binaryExpr(expr *ast.BinaryExpr, scheme sql.Scheme) (Node, error) {
 	}
 
 	binary := &Binary{
-		Operator: operator,
+		Operator: BinaryOp(expr.Operator.String()),
 		Left:     left,
 		Right:    right,
 	}

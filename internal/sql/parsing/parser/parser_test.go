@@ -25,7 +25,7 @@ func TestParser_Select(t *testing.T) {
 				Result: []ast.ResultStatement{
 					{
 						Expr:  &ast.IdentExpr{Name: "id"},
-						Alias: &ast.IdentExpr{Name: "alias"},
+						Alias: "alias",
 					},
 				},
 			},
@@ -54,7 +54,7 @@ func TestParser_Select(t *testing.T) {
 				Result: []ast.ResultStatement{
 					{
 						Expr:  &ast.IdentExpr{Name: "id"},
-						Alias: &ast.IdentExpr{Name: "alias"},
+						Alias: "alias",
 					},
 					{
 						Expr: &ast.IdentExpr{Name: "name"},
@@ -74,7 +74,7 @@ func TestParser_Select(t *testing.T) {
 					},
 					{
 						Expr:  &ast.IdentExpr{Name: "name"},
-						Alias: &ast.IdentExpr{Name: "alias"},
+						Alias: "alias",
 					},
 				},
 			},
@@ -85,15 +85,15 @@ func TestParser_Select(t *testing.T) {
 				Result: []ast.ResultStatement{
 					{
 						Expr:  &ast.IdentExpr{Name: "id"},
-						Alias: &ast.IdentExpr{Name: "PK"},
+						Alias: "PK",
 					},
 					{
 						Expr:  &ast.IdentExpr{Name: "salary"},
-						Alias: &ast.IdentExpr{Name: "salary"},
+						Alias: "salary",
 					},
 					{
 						Expr:  &ast.IdentExpr{Name: "name"},
-						Alias: &ast.IdentExpr{Name: "first_name"},
+						Alias: "first_name",
 					},
 				},
 			},
@@ -117,7 +117,7 @@ func TestParser_Select(t *testing.T) {
 								Literal: "2",
 							},
 						},
-						Alias: &ast.IdentExpr{Name: "expr"},
+						Alias: "expr",
 					},
 				},
 			},
