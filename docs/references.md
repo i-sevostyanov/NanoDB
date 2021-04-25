@@ -16,3 +16,7 @@ Implementation examples:
 
 ## SQL
 * [SQL92 references](http://www.contrib.andrew.cmu.edu/~shadow/sql/sql1992.txt)
+* [Volcano - An Extensible and Parallel Query Evaluation System](https://paperhub.s3.amazonaws.com/dace52a42c07f7f8348b08dc2b186061.pdf)
+
+## Books
+* [Compilers: Principles, Techniques, and Tools](https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools)
