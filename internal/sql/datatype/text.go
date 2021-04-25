@@ -19,7 +19,7 @@ func (t Text) Raw() interface{} {
 }
 
 func (t Text) DataType() sql.DataType {
-	return sql.String
+	return sql.Text
 }
 
 func (t Text) Compare(v sql.Value) (sql.CompareType, error) {

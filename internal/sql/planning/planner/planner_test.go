@@ -176,7 +176,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 			"name": {
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   true,
 				Default:    datatype.NewText("<unknown>"),
@@ -257,7 +257,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 			"name": {
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   true,
 				Default:    datatype.NewNull(),
@@ -638,7 +638,7 @@ func TestPlanner_Select(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -776,7 +776,7 @@ func TestPlanner_Select(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -858,7 +858,7 @@ func TestPlanner_Select(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -953,7 +953,7 @@ func TestPlanner_Insert(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -1037,7 +1037,7 @@ func TestPlanner_Update(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -1128,7 +1128,7 @@ func TestPlanner_Update(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -1207,7 +1207,7 @@ func TestPlanner_Delete(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -1273,7 +1273,7 @@ func TestPlanner_Delete(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,

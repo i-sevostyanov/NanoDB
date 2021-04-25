@@ -26,7 +26,7 @@ func TestNewExpr(t *testing.T) {
 				column: sql.Column{
 					Position:   1,
 					Name:       "name",
-					DataType:   sql.String,
+					DataType:   sql.Text,
 					PrimaryKey: false,
 					Nullable:   false,
 					Default:    nil,
@@ -54,7 +54,7 @@ func TestNewExpr(t *testing.T) {
 				"name": sql.Column{
 					Position:   1,
 					Name:       "name",
-					DataType:   sql.String,
+					DataType:   sql.Text,
 					PrimaryKey: false,
 					Nullable:   false,
 					Default:    nil,

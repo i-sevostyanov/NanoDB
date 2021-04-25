@@ -11,7 +11,7 @@ const (
 	Null DataType = iota
 	Integer
 	Float
-	String
+	Text
 	Boolean
 )
 
@@ -29,8 +29,8 @@ func (t DataType) String() string {
 		return "integer"
 	case Float:
 		return "float"
-	case String:
-		return "string"
+	case Text:
+		return "text"
 	case Boolean:
 		return "boolean"
 	case Null:

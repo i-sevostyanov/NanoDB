@@ -293,7 +293,7 @@ func (p *Planner) planSchemeColumn(position uint8, column ast.Column) (sql.Colum
 	case token.Float:
 		dataType = sql.Float
 	case token.Text:
-		dataType = sql.String
+		dataType = sql.Text
 	case token.Boolean:
 		dataType = sql.Boolean
 	default:

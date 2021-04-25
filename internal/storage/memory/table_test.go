@@ -59,7 +59,7 @@ func TestTable_PrimaryKey(t *testing.T) {
 		"name": sql.Column{
 			Position:   0,
 			Name:       "name",
-			DataType:   sql.String,
+			DataType:   sql.Text,
 			PrimaryKey: false,
 			Nullable:   false,
 			Default:    nil,
@@ -90,7 +90,7 @@ func TestTable_RowIter(t *testing.T) {
 			"name": sql.Column{
 				Position:   0,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -151,7 +151,7 @@ func TestTable_Insert(t *testing.T) {
 			"name": sql.Column{
 				Position:   0,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
@@ -357,7 +357,7 @@ func TestTable_Update(t *testing.T) {
 			"name": sql.Column{
 				Position:   1,
 				Name:       "name",
-				DataType:   sql.String,
+				DataType:   sql.Text,
 				PrimaryKey: false,
 				Nullable:   false,
 				Default:    nil,
