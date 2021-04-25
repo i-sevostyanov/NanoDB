@@ -159,7 +159,7 @@ func TestLexer_NextToken(t *testing.T) {
 		},
 		{
 			input:     "'value'",
-			tokenType: token.String,
+			tokenType: token.Text,
 			literal:   "value",
 		},
 		{

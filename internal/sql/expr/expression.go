@@ -104,7 +104,7 @@ func scalarExpr(expr *ast.ScalarExpr) (Node, error) {
 		return NewInteger(expr.Literal)
 	case token.Float:
 		return NewFloat(expr.Literal)
-	case token.String:
+	case token.Text:
 		return NewString(expr.Literal)
 	case token.Boolean:
 		return NewBoolean(expr.Literal)

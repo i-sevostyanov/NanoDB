@@ -320,7 +320,7 @@ func (p *Parser) parseColumnDefinition() (ast.Column, error) {
 
 func (p *Parser) parseColumnType() (token.Type, error) {
 	switch p.token.Type {
-	case token.Integer, token.Float, token.String, token.Boolean:
+	case token.Integer, token.Float, token.Text, token.Boolean:
 		columnType := p.token.Type
 		p.nextToken()
 
@@ -708,7 +708,7 @@ func (p *Parser) parseOperand() (ast.Expression, error) {
 		return &ast.IdentExpr{Name: p.token.Literal}, nil
 	case token.Mul:
 		return &ast.AsteriskExpr{}, nil
-	case token.Integer, token.Float, token.String, token.Boolean, token.Null:
+	case token.Integer, token.Float, token.Text, token.Boolean, token.Null:
 		return p.parseScalar(p.token.Type)
 	case token.Add, token.Sub:
 		return p.parseUnaryExpr()

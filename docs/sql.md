@@ -27,7 +27,7 @@ Detailed reference documentation for NanoDB's SQL dialect.
 * `BOOLEAN`: logical truth values, i.e. true and false.
 * `FLOAT`: 64-bit signed floating-point numbers.
 * `INTEGER`: 64-bit signed integer numbers.
-* `STRING`: UTF-8 encoded strings.
+* `TEXT`: UTF-8 encoded strings.
 * `NULL`: unknown value ([three-valued logic](https://en.wikipedia.org/wiki/Three-valued_logic)).
 
 ## SQL Syntax
@@ -178,8 +178,8 @@ CREATE TABLE will create a new empty table.
 ```
 CREATE TABLE films (
     id        INTEGER PRIMARY KEY,
-    code      STRING NOT NULL,
-    title     STRING NOT NULL,
+    code      TEXT NOT NULL,
+    title     TEXT NOT NULL,
     is_active BOOLEAN DEFAULT FALSE,
 );
 ```

@@ -73,9 +73,9 @@ func TestInteger_Compare(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "integer vs string",
+			name: "integer vs text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			cmp:  sql.Equal,
 			err:  true,
 		},
@@ -168,9 +168,9 @@ func TestInteger_Add(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "integer + string",
+			name: "integer + text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -240,9 +240,9 @@ func TestInteger_Sub(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "integer - string",
+			name: "integer - text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -312,9 +312,9 @@ func TestInteger_Mul(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "integer * string",
+			name: "integer * text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -390,9 +390,9 @@ func TestInteger_Div(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "integer / string",
+			name: "integer / text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -462,9 +462,9 @@ func TestInteger_Pow(t *testing.T) {
 			result: datatype.NewFloat(1),
 		},
 		{
-			name: "integer ^ string",
+			name: "integer ^ text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -540,9 +540,9 @@ func TestInteger_Mod(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "integer % string",
+			name: "integer % text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -606,9 +606,9 @@ func TestInteger_Equal(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float == string",
+			name: "float == text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -672,9 +672,9 @@ func TestInteger_NotEqual(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float != string",
+			name: "float != text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -738,9 +738,9 @@ func TestInteger_GreaterThan(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float > string",
+			name: "float > text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -804,9 +804,9 @@ func TestInteger_LessThan(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float < string",
+			name: "float < text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -876,9 +876,9 @@ func TestInteger_GreaterOrEqual(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float >= string",
+			name: "float >= text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -948,9 +948,9 @@ func TestInteger_LessOrEqual(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float <= string",
+			name: "float <= text",
 			a:    datatype.NewInteger(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{

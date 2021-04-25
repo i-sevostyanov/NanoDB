@@ -208,7 +208,7 @@ func TestNewExpr(t *testing.T) {
 			t.Parallel()
 
 			astExpr := &ast.ScalarExpr{
-				Type:    token.String,
+				Type:    token.Text,
 				Literal: "xyz",
 			}
 

@@ -162,7 +162,7 @@ func (l *Lexer) readString() token.Token {
 	}
 
 	return token.Token{
-		Type:    token.String,
+		Type:    token.Text,
 		Literal: l.input[start:l.offset],
 		Offset:  start,
 		Length:  l.offset - start,
