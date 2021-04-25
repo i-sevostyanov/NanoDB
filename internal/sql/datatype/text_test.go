@@ -28,7 +28,7 @@ func TestText_DataType(t *testing.T) {
 	t.Parallel()
 
 	n := datatype.NewText("xyz")
-	assert.Equal(t, sql.String, n.DataType())
+	assert.Equal(t, sql.Text, n.DataType())
 }
 
 func TestText_Compare(t *testing.T) {
