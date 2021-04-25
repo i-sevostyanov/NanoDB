@@ -98,8 +98,8 @@ Comparison operators:
 
 Logical operators:
 
-* `AND`: intersection
-* `OR`: union
+* `AND`: conjunction
+* `OR`: disjunction
 
 ### Operator Precedence
 
