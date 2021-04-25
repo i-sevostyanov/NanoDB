@@ -56,13 +56,13 @@ func TestProject_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		rows := []sql.Row{
-			{datatype.NewInteger(1), datatype.NewString("Greg"), datatype.NewFloat(2000)},
-			{datatype.NewInteger(2), datatype.NewString("Frank"), datatype.NewFloat(2200)},
+			{datatype.NewInteger(1), datatype.NewText("Greg"), datatype.NewFloat(2000)},
+			{datatype.NewInteger(2), datatype.NewText("Frank"), datatype.NewFloat(2200)},
 		}
 
 		expectedRows := []sql.Row{
-			{datatype.NewInteger(1), datatype.NewString("Greg")},
-			{datatype.NewInteger(2), datatype.NewString("Frank")},
+			{datatype.NewInteger(1), datatype.NewText("Greg")},
+			{datatype.NewInteger(2), datatype.NewText("Frank")},
 		}
 
 		id := expr.NewMockNode(ctrl)
@@ -157,8 +157,8 @@ func TestProject_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		rows := []sql.Row{
-			{datatype.NewInteger(1), datatype.NewString("Greg"), datatype.NewFloat(2000)},
-			{datatype.NewInteger(2), datatype.NewString("Frank"), datatype.NewFloat(2200)},
+			{datatype.NewInteger(1), datatype.NewText("Greg"), datatype.NewFloat(2000)},
+			{datatype.NewInteger(2), datatype.NewText("Frank"), datatype.NewFloat(2200)},
 		}
 
 		expectedErr := fmt.Errorf("something went wrong")

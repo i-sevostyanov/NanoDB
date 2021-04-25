@@ -149,11 +149,11 @@ func TestSort_RowIter(t *testing.T) {
 		t.Parallel()
 
 		rows := []sql.Row{
-			{datatype.NewString("Anna")},
-			{datatype.NewString("Catalina")},
-			{datatype.NewString("Bob")},
-			{datatype.NewString("Eval")},
-			{datatype.NewString("David")},
+			{datatype.NewText("Anna")},
+			{datatype.NewText("Catalina")},
+			{datatype.NewText("Bob")},
+			{datatype.NewText("Eval")},
+			{datatype.NewText("David")},
 		}
 
 		t.Run("ascending", func(t *testing.T) {
@@ -680,11 +680,11 @@ func TestSort_RowIter(t *testing.T) {
 		t.Parallel()
 
 		rows := []sql.Row{
-			{datatype.NewString("1")},
+			{datatype.NewText("1")},
 			{datatype.NewNull()},
-			{datatype.NewString("4")},
+			{datatype.NewText("4")},
 			{datatype.NewNull()},
-			{datatype.NewString("5")},
+			{datatype.NewText("5")},
 		}
 
 		t.Run("ascending", func(t *testing.T) {

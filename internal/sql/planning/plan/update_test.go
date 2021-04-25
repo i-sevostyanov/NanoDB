@@ -61,9 +61,9 @@ func TestUpdate_RowIter(t *testing.T) {
 		}
 
 		updated := []sql.Row{
-			{firstID, datatype.NewString("Max"), datatype.NewFloat(2000)},
-			{secondID, datatype.NewString("Jane"), datatype.NewFloat(2200)},
-			{thirdID, datatype.NewString("John"), datatype.NewFloat(2100)},
+			{firstID, datatype.NewText("Max"), datatype.NewFloat(2000)},
+			{secondID, datatype.NewText("Jane"), datatype.NewFloat(2200)},
+			{thirdID, datatype.NewText("John"), datatype.NewFloat(2100)},
 		}
 
 		updater := NewMockRowUpdater(ctrl)
@@ -160,7 +160,7 @@ func TestUpdate_RowIter(t *testing.T) {
 		expectedErr := fmt.Errorf("something went wrong")
 		row := sql.Row{
 			datatype.NewInteger(1),
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		ctrl := gomock.NewController(t)
@@ -209,7 +209,7 @@ func TestUpdate_RowIter(t *testing.T) {
 
 		row := sql.Row{
 			id,
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		gomock.InOrder(
@@ -250,12 +250,12 @@ func TestUpdate_RowIter(t *testing.T) {
 
 		row := sql.Row{
 			id,
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		updated := sql.Row{
 			id,
-			datatype.NewString("John"),
+			datatype.NewText("John"),
 		}
 
 		gomock.InOrder(

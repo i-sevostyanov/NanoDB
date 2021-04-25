@@ -38,9 +38,9 @@ func TestDelete_RowIter(t *testing.T) {
 
 		pkIndex := uint8(0)
 		rows := []sql.Row{
-			{datatype.NewInteger(1), datatype.NewString("Max")},
-			{datatype.NewInteger(2), datatype.NewString("Vlad")},
-			{datatype.NewInteger(3), datatype.NewString("John")},
+			{datatype.NewInteger(1), datatype.NewText("Max")},
+			{datatype.NewInteger(2), datatype.NewText("Vlad")},
+			{datatype.NewInteger(3), datatype.NewText("John")},
 		}
 
 		child := plan.NewMockNode(ctrl)
@@ -137,7 +137,7 @@ func TestDelete_RowIter(t *testing.T) {
 
 		row := sql.Row{
 			datatype.NewInteger(1),
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		child := plan.NewMockNode(ctrl)
@@ -171,7 +171,7 @@ func TestDelete_RowIter(t *testing.T) {
 
 		pkIndex := uint8(0)
 		row := sql.Row{
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		child := plan.NewMockNode(ctrl)

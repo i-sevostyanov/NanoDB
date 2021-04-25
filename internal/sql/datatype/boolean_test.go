@@ -89,9 +89,9 @@ func TestBoolean_Compare(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean vs string",
+			name: "boolean vs text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			cmp:  sql.Equal,
 			err:  true,
 		},
@@ -255,9 +255,9 @@ func TestBoolean_Equal(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean == string",
+			name: "boolean == text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -339,9 +339,9 @@ func TestBoolean_NotEqual(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean != string",
+			name: "boolean != text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -423,9 +423,9 @@ func TestBoolean_GreaterThan(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean > string",
+			name: "boolean > text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -507,9 +507,9 @@ func TestBoolean_LessThan(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean < string",
+			name: "boolean < text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -591,9 +591,9 @@ func TestBoolean_GreaterOrEqual(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean >= string",
+			name: "boolean >= text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -675,9 +675,9 @@ func TestBoolean_LessOrEqual(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean <= string",
+			name: "boolean <= text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -759,9 +759,9 @@ func TestBoolean_And(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean AND string",
+			name: "boolean AND text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -843,9 +843,9 @@ func TestBoolean_Or(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "boolean OR string",
+			name: "boolean OR text",
 			a:    datatype.NewBoolean(true),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{

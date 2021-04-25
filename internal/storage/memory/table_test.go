@@ -168,7 +168,7 @@ func TestTable_Insert(t *testing.T) {
 
 		key := int64(1)
 		expected := sql.Row{
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 			datatype.NewInteger(key),
 		}
 
@@ -366,12 +366,12 @@ func TestTable_Update(t *testing.T) {
 
 		row := sql.Row{
 			datatype.NewInteger(1),
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		updated := sql.Row{
 			datatype.NewInteger(1),
-			datatype.NewString("Vlad"),
+			datatype.NewText("Vlad"),
 		}
 
 		database := memory.NewDatabase("playground")

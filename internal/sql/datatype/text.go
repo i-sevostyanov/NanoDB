@@ -6,29 +6,29 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
 
-type String struct {
+type Text struct {
 	value string
 }
 
-func NewString(v string) String {
-	return String{value: v}
+func NewText(v string) Text {
+	return Text{value: v}
 }
 
-func (s String) Raw() interface{} {
-	return s.value
+func (t Text) Raw() interface{} {
+	return t.value
 }
 
-func (s String) DataType() sql.DataType {
+func (t Text) DataType() sql.DataType {
 	return sql.String
 }
 
-func (s String) Compare(v sql.Value) (sql.CompareType, error) {
+func (t Text) Compare(v sql.Value) (sql.CompareType, error) {
 	switch value := v.Raw().(type) {
 	case string:
 		switch {
-		case s.value < value:
+		case t.value < value:
 			return sql.Less, nil
-		case s.value > value:
+		case t.value > value:
 			return sql.Greater, nil
 		default:
 			return sql.Equal, nil
@@ -40,18 +40,18 @@ func (s String) Compare(v sql.Value) (sql.CompareType, error) {
 	}
 }
 
-func (s String) UnaryPlus() (sql.Value, error) {
+func (t Text) UnaryPlus() (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }
 
-func (s String) UnaryMinus() (sql.Value, error) {
+func (t Text) UnaryMinus() (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }
 
-func (s String) Add(v sql.Value) (sql.Value, error) {
+func (t Text) Add(v sql.Value) (sql.Value, error) {
 	switch value := v.Raw().(type) {
 	case string:
-		return String{value: s.value + value}, nil
+		return Text{value: t.value + value}, nil
 	case nil:
 		return Null{}, nil
 	default:
@@ -59,30 +59,30 @@ func (s String) Add(v sql.Value) (sql.Value, error) {
 	}
 }
 
-func (s String) Sub(_ sql.Value) (sql.Value, error) {
+func (t Text) Sub(_ sql.Value) (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }
 
-func (s String) Mul(_ sql.Value) (sql.Value, error) {
+func (t Text) Mul(_ sql.Value) (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }
 
-func (s String) Div(_ sql.Value) (sql.Value, error) {
+func (t Text) Div(_ sql.Value) (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }
 
-func (s String) Pow(_ sql.Value) (sql.Value, error) {
+func (t Text) Pow(_ sql.Value) (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }
 
-func (s String) Mod(_ sql.Value) (sql.Value, error) {
+func (t Text) Mod(_ sql.Value) (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }
 
-func (s String) Equal(v sql.Value) (sql.Value, error) {
+func (t Text) Equal(v sql.Value) (sql.Value, error) {
 	switch value := v.Raw().(type) {
 	case string:
-		return Boolean{value: s.value == value}, nil
+		return Boolean{value: t.value == value}, nil
 	case nil:
 		return Null{}, nil
 	default:
@@ -90,10 +90,10 @@ func (s String) Equal(v sql.Value) (sql.Value, error) {
 	}
 }
 
-func (s String) NotEqual(v sql.Value) (sql.Value, error) {
+func (t Text) NotEqual(v sql.Value) (sql.Value, error) {
 	switch value := v.Raw().(type) {
 	case string:
-		return Boolean{value: s.value != value}, nil
+		return Boolean{value: t.value != value}, nil
 	case nil:
 		return Null{}, nil
 	default:
@@ -101,10 +101,10 @@ func (s String) NotEqual(v sql.Value) (sql.Value, error) {
 	}
 }
 
-func (s String) GreaterThan(v sql.Value) (sql.Value, error) {
+func (t Text) GreaterThan(v sql.Value) (sql.Value, error) {
 	switch value := v.Raw().(type) {
 	case string:
-		return Boolean{value: s.value > value}, nil
+		return Boolean{value: t.value > value}, nil
 	case nil:
 		return Null{}, nil
 	default:
@@ -112,10 +112,10 @@ func (s String) GreaterThan(v sql.Value) (sql.Value, error) {
 	}
 }
 
-func (s String) LessThan(v sql.Value) (sql.Value, error) {
+func (t Text) LessThan(v sql.Value) (sql.Value, error) {
 	switch value := v.Raw().(type) {
 	case string:
-		return Boolean{value: s.value < value}, nil
+		return Boolean{value: t.value < value}, nil
 	case nil:
 		return Null{}, nil
 	default:
@@ -123,10 +123,10 @@ func (s String) LessThan(v sql.Value) (sql.Value, error) {
 	}
 }
 
-func (s String) GreaterOrEqual(v sql.Value) (sql.Value, error) {
+func (t Text) GreaterOrEqual(v sql.Value) (sql.Value, error) {
 	switch value := v.Raw().(type) {
 	case string:
-		return Boolean{value: s.value > value || s.value == value}, nil
+		return Boolean{value: t.value > value || t.value == value}, nil
 	case nil:
 		return Null{}, nil
 	default:
@@ -134,10 +134,10 @@ func (s String) GreaterOrEqual(v sql.Value) (sql.Value, error) {
 	}
 }
 
-func (s String) LessOrEqual(v sql.Value) (sql.Value, error) {
+func (t Text) LessOrEqual(v sql.Value) (sql.Value, error) {
 	switch value := v.Raw().(type) {
 	case string:
-		return Boolean{value: s.value < value || s.value == value}, nil
+		return Boolean{value: t.value < value || t.value == value}, nil
 	case nil:
 		return Null{}, nil
 	default:
@@ -145,10 +145,10 @@ func (s String) LessOrEqual(v sql.Value) (sql.Value, error) {
 	}
 }
 
-func (s String) And(_ sql.Value) (sql.Value, error) {
+func (t Text) And(_ sql.Value) (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }
 
-func (s String) Or(_ sql.Value) (sql.Value, error) {
+func (t Text) Or(_ sql.Value) (sql.Value, error) {
 	return nil, fmt.Errorf("unsupported operation")
 }

@@ -57,9 +57,9 @@ func TestNull_Compare(t *testing.T) {
 			cmp:  sql.Less,
 		},
 		{
-			name: "null vs string",
+			name: "null vs text",
 			a:    datatype.NewNull(),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			cmp:  sql.Less,
 		},
 		{
@@ -139,11 +139,11 @@ func TestNull_Add(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null + string", func(t *testing.T) {
+	t.Run("null + text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.Add(b)
 		require.NoError(t, err)
@@ -187,11 +187,11 @@ func TestNull_Sub(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null - string", func(t *testing.T) {
+	t.Run("null - text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.Sub(b)
 		require.NoError(t, err)
@@ -235,11 +235,11 @@ func TestNull_Mul(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null * string", func(t *testing.T) {
+	t.Run("null * text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.Mul(b)
 		require.NoError(t, err)
@@ -283,11 +283,11 @@ func TestNull_Div(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null / string", func(t *testing.T) {
+	t.Run("null / text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.Div(b)
 		require.NoError(t, err)
@@ -331,11 +331,11 @@ func TestNull_Pow(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null ^ string", func(t *testing.T) {
+	t.Run("null ^ text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.Pow(b)
 		require.NoError(t, err)
@@ -379,11 +379,11 @@ func TestNull_Mod(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null % string", func(t *testing.T) {
+	t.Run("null % text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.Mod(b)
 		require.NoError(t, err)
@@ -427,11 +427,11 @@ func TestNull_Equal(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null == string", func(t *testing.T) {
+	t.Run("null == text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.Equal(b)
 		require.NoError(t, err)
@@ -475,11 +475,11 @@ func TestNull_NotEqual(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null != string", func(t *testing.T) {
+	t.Run("null != text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.NotEqual(b)
 		require.NoError(t, err)
@@ -523,11 +523,11 @@ func TestNull_GreaterThan(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null > string", func(t *testing.T) {
+	t.Run("null > text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.GreaterThan(b)
 		require.NoError(t, err)
@@ -571,11 +571,11 @@ func TestNull_LessThan(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null < string", func(t *testing.T) {
+	t.Run("null < text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.LessThan(b)
 		require.NoError(t, err)
@@ -619,11 +619,11 @@ func TestNull_GreaterOrEqual(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null >= string", func(t *testing.T) {
+	t.Run("null >= text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.GreaterOrEqual(b)
 		require.NoError(t, err)
@@ -667,11 +667,11 @@ func TestNull_LessOrEqual(t *testing.T) {
 		assert.Equal(t, datatype.NewNull(), value)
 	})
 
-	t.Run("null <= string", func(t *testing.T) {
+	t.Run("null <= text", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.LessOrEqual(b)
 		require.NoError(t, err)
@@ -737,11 +737,11 @@ func TestNull_And(t *testing.T) {
 		assert.Nil(t, value)
 	})
 
-	t.Run("null AND string -> unsupported", func(t *testing.T) {
+	t.Run("null AND text -> unsupported", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.And(b)
 		require.NotNil(t, err)
@@ -807,11 +807,11 @@ func TestNull_Or(t *testing.T) {
 		assert.Nil(t, value)
 	})
 
-	t.Run("null OR string -> unsupported", func(t *testing.T) {
+	t.Run("null OR text -> unsupported", func(t *testing.T) {
 		t.Parallel()
 
 		a := datatype.NewNull()
-		b := datatype.NewString("xyz")
+		b := datatype.NewText("xyz")
 
 		value, err := a.Or(b)
 		require.NotNil(t, err)

@@ -38,7 +38,7 @@ func TestColumn_Eval(t *testing.T) {
 		//  salary
 		row := sql.Row{
 			datatype.NewInteger(1),
-			datatype.NewString(expected),
+			datatype.NewText(expected),
 			datatype.NewFloat(1500.5),
 		}
 
@@ -62,7 +62,7 @@ func TestColumn_Eval(t *testing.T) {
 
 		row := sql.Row{
 			datatype.NewInteger(1),
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 			datatype.NewFloat(1500.5),
 		}
 

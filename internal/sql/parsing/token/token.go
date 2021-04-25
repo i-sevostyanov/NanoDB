@@ -52,7 +52,7 @@ const (
 	// Types
 	Integer
 	Float
-	String
+	Text
 	Boolean
 	Null
 
@@ -112,7 +112,7 @@ var tokens = [...]string{
 
 	Integer: "INTEGER",
 	Float:   "FLOAT",
-	String:  "STRING",
+	Text:    "TEXT",
 	Boolean: "BOOLEAN",
 	Null:    "NULL",
 
@@ -141,7 +141,7 @@ var tokens = [...]string{
 	Key:      "KEY",
 }
 
-// String returns the string corresponding to the token t.
+// Text returns the string corresponding to the token t.
 func (t Type) String() string {
 	s := ""
 
@@ -161,7 +161,7 @@ func Lookup(ident string) Type {
 	keywords := map[string]Type{
 		"INTEGER":  Integer,
 		"FLOAT":    Float,
-		"STRING":   String,
+		"TEXT":     Text,
 		"BOOLEAN":  Boolean,
 		"TRUE":     Boolean,
 		"FALSE":    Boolean,

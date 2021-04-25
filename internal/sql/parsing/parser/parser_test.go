@@ -311,7 +311,7 @@ func TestParser_Select(t *testing.T) {
 							Left:     &ast.IdentExpr{Name: "name"},
 							Operator: token.Equal,
 							Right: &ast.ScalarExpr{
-								Type:    token.String,
+								Type:    token.Text,
 								Literal: "vlad",
 							},
 						},
@@ -347,7 +347,7 @@ func TestParser_Select(t *testing.T) {
 							Left:     &ast.IdentExpr{Name: "name"},
 							Operator: token.Equal,
 							Right: &ast.ScalarExpr{
-								Type:    token.String,
+								Type:    token.Text,
 								Literal: "vlad",
 							},
 						},
@@ -387,7 +387,7 @@ func TestParser_Select(t *testing.T) {
 							Left:     &ast.IdentExpr{Name: "name"},
 							Operator: token.Equal,
 							Right: &ast.ScalarExpr{
-								Type:    token.String,
+								Type:    token.Text,
 								Literal: "vlad",
 							},
 						},
@@ -433,7 +433,7 @@ func TestParser_Select(t *testing.T) {
 							Left:     &ast.IdentExpr{Name: "name"},
 							Operator: token.Equal,
 							Right: &ast.ScalarExpr{
-								Type:    token.String,
+								Type:    token.Text,
 								Literal: "vlad",
 							},
 						},
@@ -602,7 +602,7 @@ func TestParser_Insert(t *testing.T) {
 						Literal: "10",
 					},
 					&ast.ScalarExpr{
-						Type:    token.String,
+						Type:    token.Text,
 						Literal: "ivan",
 					},
 					&ast.BinaryExpr{
@@ -693,7 +693,7 @@ func TestParser_Update(t *testing.T) {
 					{
 						Column: "name",
 						Value: &ast.ScalarExpr{
-							Type:    token.String,
+							Type:    token.Text,
 							Literal: "vlad",
 						},
 					},
@@ -893,7 +893,7 @@ func TestParser_Create(t *testing.T) {
 			stmt  ast.Statement
 		}{
 			{
-				input: "CREATE TABLE customers (id INTEGER, name STRING, salary FLOAT, is_active BOOLEAN)",
+				input: "CREATE TABLE customers (id INTEGER, name TEXT, salary FLOAT, is_active BOOLEAN)",
 				stmt: &ast.CreateTableStatement{
 					Table: "customers",
 					Columns: []ast.Column{
@@ -903,7 +903,7 @@ func TestParser_Create(t *testing.T) {
 						},
 						{
 							Name: "name",
-							Type: token.String,
+							Type: token.Text,
 						},
 						{
 							Name: "salary",
@@ -920,7 +920,7 @@ func TestParser_Create(t *testing.T) {
 				input: `
 				CREATE TABLE customers (
 					id INTEGER PRIMARY KEY,
-					name STRING NULL,
+					name TEXT NULL,
 					salary FLOAT NOT NULL,
 					is_active BOOLEAN NOT NULL DEFAULT true,
 				)
@@ -936,7 +936,7 @@ func TestParser_Create(t *testing.T) {
 						},
 						{
 							Name:     "name",
-							Type:     token.String,
+							Type:     token.Text,
 							Nullable: true,
 						},
 						{

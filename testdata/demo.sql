@@ -4,12 +4,12 @@ CREATE DATABASE demo;
 
 CREATE TABLE airports (
     id INTEGER PRIMARY KEY,
-    code STRING NOT NULL,
-    name STRING NOT NULL,
-    city STRING NOT NULL,
+    code TEXT NOT NULL,
+    name TEXT NOT NULL,
+    city TEXT NOT NULL,
     lat FLOAT NOT NULL,
     lon FLOAT NOT NULL,
-    timezone STRING NOT NULL
+    timezone TEXT NOT NULL
 );
 
 INSERT INTO airports (code, name, city, lat, lon, timezone) VALUES ('YKS', 'Yakutsk Airport', 'Yakutsk', 129.77099609375, 62.0932998657226562, 'Asia/Yakutsk');
@@ -46,8 +46,8 @@ INSERT INTO airports (code, name, city, lat, lon, timezone) VALUES ('ARH', 'Tala
 
 CREATE TABLE aircrafts (
     id INTEGER PRIMARY KEY,
-    code STRING NOT NULL,
-    model STRING NOT NULL,
+    code TEXT NOT NULL,
+    model TEXT NOT NULL,
     range INTEGER NOT NULL
 );
 

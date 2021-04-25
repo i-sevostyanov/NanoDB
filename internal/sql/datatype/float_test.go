@@ -73,9 +73,9 @@ func TestFloat_Compare(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "float vs string",
+			name: "float vs text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			cmp:  sql.Equal,
 			err:  true,
 		},
@@ -168,9 +168,9 @@ func TestFloat_Add(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float + string",
+			name: "float + text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -240,9 +240,9 @@ func TestFloat_Sub(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float - string",
+			name: "float - text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -312,9 +312,9 @@ func TestFloat_Mul(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float * string",
+			name: "float * text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -390,9 +390,9 @@ func TestFloat_Div(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "float / string",
+			name: "float / text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -462,9 +462,9 @@ func TestFloat_Pow(t *testing.T) {
 			result: datatype.NewFloat(1),
 		},
 		{
-			name: "float ^ string",
+			name: "float ^ text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -540,9 +540,9 @@ func TestFloat_Mod(t *testing.T) {
 			err:  true,
 		},
 		{
-			name: "float % string",
+			name: "float % text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -606,9 +606,9 @@ func TestFloat_Equal(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float == string",
+			name: "float == text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -672,9 +672,9 @@ func TestFloat_NotEqual(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float != string",
+			name: "float != text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -738,9 +738,9 @@ func TestFloat_GreaterThan(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float > string",
+			name: "float > text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -804,9 +804,9 @@ func TestFloat_LessThan(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float < string",
+			name: "float < text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -870,9 +870,9 @@ func TestFloat_GreaterOrEqual(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float >= string",
+			name: "float >= text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{
@@ -936,9 +936,9 @@ func TestFloat_LessOrEqual(t *testing.T) {
 			result: datatype.NewNull(),
 		},
 		{
-			name: "float <= string",
+			name: "float <= text",
 			a:    datatype.NewFloat(10),
-			b:    datatype.NewString("xyz"),
+			b:    datatype.NewText("xyz"),
 			err:  true,
 		},
 		{

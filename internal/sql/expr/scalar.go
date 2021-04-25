@@ -71,7 +71,7 @@ func NewString(literal string) (Node, error) {
 }
 
 func (s String) Eval(_ sql.Row) (sql.Value, error) {
-	return datatype.NewString(s.value), nil
+	return datatype.NewText(s.value), nil
 }
 
 func (s String) String() string {

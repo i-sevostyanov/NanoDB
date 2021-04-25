@@ -46,9 +46,9 @@ func TestFilter_RowIter(t *testing.T) {
 		rowIter := sql.NewMockRowIter(ctrl)
 
 		rows := []sql.Row{
-			{datatype.NewInteger(1), datatype.NewString("Max")},
-			{datatype.NewInteger(2), datatype.NewString("Vlad")},
-			{datatype.NewInteger(3), datatype.NewString("John")},
+			{datatype.NewInteger(1), datatype.NewText("Max")},
+			{datatype.NewInteger(2), datatype.NewText("Vlad")},
+			{datatype.NewInteger(3), datatype.NewText("John")},
 		}
 
 		isTrue := datatype.NewBoolean(true)
@@ -150,7 +150,7 @@ func TestFilter_RowIter(t *testing.T) {
 		expectedErr := fmt.Errorf("something went wrong")
 		row := sql.Row{
 			datatype.NewInteger(1),
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		gomock.InOrder(
@@ -186,7 +186,7 @@ func TestFilter_RowIter(t *testing.T) {
 
 		row := sql.Row{
 			datatype.NewInteger(1),
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		gomock.InOrder(

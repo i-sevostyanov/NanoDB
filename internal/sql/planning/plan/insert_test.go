@@ -23,7 +23,7 @@ func TestInsert_Columns(t *testing.T) {
 	key := int64(1)
 	row := sql.Row{
 		datatype.NewInteger(key),
-		datatype.NewString("Max"),
+		datatype.NewText("Max"),
 	}
 
 	inserter := NewMockTableInserter(ctrl)
@@ -43,7 +43,7 @@ func TestInsert_RowIter(t *testing.T) {
 		key := int64(1)
 		row := sql.Row{
 			datatype.NewInteger(key),
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		inserter := NewMockTableInserter(ctrl)
@@ -68,7 +68,7 @@ func TestInsert_RowIter(t *testing.T) {
 		expectedErr := fmt.Errorf("something went wrong")
 		row := sql.Row{
 			datatype.NewInteger(key),
-			datatype.NewString("Max"),
+			datatype.NewText("Max"),
 		}
 
 		inserter := NewMockTableInserter(ctrl)

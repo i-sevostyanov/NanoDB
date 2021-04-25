@@ -136,9 +136,9 @@ func TestPlanner_CreateTable(t *testing.T) {
 				},
 				{
 					Name: "name",
-					Type: token.String,
+					Type: token.Text,
 					Default: &ast.ScalarExpr{
-						Type:    token.String,
+						Type:    token.Text,
 						Literal: "<unknown>",
 					},
 					Nullable:   true,
@@ -179,7 +179,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 				DataType:   sql.String,
 				PrimaryKey: false,
 				Nullable:   true,
-				Default:    datatype.NewString("<unknown>"),
+				Default:    datatype.NewText("<unknown>"),
 			},
 			"salary": {
 				Position:   2,
@@ -234,7 +234,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 				},
 				{
 					Name: "name",
-					Type: token.String,
+					Type: token.Text,
 					Default: &ast.ScalarExpr{
 						Type:    token.Null,
 						Literal: "null",
@@ -299,7 +299,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 				},
 				{
 					Name: "name",
-					Type: token.String,
+					Type: token.Text,
 					Default: &ast.ScalarExpr{
 						Type:    token.Null,
 						Literal: "null",
@@ -339,7 +339,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 				},
 				{
 					Name: "name",
-					Type: token.String,
+					Type: token.Text,
 					Default: &ast.ScalarExpr{
 						Type:    token.Null,
 						Literal: "null",
@@ -383,7 +383,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 				},
 				{
 					Name: "name",
-					Type: token.String,
+					Type: token.Text,
 					Default: &ast.ScalarExpr{
 						Type:    token.Null,
 						Literal: "null",
@@ -427,7 +427,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 				},
 				{
 					Name: "name",
-					Type: token.String,
+					Type: token.Text,
 					Default: &ast.ScalarExpr{
 						Type:    token.Null,
 						Literal: "null",
@@ -471,7 +471,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 				},
 				{
 					Name: "name",
-					Type: token.String,
+					Type: token.Text,
 					Default: &ast.ScalarExpr{
 						Type:    token.Integer,
 						Literal: "10",
@@ -515,7 +515,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 				},
 				{
 					Name: "name",
-					Type: token.String,
+					Type: token.Text,
 					Default: &ast.ScalarExpr{
 						Type:    token.Null,
 						Literal: "null",
@@ -987,7 +987,7 @@ func TestPlanner_Insert(t *testing.T) {
 			},
 			Values: []ast.Expression{
 				&ast.ScalarExpr{
-					Type:    token.String,
+					Type:    token.Text,
 					Literal: "Mad Max",
 				},
 				&ast.ScalarExpr{
@@ -1000,7 +1000,7 @@ func TestPlanner_Insert(t *testing.T) {
 		key := int64(1)
 		row := sql.Row{
 			datatype.NewInteger(key),
-			datatype.NewString("Mad Max"),
+			datatype.NewText("Mad Max"),
 			datatype.NewFloat(200.2),
 		}
 
@@ -1050,7 +1050,7 @@ func TestPlanner_Update(t *testing.T) {
 				{
 					Column: "name",
 					Value: &ast.ScalarExpr{
-						Type:    token.String,
+						Type:    token.Text,
 						Literal: "xyz",
 					},
 				},
@@ -1068,7 +1068,7 @@ func TestPlanner_Update(t *testing.T) {
 		}
 
 		astExpr := &ast.ScalarExpr{
-			Type:    token.String,
+			Type:    token.Text,
 			Literal: "xyz",
 		}
 
@@ -1141,7 +1141,7 @@ func TestPlanner_Update(t *testing.T) {
 				{
 					Column: "name",
 					Value: &ast.ScalarExpr{
-						Type:    token.String,
+						Type:    token.Text,
 						Literal: "xyz",
 					},
 				},
@@ -1149,7 +1149,7 @@ func TestPlanner_Update(t *testing.T) {
 		}
 
 		astExpr := &ast.ScalarExpr{
-			Type:    token.String,
+			Type:    token.Text,
 			Literal: "xyz",
 		}
 
