@@ -93,7 +93,7 @@ func (r *Repl) execCommand(input string) (string, error) {
 
 	switch params[0] {
 	case "\\use":
-		return r.connect(params)
+		return r.useDatabase(params)
 	case "\\databases":
 		return r.listDatabases()
 	case "\\tables":
@@ -111,7 +111,7 @@ func (r *Repl) execCommand(input string) (string, error) {
 	}
 }
 
-func (r *Repl) connect(params []string) (string, error) {
+func (r *Repl) useDatabase(params []string) (string, error) {
 	if len(params) < 2 {
 		return "", fmt.Errorf("database name not specified")
 	}
@@ -140,7 +140,7 @@ func (r *Repl) listDatabases() (string, error) {
 		data = append(data, []string{databases[i].Name()})
 	}
 
-	drawTable(buf, []string{"Database"}, data)
+	r.drawTable(buf, []string{"Database"}, data)
 	buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
 
 	return buf.String(), nil
@@ -159,7 +159,7 @@ func (r *Repl) listTables() (string, error) {
 		data = append(data, []string{tables[i].Name()})
 	}
 
-	drawTable(buf, []string{"Table"}, data)
+	r.drawTable(buf, []string{"Table"}, data)
 	buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
 
 	return buf.String(), nil
@@ -214,7 +214,7 @@ func (r *Repl) describeTable(params []string) (string, error) {
 		data = append(data, row)
 	}
 
-	drawTable(buf, []string{"Column", "Type", "Nullable", "Default"}, data)
+	r.drawTable(buf, []string{"Column", "Type", "Nullable", "Default"}, data)
 	buf.WriteString("Indexes:\n")
 	buf.WriteString(fmt.Sprintf("   PRIMARY KEY (%s) autoincrement\n\n", primaryKey.Name))
 
@@ -319,15 +319,15 @@ loop:
 	buf := bytes.NewBuffer(nil)
 
 	if len(data) > 0 {
-		drawTable(buf, columns, data)
+		r.drawTable(buf, columns, data)
 		buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
 	}
 
 	return buf.String(), nil
 }
 
-func drawTable(buf io.Writer, headers []string, data [][]string) {
-	tw := tablewriter.NewWriter(buf)
+func (r *Repl) drawTable(w io.Writer, headers []string, data [][]string) {
+	tw := tablewriter.NewWriter(w)
 	tw.SetColWidth(75)
 	tw.AppendBulk(data)
 	tw.SetAutoFormatHeaders(false)
