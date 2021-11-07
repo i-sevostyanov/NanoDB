@@ -44,13 +44,11 @@ func main() {
 		signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 		defer signal.Stop(signals)
 
-		for {
-			select {
-			case <-ctx.Done():
-				return nil
-			case <-signals:
-				return errCanceled
-			}
+		select {
+		case <-ctx.Done():
+			return nil
+		case <-signals:
+			return errCanceled
 		}
 	})
 

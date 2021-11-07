@@ -32,17 +32,6 @@ func TestLimit_Columns(t *testing.T) {
 func TestLimit_RowIter(t *testing.T) {
 	t.Parallel()
 
-	// rows:
-	//   0
-	//   1
-	//   N
-
-	// limit -1
-	// limit 0
-
-	// limit 1
-	// limit N
-
 	t.Run("negative limit", func(t *testing.T) {
 		t.Parallel()
 

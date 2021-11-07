@@ -10,7 +10,7 @@ type Catalog interface {
 	DropDatabase(name string) error
 }
 
-// Database represents the backend of a SQL database.
+// Database represents the backend of an SQL database.
 type Database interface {
 	Name() string
 	GetTable(name string) (Table, error)
@@ -19,7 +19,7 @@ type Database interface {
 	DropTable(name string) error
 }
 
-// Table represents the backend of a SQL table.
+// Table represents the backend of an SQL table.
 type Table interface {
 	Name() string
 	Scheme() Scheme
