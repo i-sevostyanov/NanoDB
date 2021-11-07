@@ -5,12 +5,12 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/i-sevostyanov/NanoDB/internal/sql/expr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/datatype"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/expr"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"

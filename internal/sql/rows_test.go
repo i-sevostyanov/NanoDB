@@ -4,9 +4,10 @@ import (
 	"io"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/datatype"
-	"github.com/stretchr/testify/require"
 )
 
 func TestSliceRowsIter_Next(t *testing.T) {

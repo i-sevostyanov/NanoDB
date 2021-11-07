@@ -3,11 +3,11 @@ package memory_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 	"github.com/i-sevostyanov/NanoDB/internal/storage/memory"
-	"github.com/stretchr/testify/assert"
-
-	"github.com/stretchr/testify/require"
 )
 
 func TestDatabase_ListTables(t *testing.T) {

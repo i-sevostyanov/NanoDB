@@ -4,11 +4,12 @@ import (
 	"io"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/datatype"
 	"github.com/i-sevostyanov/NanoDB/internal/storage/memory"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestTable_Name(t *testing.T) {

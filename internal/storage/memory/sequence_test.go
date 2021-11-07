@@ -3,8 +3,9 @@ package memory_test
 import (
 	"testing"
 
-	"github.com/i-sevostyanov/NanoDB/internal/storage/memory"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/i-sevostyanov/NanoDB/internal/storage/memory"
 )
 
 func TestSequence_Next(t *testing.T) {

@@ -5,13 +5,14 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/engine"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestEngine_Query(t *testing.T) {
