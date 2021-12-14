@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -226,12 +225,7 @@ func (r *Repl) importFile(params []string) (string, error) {
 		return "", fmt.Errorf("filename not specified")
 	}
 
-	file, err := os.Open(params[1])
-	if err != nil {
-		return "", err
-	}
-
-	data, err := ioutil.ReadAll(file)
+	data, err := os.ReadFile(params[1])
 	if err != nil {
 		return "", err
 	}
