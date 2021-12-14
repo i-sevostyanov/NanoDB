@@ -201,10 +201,10 @@ func Lookup(ident string) Type {
 	return Ident
 }
 
-// New is a short-hand method for creating the new token.
+// New is a shorthand method for creating the new token.
 func New(t Type, offset int) Token {
 	literal := t.String()
-	length := len(t.String())
+	length := len(literal)
 
 	return Token{
 		Type:    t,
