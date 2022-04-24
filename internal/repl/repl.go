@@ -46,25 +46,24 @@ func New(in io.Reader, out io.Writer, catalog sql.Catalog, engine Engine) *Repl 
 }
 
 func (r *Repl) Run(ctx context.Context) error {
-	_, _ = r.output.Write([]byte("repl is the NanoDB interactive terminal.\n"))
+	r.write("repl is the NanoDB interactive terminal.\n")
 
 	go func() {
 		for {
-			_, _ = r.output.Write([]byte(r.prompt))
+			r.write(r.prompt)
 
 			scanner := bufio.NewScanner(r.input)
 			scanner.Scan()
 			input := scanner.Text()
 
-			if len(input) == 0 {
+			if input == "" {
 				continue
 			}
 
-			repl, err := r.exec(input)
-			if err != nil {
-				_, _ = r.output.Write([]byte(err.Error() + "\n"))
+			if repl, err := r.exec(input); err != nil {
+				r.write(err.Error() + "\n")
 			} else if repl != "" {
-				_, _ = r.output.Write([]byte(repl))
+				r.write(repl)
 			}
 		}
 	}()
@@ -75,6 +74,10 @@ func (r *Repl) Run(ctx context.Context) error {
 	case <-r.closeCh:
 		return ErrQuit
 	}
+}
+
+func (r *Repl) write(s string) {
+	_, _ = r.output.Write([]byte(s))
 }
 
 func (r *Repl) exec(input string) (string, error) {
@@ -91,19 +94,19 @@ func (r *Repl) execCommand(input string) (string, error) {
 	params := strings.Fields(cmd)
 
 	switch params[0] {
-	case "\\use":
+	case `\use`:
 		return r.useDatabase(params)
-	case "\\databases":
+	case `\databases`:
 		return r.listDatabases()
-	case "\\tables":
+	case `\tables`:
 		return r.listTables()
-	case "\\describe":
+	case `\describe`:
 		return r.describeTable(params)
-	case "\\import":
+	case `\import`:
 		return r.importFile(params)
-	case "\\help":
+	case `\help`:
 		return r.showHelp(), nil
-	case "\\quit":
+	case `\quit`:
 		return r.quit(), nil
 	default:
 		return "", fmt.Errorf("unknown command: %v", params[0])
@@ -292,18 +295,13 @@ loop:
 			return "", err
 		}
 
-		r := make([]string, 0, len(row))
+		values := make([]string, 0, len(row))
 
 		for i := range row {
-			switch v := row[i].Raw().(type) {
-			case nil:
-				r = append(r, "null")
-			default:
-				r = append(r, fmt.Sprint(v))
-			}
+			values = append(values, row[i].String())
 		}
 
-		data = append(data, r)
+		data = append(data, values)
 	}
 
 	if err = rowIter.Close(); err != nil {
