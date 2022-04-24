@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine3.14 AS build-env
+FROM golang:1.18.1-alpine3.15 AS build-env
 
 # Set environment variables
 ENV GO_WORKDIR /go/src/github.com/i-sevostyanov/NanoDB
@@ -17,7 +17,7 @@ RUN go mod verify
 RUN cd $GO_WORKDIR/cmd/repl && go install
 
 # Put everything together in a clean image
-FROM alpine:3.14
+FROM scratch
 
 # Copy binary into PATH
 COPY --from=build-env /go/bin/repl /usr/local/bin/repl
