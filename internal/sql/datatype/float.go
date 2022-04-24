@@ -3,6 +3,7 @@ package datatype
 import (
 	"fmt"
 	"math"
+	"strconv"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
@@ -17,6 +18,10 @@ func NewFloat(v float64) Float {
 
 func (f Float) Raw() interface{} {
 	return f.value
+}
+
+func (f Float) String() string {
+	return strconv.FormatFloat(f.value, 'E', -1, 64)
 }
 
 func (f Float) DataType() sql.DataType {

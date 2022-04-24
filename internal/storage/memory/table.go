@@ -99,8 +99,7 @@ func (t *Table) Delete(key int64) error {
 }
 
 func (t *Table) Update(key int64, row sql.Row) error {
-	_, ok := t.rows[key]
-	if !ok {
+	if _, ok := t.rows[key]; !ok {
 		return fmt.Errorf("row with key %d not found", key)
 	}
 

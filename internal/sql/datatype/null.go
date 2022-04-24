@@ -16,6 +16,10 @@ func (n Null) Raw() interface{} {
 	return nil
 }
 
+func (n Null) String() string {
+	return "null"
+}
+
 func (n Null) DataType() sql.DataType {
 	return sql.Null
 }

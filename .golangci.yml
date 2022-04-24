@@ -246,6 +246,11 @@ linters:
     - wsl
     - dupl
     - revive
+    - ireturn
+    - golint
+    - varnamelen
+    - maintidx
+    - nilnil
   fast: false
 
 issues:

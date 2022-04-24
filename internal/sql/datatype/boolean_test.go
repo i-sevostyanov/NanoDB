@@ -28,6 +28,16 @@ func TestBoolean_Raw(t *testing.T) {
 	fn(false)
 }
 
+func TestBoolean_String(t *testing.T) {
+	t.Parallel()
+
+	b := datatype.NewBoolean(true)
+	assert.Equal(t, "true", b.String())
+
+	b = datatype.NewBoolean(false)
+	assert.Equal(t, "false", b.String())
+}
+
 func TestBoolean_DataType(t *testing.T) {
 	t.Parallel()
 

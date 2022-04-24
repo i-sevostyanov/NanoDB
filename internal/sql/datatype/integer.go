@@ -3,6 +3,7 @@ package datatype
 import (
 	"fmt"
 	"math"
+	"strconv"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
@@ -17,6 +18,10 @@ func NewInteger(v int64) Integer {
 
 func (i Integer) Raw() interface{} {
 	return i.value
+}
+
+func (i Integer) String() string {
+	return strconv.FormatInt(i.value, 10)
 }
 
 func (i Integer) DataType() sql.DataType {
