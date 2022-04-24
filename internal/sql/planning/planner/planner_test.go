@@ -927,6 +927,154 @@ func TestPlanner_Select(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, expected, planNode)
 	})
+
+	t.Run("select 1", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		databaseName := "playground"
+		catalog := sql.NewMockCatalog(ctrl)
+
+		stmt := &ast.SelectStatement{
+			Result: []ast.ResultStatement{
+				{
+					Expr: &ast.ScalarExpr{
+						Type:    token.Integer,
+						Literal: "1",
+					},
+				},
+			},
+		}
+
+		project, err := expr.NewInteger("1")
+		require.NoError(t, err)
+
+		projections := []plan.Projection{
+			{
+				Alias: "",
+				Expr:  project,
+			},
+		}
+
+		expected := plan.NewProject(
+			projections,
+			plan.NewRows(sql.Row{}),
+		)
+
+		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
+		require.NoError(t, err)
+		assert.Equal(t, expected, planNode)
+	})
+
+	t.Run("returns error", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("on empty database name", func(t *testing.T) {
+			t.Parallel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			databaseName := ""
+			catalog := sql.NewMockCatalog(ctrl)
+
+			stmt := &ast.SelectStatement{
+				From: &ast.FromStatement{
+					Table: "users",
+				},
+			}
+
+			planNode, err := planner.New(catalog).Plan(databaseName, stmt)
+			require.NotNil(t, err)
+			assert.Nil(t, planNode)
+		})
+
+		t.Run("on empty table name", func(t *testing.T) {
+			t.Parallel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			databaseName := "playground"
+			catalog := sql.NewMockCatalog(ctrl)
+
+			stmt := &ast.SelectStatement{
+				From: &ast.FromStatement{
+					Table: "",
+				},
+			}
+
+			planNode, err := planner.New(catalog).Plan(databaseName, stmt)
+			require.NotNil(t, err)
+			assert.Nil(t, planNode)
+		})
+
+		t.Run("on empty where expression", func(t *testing.T) {
+			t.Parallel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			tableName := "users"
+			databaseName := "playground"
+
+			scheme := sql.Scheme{
+				"id": sql.Column{
+					Position:   0,
+					Name:       "id",
+					DataType:   sql.Integer,
+					PrimaryKey: true,
+					Nullable:   false,
+					Default:    nil,
+				},
+				"name": sql.Column{
+					Position:   1,
+					Name:       "name",
+					DataType:   sql.Text,
+					PrimaryKey: false,
+					Nullable:   false,
+					Default:    nil,
+				},
+				"salary": sql.Column{
+					Position:   2,
+					Name:       "salary",
+					DataType:   sql.Float,
+					PrimaryKey: false,
+					Nullable:   false,
+					Default:    nil,
+				},
+			}
+
+			catalog := sql.NewMockCatalog(ctrl)
+			database := sql.NewMockDatabase(ctrl)
+			table := sql.NewMockTable(ctrl)
+
+			catalog.EXPECT().GetDatabase(databaseName).Return(database, nil)
+			database.EXPECT().GetTable(tableName).Return(table, nil)
+			table.EXPECT().Scheme().Return(scheme)
+
+			stmt := &ast.SelectStatement{
+				Result: []ast.ResultStatement{
+					{
+						Alias: "",
+						Expr:  nil,
+					},
+				},
+				From: &ast.FromStatement{
+					Table: tableName,
+				},
+				Where: &ast.WhereStatement{
+					Expr: nil,
+				},
+			}
+
+			planNode, err := planner.New(catalog).Plan(databaseName, stmt)
+			require.NotNil(t, err)
+			assert.Nil(t, planNode)
+		})
+	})
 }
 
 func TestPlanner_Insert(t *testing.T) {
@@ -1383,4 +1531,13 @@ func TestPlanner_Empty(t *testing.T) {
 	planNode, err := planner.New(nil).Plan(databaseName, nil)
 	require.NoError(t, err)
 	assert.Equal(t, plan.NewRows(), planNode)
+}
+
+func TestPlanner_UnexpectedStatement(t *testing.T) {
+	t.Parallel()
+
+	databaseName := "playground"
+	planNode, err := planner.New(nil).Plan(databaseName, 1)
+	require.NotNil(t, err)
+	assert.Nil(t, planNode)
 }
