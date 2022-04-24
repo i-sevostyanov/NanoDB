@@ -22,6 +22,13 @@ func TestNull_Raw(t *testing.T) {
 	}
 }
 
+func TestNull_String(t *testing.T) {
+	t.Parallel()
+
+	n := datatype.NewNull()
+	assert.Equal(t, "null", n.String())
+}
+
 func TestNull_DataType(t *testing.T) {
 	t.Parallel()
 

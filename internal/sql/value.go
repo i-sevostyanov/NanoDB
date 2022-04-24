@@ -44,6 +44,7 @@ func (t DataType) String() string {
 
 type Value interface {
 	Raw() interface{}
+	String() string
 	DataType() DataType
 	Compare(x Value) (CompareType, error)
 	UnaryPlus() (Value, error)

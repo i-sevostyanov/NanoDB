@@ -24,6 +24,14 @@ func TestText_Raw(t *testing.T) {
 	}
 }
 
+func TestText_String(t *testing.T) {
+	t.Parallel()
+
+	value := "xyz"
+	text := datatype.NewText(value)
+	assert.Equal(t, value, text.String())
+}
+
 func TestText_DataType(t *testing.T) {
 	t.Parallel()
 

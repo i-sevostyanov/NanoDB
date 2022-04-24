@@ -24,6 +24,13 @@ func TestFloat_Raw(t *testing.T) {
 	}
 }
 
+func TestFloat_String(t *testing.T) {
+	t.Parallel()
+
+	f := datatype.NewFloat(10.0006)
+	assert.Equal(t, "1.00006E+01", f.String())
+}
+
 func TestFloat_DataType(t *testing.T) {
 	t.Parallel()
 

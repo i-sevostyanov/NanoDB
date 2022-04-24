@@ -2,6 +2,7 @@ package datatype
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
@@ -16,6 +17,10 @@ func NewBoolean(v bool) Boolean {
 
 func (b Boolean) Raw() interface{} {
 	return b.value
+}
+
+func (b Boolean) String() string {
+	return strconv.FormatBool(b.value)
 }
 
 func (b Boolean) DataType() sql.DataType {

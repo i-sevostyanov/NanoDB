@@ -18,6 +18,10 @@ func (t Text) Raw() interface{} {
 	return t.value
 }
 
+func (t Text) String() string {
+	return t.value
+}
+
 func (t Text) DataType() sql.DataType {
 	return sql.Text
 }
