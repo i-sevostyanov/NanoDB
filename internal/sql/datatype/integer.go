@@ -16,7 +16,7 @@ func NewInteger(v int64) Integer {
 	return Integer{value: v}
 }
 
-func (i Integer) Raw() interface{} {
+func (i Integer) Raw() any {
 	return i.value
 }
 

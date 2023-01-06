@@ -12,7 +12,7 @@ func NewNull() Null {
 	return Null{}
 }
 
-func (n Null) Raw() interface{} {
+func (n Null) Raw() any {
 	return nil
 }
 

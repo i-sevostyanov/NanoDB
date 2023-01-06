@@ -15,7 +15,7 @@ func NewBoolean(v bool) Boolean {
 	return Boolean{value: v}
 }
 
-func (b Boolean) Raw() interface{} {
+func (b Boolean) Raw() any {
 	return b.value
 }
 

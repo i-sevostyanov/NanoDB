@@ -43,7 +43,7 @@ func (t DataType) String() string {
 //go:generate mockgen -source=value.go -destination ./value_mock.go -package sql
 
 type Value interface {
-	Raw() interface{}
+	Raw() any
 	String() string
 	DataType() DataType
 	Compare(x Value) (CompareType, error)

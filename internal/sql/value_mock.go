@@ -33,7 +33,7 @@ func (m *MockValue) EXPECT() *MockValueMockRecorder {
 }
 
 // Raw mocks base method
-func (m *MockValue) Raw() interface{} {
+func (m *MockValue) Raw() any {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Raw")
 	ret0, _ := ret[0].(interface{})

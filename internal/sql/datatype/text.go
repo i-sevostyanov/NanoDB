@@ -14,7 +14,7 @@ func NewText(v string) Text {
 	return Text{value: v}
 }
 
-func (t Text) Raw() interface{} {
+func (t Text) Raw() any {
 	return t.value
 }
 

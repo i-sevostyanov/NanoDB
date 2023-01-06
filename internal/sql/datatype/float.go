@@ -16,7 +16,7 @@ func NewFloat(v float64) Float {
 	return Float{value: v}
 }
 
-func (f Float) Raw() interface{} {
+func (f Float) Raw() any {
 	return f.value
 }
 
