@@ -25,7 +25,7 @@ type Table interface {
 	Scheme() Scheme
 	PrimaryKey() Column
 	Sequence() Sequence
-	RowIter() (RowIter, error)
+	Scan() (RowIter, error)
 	Insert(key int64, row Row) error
 	Delete(key int64) error
 	Update(key int64, row Row) error

@@ -47,7 +47,7 @@ func (t *Table) PrimaryKey() sql.Column {
 	return t.primaryKey
 }
 
-func (t *Table) RowIter() (sql.RowIter, error) {
+func (t *Table) Scan() (sql.RowIter, error) {
 	rows := make([]sql.Row, 0, len(t.rows))
 
 	for _, key := range t.keys {

@@ -59,7 +59,7 @@ func TestScan_RowIter(t *testing.T) {
 		rowIter := sql.NewMockRowIter(ctrl)
 
 		gomock.InOrder(
-			table.EXPECT().RowIter().Return(rowIter, nil),
+			table.EXPECT().Scan().Return(rowIter, nil),
 			rowIter.EXPECT().Close().Return(nil),
 		)
 
@@ -81,7 +81,7 @@ func TestScan_RowIter(t *testing.T) {
 		expectedErr := fmt.Errorf("something went wrong")
 
 		table := sql.NewMockTable(ctrl)
-		table.EXPECT().RowIter().Return(nil, expectedErr)
+		table.EXPECT().Scan().Return(nil, expectedErr)
 
 		scan := plan.NewScan(table)
 		iter, err := scan.RowIter()

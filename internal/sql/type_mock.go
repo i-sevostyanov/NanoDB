@@ -265,19 +265,19 @@ func (mr *MockTableMockRecorder) Sequence() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Sequence", reflect.TypeOf((*MockTable)(nil).Sequence))
 }
 
-// RowIter mocks base method
-func (m *MockTable) RowIter() (RowIter, error) {
+// Scan mocks base method
+func (m *MockTable) Scan() (RowIter, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RowIter")
+	ret := m.ctrl.Call(m, "Scan")
 	ret0, _ := ret[0].(RowIter)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// RowIter indicates an expected call of RowIter
-func (mr *MockTableMockRecorder) RowIter() *gomock.Call {
+// Scan indicates an expected call of Scan
+func (mr *MockTableMockRecorder) Scan() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RowIter", reflect.TypeOf((*MockTable)(nil).RowIter))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Scan", reflect.TypeOf((*MockTable)(nil).Scan))
 }
 
 // Insert mocks base method

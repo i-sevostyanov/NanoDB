@@ -27,5 +27,5 @@ func (s *Scan) Columns() []string {
 }
 
 func (s *Scan) RowIter() (sql.RowIter, error) {
-	return s.table.RowIter()
+	return s.table.Scan()
 }

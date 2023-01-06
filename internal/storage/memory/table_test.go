@@ -110,7 +110,7 @@ func TestTable_RowIter(t *testing.T) {
 		table, err := database.CreateTable("users", scheme)
 		require.NoError(t, err)
 
-		iter, err := table.RowIter()
+		iter, err := table.Scan()
 		require.NoError(t, err)
 
 		row, err := iter.Next()
@@ -180,7 +180,7 @@ func TestTable_Insert(t *testing.T) {
 		err = table.Insert(key, expected)
 		require.NoError(t, err)
 
-		iter, err := table.RowIter()
+		iter, err := table.Scan()
 		require.NoError(t, err)
 
 		row, err := iter.Next()
@@ -255,7 +255,7 @@ func TestTable_Delete(t *testing.T) {
 		err = table.Delete(key)
 		require.NoError(t, err)
 
-		iter, err := table.RowIter()
+		iter, err := table.Scan()
 		require.NoError(t, err)
 
 		row, err := iter.Next()
@@ -309,7 +309,7 @@ func TestTable_Delete(t *testing.T) {
 			require.NoError(t, err)
 		}
 
-		iter, err := table.RowIter()
+		iter, err := table.Scan()
 		require.NoError(t, err)
 
 		row, err := iter.Next()
@@ -385,7 +385,7 @@ func TestTable_Update(t *testing.T) {
 		err = table.Update(1, updated)
 		require.NoError(t, err)
 
-		iter, err := table.RowIter()
+		iter, err := table.Scan()
 		require.NoError(t, err)
 
 		actual, err := iter.Next()
