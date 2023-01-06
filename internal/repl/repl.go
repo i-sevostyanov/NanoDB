@@ -20,7 +20,7 @@ const prompt = "#> "
 var ErrQuit = errors.New("quit")
 
 type Engine interface {
-	Exec(database, sql string) ([]string, sql.RowIter, error)
+	Exec(database, sql string) (columns []string, iter sql.RowIter, err error)
 }
 
 // Repl is a terminal-based front-end to NanoDB.
@@ -200,17 +200,17 @@ func (r *Repl) describeTable(params []string) (string, error) {
 	data := make([][]string, 0, len(columns))
 
 	for i := range columns {
-		var defaultValue interface{} = ""
+		var defaultValue string
 
 		if columns[i].Default != nil {
-			defaultValue = columns[i].Default.Raw()
+			defaultValue = columns[i].Default.String()
 		}
 
 		row := []string{
 			columns[i].Name,
 			columns[i].DataType.String(),
 			fmt.Sprintf("%t", columns[i].Nullable),
-			fmt.Sprintf("%v", defaultValue),
+			defaultValue,
 		}
 
 		data = append(data, row)

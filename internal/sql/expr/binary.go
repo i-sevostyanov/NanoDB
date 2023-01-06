@@ -4,6 +4,9 @@ import (
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/expr/comparison"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/expr/logical"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/expr/math"
 )
 
 type BinaryOp string
@@ -52,33 +55,33 @@ func (b Binary) Eval(row sql.Row) (sql.Value, error) {
 
 	switch b.Operator {
 	case Equal:
-		return lvalue.Equal(rvalue)
+		return comparison.Equal(lvalue, rvalue)
 	case NotEqual:
-		return lvalue.NotEqual(rvalue)
+		return comparison.NotEqual(lvalue, rvalue)
 	case LessThan:
-		return lvalue.LessThan(rvalue)
+		return comparison.LessThan(lvalue, rvalue)
 	case GreaterThan:
-		return lvalue.GreaterThan(rvalue)
+		return comparison.GreaterThan(lvalue, rvalue)
 	case LessThanOrEqual:
-		return lvalue.LessOrEqual(rvalue)
+		return comparison.LessOrEqual(lvalue, rvalue)
 	case GreaterThanOrEqual:
-		return lvalue.GreaterOrEqual(rvalue)
+		return comparison.GreaterOrEqual(lvalue, rvalue)
 	case And:
-		return lvalue.And(rvalue)
+		return logical.And(lvalue, rvalue)
 	case Or:
-		return lvalue.Or(rvalue)
+		return logical.Or(lvalue, rvalue)
 	case Add:
-		return lvalue.Add(rvalue)
+		return math.Add(lvalue, rvalue)
 	case Sub:
-		return lvalue.Sub(rvalue)
+		return math.Sub(lvalue, rvalue)
 	case Mul:
-		return lvalue.Mul(rvalue)
+		return math.Mul(lvalue, rvalue)
 	case Div:
-		return lvalue.Div(rvalue)
+		return math.Div(lvalue, rvalue)
 	case Mod:
-		return lvalue.Mod(rvalue)
+		return math.Mod(lvalue, rvalue)
 	case Pow:
-		return lvalue.Pow(rvalue)
+		return math.Pow(lvalue, rvalue)
 	default:
 		return nil, fmt.Errorf("unknown binary operator: %q", b.Operator)
 	}

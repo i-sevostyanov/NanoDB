@@ -59,14 +59,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
+			leftValue := datatype.NewText("123")
+			rightValue := datatype.NewText("456")
 			expected := datatype.NewBoolean(false)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Equal(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -89,18 +88,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewBoolean(true)
+			rightValue := datatype.NewInteger(10)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Equal(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -123,14 +120,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
+			leftValue := datatype.NewText("123")
+			rightValue := datatype.NewText("123")
 			expected := datatype.NewBoolean(false)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().NotEqual(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -153,18 +149,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewText("123")
+			rightValue := datatype.NewFloat(123)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().NotEqual(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -187,14 +181,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewFloat(100)
 			expected := datatype.NewBoolean(false)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().GreaterThan(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -217,18 +210,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewText("123")
+			rightValue := datatype.NewFloat(123)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().GreaterThan(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -251,14 +242,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
+			leftValue := datatype.NewFloat(100)
+			rightValue := datatype.NewFloat(10)
 			expected := datatype.NewBoolean(false)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().LessThan(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -281,18 +271,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewText("123")
+			rightValue := datatype.NewFloat(123)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().LessThan(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -315,14 +303,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := datatype.NewBoolean(false)
+			leftValue := datatype.NewFloat(100)
+			rightValue := datatype.NewFloat(100)
+			expected := datatype.NewBoolean(true)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().GreaterOrEqual(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -345,18 +332,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewFloat(100)
+			rightValue := datatype.NewText("100")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().GreaterOrEqual(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -379,14 +364,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
+			leftValue := datatype.NewFloat(1000)
+			rightValue := datatype.NewFloat(100)
 			expected := datatype.NewBoolean(false)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().LessOrEqual(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -409,18 +393,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewFloat(100)
+			rightValue := datatype.NewText("100")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().LessOrEqual(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -443,14 +425,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
+			leftValue := datatype.NewBoolean(true)
+			rightValue := datatype.NewBoolean(false)
 			expected := datatype.NewBoolean(false)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().And(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -473,18 +454,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewBoolean(true)
+			rightValue := datatype.NewText("true")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().And(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -507,14 +486,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
+			leftValue := datatype.NewBoolean(false)
+			rightValue := datatype.NewBoolean(false)
 			expected := datatype.NewBoolean(false)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Or(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -537,18 +515,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewBoolean(false)
+			rightValue := datatype.NewText("false")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Or(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -571,14 +547,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := datatype.NewBoolean(false)
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewFloat(10)
+			expected := datatype.NewFloat(20)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Add(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -601,18 +576,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewText("10")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Add(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -635,14 +608,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := datatype.NewBoolean(false)
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewFloat(10)
+			expected := datatype.NewFloat(0)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Sub(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -665,18 +637,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewText("10")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Sub(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -699,14 +669,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := datatype.NewBoolean(false)
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewFloat(10)
+			expected := datatype.NewFloat(100)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Mul(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -729,18 +698,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewText("10")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Mul(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -763,14 +730,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := datatype.NewBoolean(false)
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewFloat(10)
+			expected := datatype.NewFloat(1)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Div(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -793,18 +759,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewFloat(0)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Div(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -827,14 +791,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := datatype.NewBoolean(false)
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewFloat(10)
+			expected := datatype.NewFloat(0)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Mod(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -857,18 +820,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewText("10")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Mod(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -891,14 +852,13 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := datatype.NewBoolean(false)
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewFloat(2)
+			expected := datatype.NewFloat(100)
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Pow(rightValue).Return(expected, nil),
 			)
 
 			value, err := binaryExpr.Eval(nil)
@@ -921,18 +881,16 @@ func TestBinary_Eval(t *testing.T) {
 				Right:    rightNode,
 			}
 
-			leftValue := sql.NewMockValue(ctrl)
-			rightValue := sql.NewMockValue(ctrl)
-			expected := fmt.Errorf("unexpected error")
+			leftValue := datatype.NewFloat(10)
+			rightValue := datatype.NewText("10")
 
 			gomock.InOrder(
 				leftNode.EXPECT().Eval(nil).Return(leftValue, nil),
 				rightNode.EXPECT().Eval(nil).Return(rightValue, nil),
-				leftValue.EXPECT().Pow(rightValue).Return(nil, expected),
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.Equal(t, expected, err)
+			assert.NotNil(t, err)
 			assert.Nil(t, value)
 		})
 	})

@@ -7,6 +7,7 @@ import (
 	"sort"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
+	"github.com/i-sevostyanov/NanoDB/internal/sql/expr/comparison"
 )
 
 type Order uint8
@@ -111,7 +112,7 @@ loop:
 	sort.Slice(i.rows, func(x, y int) bool {
 		a := i.rows[x][position]
 		b := i.rows[y][position]
-		c, _ := a.Compare(b)
+		c, _ := comparison.Compare(a, b)
 
 		return c == operator
 	})

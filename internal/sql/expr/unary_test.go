@@ -78,7 +78,8 @@ func TestUnary_Eval(t *testing.T) {
 		}
 
 		operand.EXPECT().Eval(nil).Return(sqlValue, nil)
-		sqlValue.EXPECT().UnaryPlus().Return(expected, nil)
+		sqlValue.EXPECT().DataType().Return(expected.DataType())
+		sqlValue.EXPECT().Raw().Return(expected.Raw())
 
 		value, err := unaryExpr.Eval(nil)
 		require.NoError(t, err)
@@ -101,7 +102,8 @@ func TestUnary_Eval(t *testing.T) {
 		}
 
 		operand.EXPECT().Eval(nil).Return(sqlValue, nil)
-		sqlValue.EXPECT().UnaryMinus().Return(expected, nil)
+		sqlValue.EXPECT().DataType().Return(expected.DataType())
+		sqlValue.EXPECT().Raw().Return(int64(10))
 
 		value, err := unaryExpr.Eval(nil)
 		require.NoError(t, err)
