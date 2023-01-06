@@ -104,7 +104,7 @@ Logical operators:
 ### Operator Precedence
 
 | Precedence | Operator                        | Associativity |
-| ---------- | ------------------------------- | ------------- |
+|------------|---------------------------------|---------------|
 | 7          | `+`, `-` (unary plus/minus)     | Right         |
 | 6          | `^`                             | Right         |
 | 5          | `*`, `/`, `%`                   | Left          |
