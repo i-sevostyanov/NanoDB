@@ -1,4 +1,16 @@
+# https://docs.codecov.com/docs/codecovyml-reference
+codecov:
+  require_ci_to_pass: true
+  notify:
+    wait_for_ci: true
+
+# https://docs.codecov.com/docs/coverage-configuration
 coverage:
+  range: 60..90
+  round: down
+  precision: 2
+
+  # https://docs.codecov.com/docs/commit-status
   status:
     project:
       default:
@@ -8,3 +20,9 @@ coverage:
       default:
         target: auto
         threshold: 15%
+
+# https://docs.codecov.com/docs/ignoring-paths
+ignore:
+  - cmd
+  - internal/repl
+  - "**/*_mock*.go"
