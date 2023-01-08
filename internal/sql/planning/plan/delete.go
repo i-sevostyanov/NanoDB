@@ -35,7 +35,7 @@ func (d *Delete) Columns() []string {
 func (d *Delete) RowIter() (sql.RowIter, error) {
 	iter, err := d.child.RowIter()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get row iter: %w", err)
+		return nil, fmt.Errorf("get row iter: %w", err)
 	}
 
 	iter = &deleteIter{
@@ -60,7 +60,7 @@ func (i *deleteIter) Next() (sql.Row, error) {
 		case errors.Is(err, io.EOF):
 			return nil, err
 		case err != nil:
-			return nil, fmt.Errorf("failed to get next row: %w", err)
+			return nil, fmt.Errorf("get next row: %w", err)
 		}
 
 		key, ok := row[i.pkIndex].Raw().(int64)
@@ -69,7 +69,7 @@ func (i *deleteIter) Next() (sql.Row, error) {
 		}
 
 		if err = i.deleter.Delete(key); err != nil {
-			return nil, fmt.Errorf("failed to delete row: %w", err)
+			return nil, fmt.Errorf("delete row: %w", err)
 		}
 	}
 }

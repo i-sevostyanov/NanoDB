@@ -29,7 +29,7 @@ func (o *Offset) Columns() []string {
 func (o *Offset) RowIter() (sql.RowIter, error) {
 	iter, err := o.child.RowIter()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get row iter: %w", err)
+		return nil, fmt.Errorf("get row iter: %w", err)
 	}
 
 	iter = &offsetIter{
@@ -52,7 +52,7 @@ func (i *offsetIter) Next() (sql.Row, error) {
 		case errors.Is(err, io.EOF):
 			return nil, err
 		case err != nil:
-			return nil, fmt.Errorf("failed to skip row: %w", err)
+			return nil, fmt.Errorf("skip row: %w", err)
 		default:
 			i.skip--
 		}
@@ -63,7 +63,7 @@ func (i *offsetIter) Next() (sql.Row, error) {
 	case errors.Is(err, io.EOF):
 		return nil, err
 	case err != nil:
-		return nil, fmt.Errorf("failed to get next row: %w", err)
+		return nil, fmt.Errorf("get next row: %w", err)
 	default:
 		return row, nil
 	}

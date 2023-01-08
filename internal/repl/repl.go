@@ -241,7 +241,7 @@ func (r *Repl) importFile(params []string) (string, error) {
 			continue
 		}
 
-		if _, err := r.exec(stmt); err != nil {
+		if _, err = r.exec(stmt); err != nil {
 			return "", err
 		}
 	}
@@ -278,7 +278,7 @@ func (r *Repl) execQuery(input string) (string, error) {
 
 	columns, rowIter, err := r.engine.Exec(database, input)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	var data [][]string

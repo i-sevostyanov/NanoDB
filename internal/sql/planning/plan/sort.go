@@ -38,7 +38,7 @@ func (s *Sort) Columns() []string {
 func (s *Sort) RowIter() (sql.RowIter, error) {
 	iter, err := s.child.RowIter()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get row iter: %w", err)
+		return nil, fmt.Errorf("get row iter: %w", err)
 	}
 
 	iter = &sortIter{
@@ -103,7 +103,7 @@ loop:
 		case errors.Is(err, io.EOF):
 			break loop
 		case err != nil:
-			return fmt.Errorf("failed to get next row: %w", err)
+			return fmt.Errorf("get next row: %w", err)
 		default:
 			i.rows = append(i.rows, row)
 		}

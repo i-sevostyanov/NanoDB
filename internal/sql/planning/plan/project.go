@@ -45,7 +45,7 @@ func (p *Project) Columns() []string {
 func (p *Project) RowIter() (sql.RowIter, error) {
 	iter, err := p.child.RowIter()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get row iter: %w", err)
+		return nil, fmt.Errorf("get row iter: %w", err)
 	}
 
 	projections := make([]expr.Node, 0, len(p.projections))
@@ -73,7 +73,7 @@ func (i *projectIter) Next() (sql.Row, error) {
 	case errors.Is(err, io.EOF):
 		return nil, err
 	case err != nil:
-		return nil, fmt.Errorf("failed to get next row: %w", err)
+		return nil, fmt.Errorf("get next row: %w", err)
 	default:
 		return i.projection(row)
 	}
@@ -89,7 +89,7 @@ func (i *projectIter) projection(row sql.Row) (sql.Row, error) {
 	for _, p := range i.projections {
 		value, err := p.Eval(row)
 		if err != nil {
-			return nil, fmt.Errorf("failed to eval projection: %w", err)
+			return nil, fmt.Errorf("eval projection: %w", err)
 		}
 
 		project = append(project, value)

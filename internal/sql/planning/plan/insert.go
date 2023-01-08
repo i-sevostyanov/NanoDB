@@ -32,7 +32,7 @@ func (i *Insert) Columns() []string {
 
 func (i *Insert) RowIter() (sql.RowIter, error) {
 	if err := i.inserter.Insert(i.key, i.row); err != nil {
-		return nil, fmt.Errorf("failed to insert row: %w", err)
+		return nil, fmt.Errorf("insert row: %w", err)
 	}
 
 	return sql.RowsIter(), nil

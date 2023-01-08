@@ -30,7 +30,7 @@ func (d *CreateDatabase) Columns() []string {
 
 func (d *CreateDatabase) RowIter() (sql.RowIter, error) {
 	if _, err := d.creator.CreateDatabase(d.name); err != nil {
-		return nil, fmt.Errorf("failed to create database: %w", err)
+		return nil, fmt.Errorf("create database: %w", err)
 	}
 
 	return sql.RowsIter(), nil
@@ -60,7 +60,7 @@ func (t *CreateTable) Columns() []string {
 
 func (t *CreateTable) RowIter() (sql.RowIter, error) {
 	if _, err := t.creator.CreateTable(t.name, t.scheme); err != nil {
-		return nil, fmt.Errorf("failed to create table: %w", err)
+		return nil, fmt.Errorf("create table: %w", err)
 	}
 
 	return sql.RowsIter(), nil

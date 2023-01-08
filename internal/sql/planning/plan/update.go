@@ -38,7 +38,7 @@ func (u *Update) Columns() []string {
 func (u *Update) RowIter() (sql.RowIter, error) {
 	iter, err := u.child.RowIter()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get child iter: %w", err)
+		return nil, fmt.Errorf("get child iter: %w", err)
 	}
 
 	iter = &updateIter{
@@ -65,7 +65,7 @@ func (u *updateIter) Next() (sql.Row, error) {
 		case errors.Is(err, io.EOF):
 			return nil, err
 		case err != nil:
-			return nil, fmt.Errorf("failed to get next row: %w", err)
+			return nil, fmt.Errorf("get next row: %w", err)
 		}
 
 		updatedRow := make(sql.Row, len(row))
@@ -73,7 +73,7 @@ func (u *updateIter) Next() (sql.Row, error) {
 
 		for i, expression := range u.columns {
 			if updatedRow[i], err = expression.Eval(row); err != nil {
-				return nil, fmt.Errorf("failed to eval expr: %w", err)
+				return nil, fmt.Errorf("eval expr: %w", err)
 			}
 		}
 
@@ -83,7 +83,7 @@ func (u *updateIter) Next() (sql.Row, error) {
 		}
 
 		if err = u.updater.Update(key, updatedRow); err != nil {
-			return nil, fmt.Errorf("failed to update row: %w", err)
+			return nil, fmt.Errorf("update row: %w", err)
 		}
 	}
 }

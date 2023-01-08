@@ -28,7 +28,7 @@ func (f *Filter) Columns() []string {
 func (f *Filter) RowIter() (sql.RowIter, error) {
 	iter, err := f.child.RowIter()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get row iter: %w", err)
+		return nil, fmt.Errorf("get row iter: %w", err)
 	}
 
 	iter = &filterIter{
@@ -52,7 +52,7 @@ func (i *filterIter) Next() (sql.Row, error) {
 		case errors.Is(err, io.EOF):
 			return nil, err
 		case err != nil:
-			return nil, fmt.Errorf("failed to get next row: %w", err)
+			return nil, fmt.Errorf("get next row: %w", err)
 		}
 
 		value, err := i.cond.Eval(row)

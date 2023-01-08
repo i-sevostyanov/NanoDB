@@ -56,12 +56,12 @@ func columnExpr(expr *ast.IdentExpr, scheme sql.Scheme) (Node, error) {
 func binaryExpr(expr *ast.BinaryExpr, scheme sql.Scheme) (Node, error) {
 	left, err := walk(expr.Left, scheme)
 	if err != nil {
-		return nil, fmt.Errorf("failed to walk left arg of binary expr: %w", err)
+		return nil, fmt.Errorf("walk left arg of binary expr: %w", err)
 	}
 
 	right, err := walk(expr.Right, scheme)
 	if err != nil {
-		return nil, fmt.Errorf("failed to walk right arg of binary expr: %w", err)
+		return nil, fmt.Errorf("walk right arg of binary expr: %w", err)
 	}
 
 	binary := &Binary{
@@ -87,7 +87,7 @@ func unaryExpr(expr *ast.UnaryExpr, scheme sql.Scheme) (Node, error) {
 
 	operand, err := walk(expr.Right, scheme)
 	if err != nil {
-		return nil, fmt.Errorf("failed to walk left arg of unary expr: %w", err)
+		return nil, fmt.Errorf("walk left arg of unary expr: %w", err)
 	}
 
 	node := &Unary{

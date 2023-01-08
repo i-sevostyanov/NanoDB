@@ -39,17 +39,17 @@ func New(parser Parser, planner Planner) *Engine {
 func (e *Engine) Exec(database, input string) (columns []string, iter sql.RowIter, err error) {
 	astNode, err := e.parser.Parse(input)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to parse sql query: %w", err)
+		return nil, nil, fmt.Errorf("parse sql query: %w", err)
 	}
 
 	planNode, err := e.planner.Plan(database, astNode)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to build query plan: %w", err)
+		return nil, nil, fmt.Errorf("build query plan: %w", err)
 	}
 
 	iter, err = planNode.RowIter()
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to get rows iter: %w", err)
+		return nil, nil, fmt.Errorf("get rows iter: %w", err)
 	}
 
 	return planNode.Columns(), iter, nil

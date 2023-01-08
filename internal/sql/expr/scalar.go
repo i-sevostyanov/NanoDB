@@ -15,7 +15,7 @@ type Integer struct {
 func NewInteger(literal string) (Integer, error) {
 	value, err := strconv.ParseInt(literal, 10, 64)
 	if err != nil {
-		return Integer{}, fmt.Errorf("failed to parse integer literal: %w", err)
+		return Integer{}, fmt.Errorf("parse integer literal: %w", err)
 	}
 
 	node := Integer{
@@ -40,7 +40,7 @@ type Float struct {
 func NewFloat(literal string) (Node, error) {
 	value, err := strconv.ParseFloat(literal, 64)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse float literal: %w", err)
+		return nil, fmt.Errorf("parse float literal: %w", err)
 	}
 
 	node := Float{
@@ -85,7 +85,7 @@ type Boolean struct {
 func NewBoolean(literal string) (Node, error) {
 	value, err := strconv.ParseBool(literal)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse boolean literal: %w", err)
+		return nil, fmt.Errorf("parse boolean literal: %w", err)
 	}
 
 	node := Boolean{

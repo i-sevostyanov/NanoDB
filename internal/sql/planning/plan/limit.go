@@ -26,7 +26,7 @@ func (l *Limit) Columns() []string {
 func (l *Limit) RowIter() (sql.RowIter, error) {
 	iter, err := l.child.RowIter()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get row iter: %w", err)
+		return nil, fmt.Errorf("get row iter: %w", err)
 	}
 
 	iter = &limitIter{

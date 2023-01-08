@@ -45,12 +45,12 @@ func (b Binary) String() string {
 func (b Binary) Eval(row sql.Row) (sql.Value, error) {
 	lvalue, err := b.Left.Eval(row)
 	if err != nil {
-		return nil, fmt.Errorf("binary: failed to eval left arg: %w", err)
+		return nil, fmt.Errorf("binary: eval left arg: %w", err)
 	}
 
 	rvalue, err := b.Right.Eval(row)
 	if err != nil {
-		return nil, fmt.Errorf("binary: failed to eval right arg: %w", err)
+		return nil, fmt.Errorf("binary: eval right arg: %w", err)
 	}
 
 	switch b.Operator {

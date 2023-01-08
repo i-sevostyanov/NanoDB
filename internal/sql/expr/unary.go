@@ -35,7 +35,7 @@ func (e *Unary) String() string {
 func (e *Unary) Eval(row sql.Row) (sql.Value, error) {
 	value, err := e.Operand.Eval(row)
 	if err != nil {
-		return nil, fmt.Errorf("unary: failed to eval operand: %w", err)
+		return nil, fmt.Errorf("unary: eval operand: %w", err)
 	}
 
 	switch e.Operator {

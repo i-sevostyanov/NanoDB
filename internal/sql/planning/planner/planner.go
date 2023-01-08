@@ -56,27 +56,27 @@ func (p *Planner) planSelect(database string, stmt *ast.SelectStatement) (plan.N
 	)
 
 	if table, node, err = p.planScan(database, stmt.From); err != nil {
-		return nil, fmt.Errorf("failed to plan scan: %w", err)
+		return nil, fmt.Errorf("plan scan: %w", err)
 	}
 
 	if node, err = p.planFilter(table, stmt.Where, node); err != nil {
-		return nil, fmt.Errorf("failed to plan filter: %w", err)
+		return nil, fmt.Errorf("plan filter: %w", err)
 	}
 
 	if node, err = p.planSort(table, stmt.OrderBy, node); err != nil {
-		return nil, fmt.Errorf("failed to plan sort: %w", err)
+		return nil, fmt.Errorf("plan sort: %w", err)
 	}
 
 	if node, err = p.planProject(table, stmt.Result, node); err != nil {
-		return nil, fmt.Errorf("failed to plan project: %w", err)
+		return nil, fmt.Errorf("plan project: %w", err)
 	}
 
 	if node, err = p.planOffset(stmt.Offset, node); err != nil {
-		return nil, fmt.Errorf("failed to plan offset: %w", err)
+		return nil, fmt.Errorf("plan offset: %w", err)
 	}
 
 	if node, err = p.planLimit(stmt.Limit, node); err != nil {
-		return nil, fmt.Errorf("failed to plan limit: %w", err)
+		return nil, fmt.Errorf("plan limit: %w", err)
 	}
 
 	return node, nil
@@ -171,11 +171,11 @@ func (p *Planner) planUpdate(database string, stmt *ast.UpdateStatement) (plan.N
 	}
 
 	if node, err = p.planFilter(table, stmt.Where, plan.NewScan(table)); err != nil {
-		return nil, fmt.Errorf("failed to plan filter: %w", err)
+		return nil, fmt.Errorf("plan filter: %w", err)
 	}
 
 	if columns, err = p.planUpdateColumns(table.Scheme(), stmt.Set); err != nil {
-		return nil, fmt.Errorf("failed to plan columns for update: %w", err)
+		return nil, fmt.Errorf("plan columns for update: %w", err)
 	}
 
 	return plan.NewUpdate(table, table.PrimaryKey().Position, columns, node), nil
@@ -192,7 +192,7 @@ func (p *Planner) planUpdateColumns(scheme sql.Scheme, stmts []ast.SetStatement)
 
 		value, err := expr.New(stmts[i].Value, scheme)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create expr from value: %w", err)
+			return nil, fmt.Errorf("create expr from value: %w", err)
 		}
 
 		columns[column.Position] = value
@@ -213,7 +213,7 @@ func (p *Planner) planDelete(database string, stmt *ast.DeleteStatement) (plan.N
 	}
 
 	if node, err = p.planFilter(table, stmt.Where, plan.NewScan(table)); err != nil {
-		return nil, fmt.Errorf("failed to plan filter: %w", err)
+		return nil, fmt.Errorf("plan filter: %w", err)
 	}
 
 	return plan.NewDelete(table, table.PrimaryKey().Position, node), nil
@@ -229,7 +229,7 @@ func (p *Planner) planCreateDatabase(stmt *ast.CreateDatabaseStatement) (plan.No
 
 func (p *Planner) planDropDatabase(stmt *ast.DropDatabaseStatement) (plan.Node, error) {
 	if _, err := p.catalog.GetDatabase(stmt.Database); err != nil {
-		return nil, fmt.Errorf("failed to get database %q: %w", stmt.Database, err)
+		return nil, fmt.Errorf("get database %q: %w", stmt.Database, err)
 	}
 
 	return plan.NewDropDatabase(p.catalog, stmt.Database), nil
@@ -238,7 +238,7 @@ func (p *Planner) planDropDatabase(stmt *ast.DropDatabaseStatement) (plan.Node, 
 func (p *Planner) planCreateTable(database string, stmt *ast.CreateTableStatement) (plan.Node, error) {
 	db, err := p.catalog.GetDatabase(database)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get database: %w", err)
+		return nil, fmt.Errorf("get database: %w", err)
 	}
 
 	if _, err = db.GetTable(stmt.Table); err == nil {
@@ -247,7 +247,7 @@ func (p *Planner) planCreateTable(database string, stmt *ast.CreateTableStatemen
 
 	scheme, err := p.planTableScheme(stmt.Columns)
 	if err != nil {
-		return nil, fmt.Errorf("failed to plan table scheme: %w", err)
+		return nil, fmt.Errorf("plan table scheme: %w", err)
 	}
 
 	return plan.NewCreateTable(db, stmt.Table, scheme), nil
@@ -303,12 +303,12 @@ func (p *Planner) planSchemeColumn(position uint8, column ast.Column) (sql.Colum
 	if column.Default != nil {
 		defaultExpr, err := expr.New(column.Default, nil)
 		if err != nil {
-			return sql.Column{}, fmt.Errorf("failed to create default expr: %w", err)
+			return sql.Column{}, fmt.Errorf("create default expr: %w", err)
 		}
 
 		value, err = defaultExpr.Eval(nil)
 		if err != nil {
-			return sql.Column{}, fmt.Errorf("failed to eval default expr: %w", err)
+			return sql.Column{}, fmt.Errorf("eval default expr: %w", err)
 		}
 
 		if dataType != value.DataType() {
@@ -334,11 +334,11 @@ func (p *Planner) planSchemeColumn(position uint8, column ast.Column) (sql.Colum
 func (p *Planner) planDropTable(database string, stmt *ast.DropTableStatement) (plan.Node, error) {
 	db, err := p.catalog.GetDatabase(database)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get database: %w", err)
+		return nil, fmt.Errorf("get database: %w", err)
 	}
 
 	if _, err = db.GetTable(stmt.Table); err != nil {
-		return nil, fmt.Errorf("failed to get table %q: %w", stmt.Table, err)
+		return nil, fmt.Errorf("get table %q: %w", stmt.Table, err)
 	}
 
 	return plan.NewDropTable(db, stmt.Table), nil
@@ -458,12 +458,12 @@ func (p *Planner) planOffset(stmt *ast.OffsetStatement, child plan.Node) (plan.N
 
 	offsetExpr, err := expr.New(stmt.Value, nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create offset expr: %w", err)
+		return nil, fmt.Errorf("create offset expr: %w", err)
 	}
 
 	limit, err := offsetExpr.Eval(nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to eval offset expr: %w", err)
+		return nil, fmt.Errorf("eval offset expr: %w", err)
 	}
 
 	n, ok := limit.Raw().(int64)
@@ -485,12 +485,12 @@ func (p *Planner) planLimit(stmt *ast.LimitStatement, child plan.Node) (plan.Nod
 
 	limitExpr, err := expr.New(stmt.Value, nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create limit expr: %w", err)
+		return nil, fmt.Errorf("create limit expr: %w", err)
 	}
 
 	limit, err := limitExpr.Eval(nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to eval limit expr: %w", err)
+		return nil, fmt.Errorf("eval limit expr: %w", err)
 	}
 
 	n, ok := limit.Raw().(int64)

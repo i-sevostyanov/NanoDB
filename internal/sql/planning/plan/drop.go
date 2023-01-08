@@ -30,7 +30,7 @@ func (d *DropDatabase) Columns() []string {
 
 func (d *DropDatabase) RowIter() (sql.RowIter, error) {
 	if err := d.dropper.DropDatabase(d.name); err != nil {
-		return nil, fmt.Errorf("failed to drop database: %w", err)
+		return nil, fmt.Errorf("drop database: %w", err)
 	}
 
 	return sql.RowsIter(), nil
@@ -58,7 +58,7 @@ func NewDropTable(dropper TableDropper, name string) *DropTable {
 
 func (d *DropTable) RowIter() (sql.RowIter, error) {
 	if err := d.dropper.DropTable(d.name); err != nil {
-		return nil, fmt.Errorf("failed to drop table: %w", err)
+		return nil, fmt.Errorf("drop table: %w", err)
 	}
 
 	return sql.RowsIter(), nil
