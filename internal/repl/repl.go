@@ -23,7 +23,7 @@ type Engine interface {
 	Exec(database, sql string) (columns []string, iter sql.RowIter, err error)
 }
 
-// Repl is a terminal-based front-end to NanoDB.
+// Repl is terminal-based front-end to NanoDB.
 type Repl struct {
 	input    io.Reader
 	output   io.Writer

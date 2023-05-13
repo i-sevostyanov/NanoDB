@@ -1,4 +1,4 @@
-FROM golang:1.19.4-alpine3.17 AS build-env
+FROM golang:1.20-alpine3.17 AS build-env
 
 # Set environment variables
 ENV GO_WORKDIR /go/src/github.com/i-sevostyanov/NanoDB

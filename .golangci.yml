@@ -251,6 +251,12 @@ linters:
     - varnamelen
     - maintidx
     - nilnil
+    - nonamedreturns
+    - forcetypeassert
+    - errcheck
+    - exhaustruct
+    - nosnakecase
+    - gocritic
   fast: false
 
 issues:

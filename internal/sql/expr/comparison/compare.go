@@ -41,14 +41,11 @@ func compareBool(left, right sql.Value) (sql.CompareType, error) {
 		rvalue uint8
 	)
 
-	leftRaw := left.Raw().(bool)
-	rightRaw := right.Raw().(bool)
-
-	if leftRaw {
+	if leftRaw := left.Raw().(bool); leftRaw {
 		lvalue = 1
 	}
 
-	if rightRaw {
+	if rightRaw := right.Raw().(bool); rightRaw {
 		rvalue = 1
 	}
 

@@ -11,25 +11,25 @@ jobs:
   golangci-lint:
     strategy:
       matrix:
-        go-version: [1.19.4]
+        go-version: ['1.20']
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
         with:
-          go-version: 1.19.4
+          go-version: '1.20'
       - name: lint
-        uses: golangci/golangci-lint-action@v3.3.1
+        uses: golangci/golangci-lint-action@v3.4.0
         with:
           version: latest
   tests:
     needs: golangci-lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
-          go-version: 1.19.4
+          go-version: '1.20'
       - name: Run tests and coverage
         run: make test
