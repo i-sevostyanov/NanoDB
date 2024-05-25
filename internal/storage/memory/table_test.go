@@ -219,7 +219,7 @@ func TestTable_Insert(t *testing.T) {
 		require.NoError(t, err)
 
 		err = table.Insert(key, nil)
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 }
 
@@ -336,7 +336,7 @@ func TestTable_Delete(t *testing.T) {
 		require.NoError(t, err)
 
 		err = table.Delete(1)
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 }
 
@@ -416,6 +416,6 @@ func TestTable_Update(t *testing.T) {
 		require.NoError(t, err)
 
 		err = table.Update(1, nil)
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 }

@@ -91,7 +91,7 @@ func TestDelete_RowIter(t *testing.T) {
 
 		deletePlan := plan.NewDelete(deleter, pkIndex, child)
 		iter, err := deletePlan.RowIter()
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, iter)
 	})
 
@@ -189,7 +189,7 @@ func TestDelete_RowIter(t *testing.T) {
 		require.NoError(t, err)
 
 		r, err := iter.Next()
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, r)
 
 		err = iter.Close()

@@ -17,7 +17,7 @@ func TestFloat_Raw(t *testing.T) {
 
 	switch value := b.Raw().(type) {
 	case float64:
-		assert.Equal(t, expected, value)
+		assert.InEpsilon(t, expected, value, 0)
 	default:
 		assert.Failf(t, "fail", "unexpected type %T", value)
 	}

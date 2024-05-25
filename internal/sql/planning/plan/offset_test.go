@@ -123,7 +123,7 @@ func TestOffset_RowIter(t *testing.T) {
 
 		offset := plan.NewOffset(N, child)
 		iter, err := offset.RowIter()
-		require.NotNil(t, err)
+		require.Error(t, err)
 		require.Nil(t, iter)
 	})
 

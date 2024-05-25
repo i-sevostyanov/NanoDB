@@ -30,7 +30,7 @@ func TestCatalog_GetDatabase(t *testing.T) {
 
 		catalog := memory.NewCatalog()
 		database, err := catalog.GetDatabase("not-exist")
-		require.NotNil(t, err)
+		require.Error(t, err)
 		require.Nil(t, database)
 	})
 }
@@ -90,7 +90,7 @@ func TestCatalog_CreateDatabase(t *testing.T) {
 		require.NotNil(t, db)
 
 		db, err = catalog.CreateDatabase("playground")
-		require.NotNil(t, err)
+		require.Error(t, err)
 		require.Nil(t, db)
 	})
 }
@@ -112,7 +112,7 @@ func TestCatalog_DropDatabase(t *testing.T) {
 		require.NoError(t, err)
 
 		_, err = catalog.GetDatabase(database)
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("returns error if database not exist", func(t *testing.T) {
@@ -120,6 +120,6 @@ func TestCatalog_DropDatabase(t *testing.T) {
 
 		catalog := memory.NewCatalog()
 		err := catalog.DropDatabase("playground")
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 }

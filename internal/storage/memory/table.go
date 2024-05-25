@@ -3,6 +3,7 @@ package memory
 import (
 	"fmt"
 	"io"
+	"sync"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
@@ -27,11 +28,15 @@ func NewTable(name string, scheme sql.Scheme) *Table {
 	}
 
 	return &Table{
-		name:       name,
-		scheme:     scheme,
-		seq:        &Sequence{},
+		name:   name,
+		scheme: scheme,
+		keys:   nil,
+		rows:   make(map[int64]sql.Row),
+		seq: &Sequence{
+			mu:    sync.RWMutex{},
+			value: 0,
+		},
 		primaryKey: primaryKey,
-		rows:       make(map[int64]sql.Row),
 	}
 }
 
@@ -55,7 +60,8 @@ func (t *Table) Scan() (sql.RowIter, error) {
 	}
 
 	i := &iter{
-		rows: rows,
+		index: 0,
+		rows:  rows,
 	}
 
 	return i, nil
