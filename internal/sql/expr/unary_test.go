@@ -1,7 +1,6 @@
 package expr_test
 
 import (
-	"errors"
 	"fmt"
 	"math"
 	"testing"
@@ -125,7 +124,7 @@ func TestUnary_Eval(t *testing.T) {
 		operand.EXPECT().Eval(nil).Return(nil, nil)
 
 		value, err := unaryExpr.Eval(nil)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, value)
 	})
 
@@ -145,7 +144,7 @@ func TestUnary_Eval(t *testing.T) {
 		operand.EXPECT().Eval(nil).Return(nil, expected)
 
 		value, err := unaryExpr.Eval(nil)
-		require.True(t, errors.Is(err, expected))
+		require.ErrorIs(t, err, expected)
 		assert.Nil(t, value)
 	})
 }

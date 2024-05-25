@@ -531,8 +531,6 @@ func TestParser_Select(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
-
 		t.Run(test.input, func(t *testing.T) {
 			t.Parallel()
 
@@ -565,15 +563,13 @@ func TestParser_Select(t *testing.T) {
 		}
 
 		for _, input := range inputs {
-			input := input
-
 			t.Run(input, func(t *testing.T) {
 				t.Parallel()
 
 				p := parser.New(lexer.New(input))
 				stmts, err := p.Parse()
 
-				require.NotNil(t, err)
+				require.Error(t, err)
 				assert.Nil(t, stmts)
 			})
 		}
@@ -629,8 +625,6 @@ func TestParser_Insert(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
-
 		t.Run(test.input, func(t *testing.T) {
 			t.Parallel()
 
@@ -663,15 +657,13 @@ func TestParser_Insert(t *testing.T) {
 		}
 
 		for _, input := range inputs {
-			input := input
-
 			t.Run(input, func(t *testing.T) {
 				t.Parallel()
 
 				p := parser.New(lexer.New(input))
 				stmts, err := p.Parse()
 
-				require.NotNil(t, err)
+				require.Error(t, err)
 				assert.Nil(t, stmts)
 			})
 		}
@@ -729,8 +721,6 @@ func TestParser_Update(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
-
 		t.Run(test.input, func(t *testing.T) {
 			t.Parallel()
 
@@ -762,15 +752,13 @@ func TestParser_Update(t *testing.T) {
 		}
 
 		for _, input := range inputs {
-			input := input
-
 			t.Run(input, func(t *testing.T) {
 				t.Parallel()
 
 				p := parser.New(lexer.New(input))
 				stmts, err := p.Parse()
 
-				require.NotNil(t, err)
+				require.Error(t, err)
 				assert.Nil(t, stmts)
 			})
 		}
@@ -812,8 +800,6 @@ func TestParser_Delete(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
-
 		t.Run(test.input, func(t *testing.T) {
 			t.Parallel()
 
@@ -837,15 +823,13 @@ func TestParser_Delete(t *testing.T) {
 		}
 
 		for _, input := range inputs {
-			input := input
-
 			t.Run(input, func(t *testing.T) {
 				t.Parallel()
 
 				p := parser.New(lexer.New(input))
 				stmts, err := p.Parse()
 
-				require.NotNil(t, err)
+				require.Error(t, err)
 				assert.Nil(t, stmts)
 			})
 		}
@@ -881,7 +865,7 @@ func TestParser_Create(t *testing.T) {
 			stmts, err := p.Parse()
 
 			assert.Nil(t, stmts)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 		})
 	})
 
@@ -959,8 +943,6 @@ func TestParser_Create(t *testing.T) {
 		}
 
 		for _, test := range tests {
-			test := test
-
 			t.Run(test.input, func(t *testing.T) {
 				t.Parallel()
 
@@ -994,15 +976,13 @@ func TestParser_Create(t *testing.T) {
 			}
 
 			for _, input := range inputs {
-				input := input
-
 				t.Run(input, func(t *testing.T) {
 					t.Parallel()
 
 					p := parser.New(lexer.New(input))
 					stmts, err := p.Parse()
 
-					require.NotNil(t, err)
+					require.Error(t, err)
 					assert.Nil(t, stmts)
 				})
 			}
@@ -1016,7 +996,7 @@ func TestParser_Create(t *testing.T) {
 		p := parser.New(lexer.New(input))
 		stmts, err := p.Parse()
 
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, stmts)
 	})
 }
@@ -1049,7 +1029,7 @@ func TestParser_Drop(t *testing.T) {
 			p := parser.New(lexer.New(input))
 			stmts, err := p.Parse()
 
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, stmts)
 		})
 	})
@@ -1079,7 +1059,7 @@ func TestParser_Drop(t *testing.T) {
 			p := parser.New(lexer.New(input))
 			stmts, err := p.Parse()
 
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, stmts)
 		})
 	})
@@ -1091,7 +1071,7 @@ func TestParser_Drop(t *testing.T) {
 		p := parser.New(lexer.New(input))
 		stmts, err := p.Parse()
 
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, stmts)
 	})
 }
@@ -1105,7 +1085,7 @@ func TestParser_Parse(t *testing.T) {
 		p := parser.New(lexer.New(""))
 		stmt, err := p.Parse()
 
-		require.Nil(t, err)
+		require.NoError(t, err)
 		assert.Nil(t, stmt)
 	})
 }

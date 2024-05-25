@@ -53,7 +53,7 @@ func TestColumn_Eval(t *testing.T) {
 		column := expr.Column{Position: 1}
 		value, err := column.Eval(nil)
 
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, value)
 	})
 
@@ -69,7 +69,7 @@ func TestColumn_Eval(t *testing.T) {
 		column := expr.Column{Position: uint8(len(row) + 1)}
 		value, err := column.Eval(row)
 
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, value)
 	})
 }

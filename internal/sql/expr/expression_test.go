@@ -66,7 +66,7 @@ func TestNewExpr(t *testing.T) {
 			}
 
 			node, err := expr.New(identExpr, scheme)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, node)
 		})
 
@@ -78,7 +78,7 @@ func TestNewExpr(t *testing.T) {
 			}
 
 			node, err := expr.New(identExpr, nil)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, node)
 		})
 	})
@@ -148,7 +148,7 @@ func TestNewExpr(t *testing.T) {
 			}
 
 			node, err := expr.New(astExpr, nil)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, node)
 		})
 
@@ -164,7 +164,7 @@ func TestNewExpr(t *testing.T) {
 			}
 
 			node, err := expr.New(astExpr, nil)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, node)
 		})
 	})
@@ -303,7 +303,7 @@ func TestNewExpr(t *testing.T) {
 			}
 
 			node, err := expr.New(astExpr, nil)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, node)
 		})
 
@@ -323,7 +323,7 @@ func TestNewExpr(t *testing.T) {
 			}
 
 			node, err := expr.New(astExpr, nil)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, node)
 		})
 	})
@@ -333,7 +333,7 @@ func TestNewExpr(t *testing.T) {
 
 		astExpr := &ast.AsteriskExpr{}
 		node, err := expr.New(astExpr, nil)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, node)
 	})
 }

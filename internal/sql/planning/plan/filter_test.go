@@ -203,7 +203,7 @@ func TestFilter_RowIter(t *testing.T) {
 		require.NotNil(t, iter)
 
 		row, err = iter.Next()
-		require.NotNil(t, err)
+		require.Error(t, err)
 		require.Nil(t, row)
 
 		err = iter.Close()

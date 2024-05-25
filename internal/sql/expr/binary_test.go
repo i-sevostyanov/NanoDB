@@ -1,7 +1,6 @@
 package expr_test
 
 import (
-	"errors"
 	"fmt"
 	"testing"
 
@@ -97,7 +96,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -158,7 +157,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -219,7 +218,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -280,7 +279,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -341,7 +340,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -402,7 +401,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -463,7 +462,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -524,7 +523,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -585,7 +584,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -646,7 +645,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -707,7 +706,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -768,7 +767,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -829,7 +828,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -890,7 +889,7 @@ func TestBinary_Eval(t *testing.T) {
 			)
 
 			value, err := binaryExpr.Eval(nil)
-			assert.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, value)
 		})
 	})
@@ -914,7 +913,7 @@ func TestBinary_Eval(t *testing.T) {
 		leftNode.EXPECT().Eval(nil).Return(nil, expected)
 
 		value, err := equal.Eval(nil)
-		require.True(t, errors.Is(err, expected))
+		require.ErrorIs(t, err, expected)
 		assert.Nil(t, value)
 	})
 
@@ -942,7 +941,7 @@ func TestBinary_Eval(t *testing.T) {
 		)
 
 		value, err := binaryExpr.Eval(nil)
-		require.True(t, errors.Is(err, expected))
+		require.ErrorIs(t, err, expected)
 		assert.Nil(t, value)
 	})
 
@@ -970,7 +969,7 @@ func TestBinary_Eval(t *testing.T) {
 		)
 
 		value, err := binaryExpr.Eval(nil)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, value)
 	})
 }

@@ -225,7 +225,7 @@ func TestUpdate_RowIter(t *testing.T) {
 		require.NotNil(t, iter)
 
 		row, err = iter.Next()
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, row)
 	})
 

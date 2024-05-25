@@ -127,14 +127,14 @@ func (p *Planner) planInsert(database string, stmt *ast.InsertStatement) (plan.N
 			return nil, fmt.Errorf("column %q not found", columnName)
 		}
 
-		valueExpr, err := expr.New(stmt.Values[idx], scheme)
-		if err != nil {
-			return nil, err
+		valueExpr, exprErr := expr.New(stmt.Values[idx], scheme)
+		if exprErr != nil {
+			return nil, exprErr
 		}
 
-		value, err := valueExpr.Eval(nil)
-		if err != nil {
-			return nil, err
+		value, evalErr := valueExpr.Eval(nil)
+		if evalErr != nil {
+			return nil, evalErr
 		}
 
 		if column.DataType != value.DataType() {

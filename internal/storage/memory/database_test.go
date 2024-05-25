@@ -83,7 +83,7 @@ func TestDatabase_GetTable(t *testing.T) {
 
 		database := memory.NewDatabase("playground")
 		table, err := database.GetTable("xxx")
-		require.NotNil(t, err)
+		require.Error(t, err)
 		require.Nil(t, table)
 	})
 }
@@ -130,7 +130,7 @@ func TestDatabase_CreateTable(t *testing.T) {
 		require.NoError(t, err)
 
 		_, err = database.CreateTable("users", scheme)
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("return error if scheme is empty", func(t *testing.T) {
@@ -138,7 +138,7 @@ func TestDatabase_CreateTable(t *testing.T) {
 
 		database := memory.NewDatabase("playground")
 		_, err := database.CreateTable("users", nil)
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 }
 
@@ -167,7 +167,7 @@ func TestDatabase_DropTable(t *testing.T) {
 		require.NoError(t, err)
 
 		deleted, err := database.GetTable(table.Name())
-		require.NotNil(t, err)
+		require.Error(t, err)
 		require.Nil(t, deleted)
 	})
 
@@ -176,7 +176,7 @@ func TestDatabase_DropTable(t *testing.T) {
 
 		database := memory.NewDatabase("playground")
 		err := database.DropTable("xxx")
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 }
 

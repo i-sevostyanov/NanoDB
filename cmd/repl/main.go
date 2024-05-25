@@ -15,48 +15,28 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/parser"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/planner"
 	"github.com/i-sevostyanov/NanoDB/internal/storage/memory"
-
-	"golang.org/x/sync/errgroup"
 )
 
 func main() {
-	errCanceled := errors.New("canceled")
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
 
-	gr, ctx := errgroup.WithContext(context.Background())
-
-	gr.Go(func() error {
-		parseFn := engine.ParseFn(func(sql string) (ast.Node, error) {
-			lx := lexer.New(sql)
-			pr := parser.New(lx)
-			return pr.Parse()
-		})
-
-		catalog := memory.NewCatalog()
-		aPlanner := planner.New(catalog)
-		anEngine := engine.New(parseFn, aPlanner)
-		aRepl := repl.New(os.Stdin, os.Stdout, catalog, anEngine)
-
-		return aRepl.Run(ctx)
+	parseFn := engine.ParseFn(func(sql string) (ast.Node, error) {
+		lx := lexer.New(sql)
+		pr := parser.New(lx)
+		return pr.Parse()
 	})
 
-	gr.Go(func() error {
-		signals := make(chan os.Signal, 1)
-		signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
-		defer signal.Stop(signals)
+	catalog := memory.NewCatalog()
+	aPlanner := planner.New(catalog)
+	anEngine := engine.New(parseFn, aPlanner)
+	aRepl := repl.New(os.Stdin, os.Stdout, catalog, anEngine)
 
-		select {
-		case <-ctx.Done():
-			return nil
-		case <-signals:
-			return errCanceled
-		}
-	})
-
-	if err := gr.Wait(); err != nil {
+	if err := aRepl.Run(ctx); err != nil {
 		switch {
-		case errors.Is(err, errCanceled), errors.Is(err, repl.ErrQuit):
+		case errors.Is(err, repl.ErrQuit):
 		default:
-			log.Fatalf("Failed to start: %v", err)
+			log.Printf("repl: %v\n", err)
 		}
 	}
 }

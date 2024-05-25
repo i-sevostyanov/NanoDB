@@ -31,7 +31,7 @@ func TestInteger(t *testing.T) {
 		t.Parallel()
 
 		_, err := expr.NewInteger("xyz")
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("eval", func(t *testing.T) {
@@ -74,7 +74,7 @@ func TestFloat(t *testing.T) {
 		t.Parallel()
 
 		_, err := expr.NewFloat("xyz")
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("eval", func(t *testing.T) {
@@ -88,7 +88,7 @@ func TestFloat(t *testing.T) {
 
 		switch v := value.Raw().(type) {
 		case float64:
-			assert.Equal(t, float64(10), v)
+			assert.InEpsilon(t, float64(10), v, 0)
 		default:
 			assert.Failf(t, "fail", "unexpected value type %T", v)
 		}
@@ -153,7 +153,7 @@ func TestBoolean(t *testing.T) {
 		t.Parallel()
 
 		_, err := expr.NewBoolean("xyz")
-		require.NotNil(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("eval", func(t *testing.T) {

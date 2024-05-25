@@ -60,7 +60,7 @@ func TestPlanner_CreateDatabase(t *testing.T) {
 		}
 
 		planNode, err := planner.New(catalog).Plan("", stmt)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, planNode)
 	})
 }
@@ -357,7 +357,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 		database.EXPECT().GetTable(tableName).Return(nil, nil)
 
 		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, planNode)
 	})
 
@@ -401,7 +401,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 		database.EXPECT().GetTable(tableName).Return(nil, errTableNotExist)
 
 		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, planNode)
 	})
 
@@ -445,7 +445,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 		database.EXPECT().GetTable(tableName).Return(nil, errTableNotExist)
 
 		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, planNode)
 	})
 
@@ -489,7 +489,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 		database.EXPECT().GetTable(tableName).Return(nil, errTableNotExist)
 
 		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, planNode)
 	})
 
@@ -533,7 +533,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 		database.EXPECT().GetTable(tableName).Return(nil, errTableNotExist)
 
 		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, planNode)
 	})
 }
@@ -987,7 +987,7 @@ func TestPlanner_Select(t *testing.T) {
 			}
 
 			planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, planNode)
 		})
 
@@ -1007,7 +1007,7 @@ func TestPlanner_Select(t *testing.T) {
 			}
 
 			planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, planNode)
 		})
 
@@ -1071,7 +1071,7 @@ func TestPlanner_Select(t *testing.T) {
 			}
 
 			planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-			require.NotNil(t, err)
+			require.Error(t, err)
 			assert.Nil(t, planNode)
 		})
 	})
@@ -1519,7 +1519,7 @@ func TestPlanner_Delete(t *testing.T) {
 		}
 
 		planNode, err := planner.New(catalog).Plan(databaseName, stmt)
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Nil(t, planNode)
 	})
 }
@@ -1538,6 +1538,6 @@ func TestPlanner_UnexpectedStatement(t *testing.T) {
 
 	databaseName := "playground"
 	planNode, err := planner.New(nil).Plan(databaseName, 1)
-	require.NotNil(t, err)
+	require.Error(t, err)
 	assert.Nil(t, planNode)
 }

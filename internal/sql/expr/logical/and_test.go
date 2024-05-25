@@ -78,14 +78,12 @@ func TestAnd(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
-
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
 			actual, err := logical.And(test.a, test.b)
 			if test.err {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				assert.Equal(t, test.expected, actual)
 			} else {
 				require.NoError(t, err)
