@@ -1,9 +1,8 @@
 package comparison
 
 import (
+	"cmp"
 	"fmt"
-
-	"golang.org/x/exp/constraints"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
@@ -49,23 +48,12 @@ func compareBool(left, right sql.Value) (sql.CompareType, error) {
 		rvalue = 1
 	}
 
-	return compare[uint8](lvalue, rvalue)
+	return sql.CompareType(cmp.Compare(lvalue, rvalue)), nil
 }
 
-func compareOrdered[T constraints.Ordered](left, right sql.Value) (sql.CompareType, error) {
+func compareOrdered[T cmp.Ordered](left, right sql.Value) (sql.CompareType, error) {
 	lvalue := left.Raw().(T)
 	rvalue := right.Raw().(T)
 
-	return compare[T](lvalue, rvalue)
-}
-
-func compare[T constraints.Ordered](left, right T) (sql.CompareType, error) {
-	switch {
-	case left < right:
-		return sql.Less, nil
-	case left > right:
-		return sql.Greater, nil
-	default:
-		return sql.Equal, nil
-	}
+	return sql.CompareType(cmp.Compare(lvalue, rvalue)), nil
 }
