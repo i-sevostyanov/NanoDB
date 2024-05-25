@@ -1,9 +1,8 @@
 package comparison
 
 import (
+	"cmp"
 	"fmt"
-
-	"golang.org/x/exp/constraints"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/datatype"
@@ -61,7 +60,7 @@ func greaterThanBool(left, right sql.Value) sql.Value {
 	return datatype.NewBoolean(lvalue > rvalue)
 }
 
-func greaterThan[T constraints.Ordered](left, right sql.Value) sql.Value {
+func greaterThan[T cmp.Ordered](left, right sql.Value) sql.Value {
 	lvalue := left.Raw().(T)
 	rvalue := right.Raw().(T)
 
