@@ -1,6 +1,6 @@
 package sql
 
-//go:generate mockgen -source=type.go -destination ./type_mock.go -package sql
+//go:generate go run go.uber.org/mock/mockgen -typed -source=type.go -destination ./type_mock.go -package sql
 
 // Catalog holds meta-information about databases.
 type Catalog interface {

@@ -8,7 +8,7 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/planning/plan"
 )
 
-//go:generate mockgen -source=engine.go -destination ./engine_mock_test.go -package engine_test
+//go:generate go run go.uber.org/mock/mockgen -typed -source=engine.go -destination ./engine_mock_test.go -package engine_test
 
 type Parser interface {
 	Parse(sql string) (ast.Node, error)

@@ -6,7 +6,7 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
 
-//go:generate mockgen -source=create.go -destination ./create_mock_test.go -package plan_test
+//go:generate go run go.uber.org/mock/mockgen -typed -source=create.go -destination ./create_mock_test.go -package plan_test
 
 type DatabaseCreator interface {
 	CreateDatabase(name string) (sql.Database, error)

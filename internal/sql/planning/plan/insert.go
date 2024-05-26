@@ -6,7 +6,7 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
 
-//go:generate mockgen -source=insert.go -destination ./insert_mock_test.go -package plan_test
+//go:generate go run go.uber.org/mock/mockgen -typed -source=insert.go -destination ./insert_mock_test.go -package plan_test
 
 type TableInserter interface {
 	Insert(key int64, row sql.Row) error

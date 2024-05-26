@@ -8,7 +8,7 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/token"
 )
 
-//go:generate mockgen -source=expression.go -destination ./expression_mock.go -package expr
+//go:generate go run go.uber.org/mock/mockgen -typed -source=expression.go -destination ./expression_mock.go -package expr
 
 // Node is a combination of one or more SQL expressions.
 type Node interface {

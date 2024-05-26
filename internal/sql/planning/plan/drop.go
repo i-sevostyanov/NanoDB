@@ -6,7 +6,7 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
 
-//go:generate mockgen -source=drop.go -destination ./drop_mock_test.go -package plan_test
+//go:generate go run go.uber.org/mock/mockgen -typed -source=drop.go -destination ./drop_mock_test.go -package plan_test
 
 type DatabaseDropper interface {
 	DropDatabase(name string) error

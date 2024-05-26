@@ -8,7 +8,7 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
 )
 
-//go:generate mockgen -source=delete.go -destination ./delete_mock_test.go -package plan_test
+//go:generate go run go.uber.org/mock/mockgen -typed -source=delete.go -destination ./delete_mock_test.go -package plan_test
 
 type RowDeleter interface {
 	Delete(key int64) error
