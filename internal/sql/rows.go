@@ -4,7 +4,7 @@ import (
 	"io"
 )
 
-//go:generate mockgen -source=rows.go -destination ./rows_mock.go -package sql
+//go:generate go run go.uber.org/mock/mockgen -typed -source=rows.go -destination ./rows_mock.go -package sql
 
 type Row []Value
 

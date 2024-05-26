@@ -9,7 +9,7 @@ import (
 	"github.com/i-sevostyanov/NanoDB/internal/sql/expr"
 )
 
-//go:generate mockgen -source=update.go -destination ./update_mock_test.go -package plan_test
+//go:generate go run go.uber.org/mock/mockgen -typed -source=update.go -destination ./update_mock_test.go -package plan_test
 
 type RowUpdater interface {
 	Update(key int64, row sql.Row) error
