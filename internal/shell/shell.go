@@ -1,4 +1,4 @@
-package repl
+package shell
 
 import (
 	"bufio"
@@ -8,51 +8,54 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
-
-	"github.com/olekukonko/tablewriter"
 )
 
 const prompt = "#> "
 
-var ErrQuit = errors.New("quit")
+type TableWriter interface {
+	WriteTable(w io.Writer, headers []string, data [][]string, showRowsCount bool)
+}
 
 type Engine interface {
 	Exec(database, sql string) (columns []string, iter sql.RowIter, err error)
 }
 
-// Repl is terminal-based front-end to NanoDB.
-type Repl struct {
+// Shell is terminal-based front-end to NanoDB.
+type Shell struct {
 	input    io.Reader
 	output   io.Writer
 	catalog  sql.Catalog
 	database sql.Database
 	engine   Engine
+	tw       TableWriter
 	prompt   string
 	closeCh  chan struct{}
 }
 
-func New(in io.Reader, out io.Writer, catalog sql.Catalog, engine Engine) *Repl {
-	return &Repl{
+func New(in io.Reader, out io.Writer, catalog sql.Catalog, engine Engine, tw TableWriter) *Shell {
+	return &Shell{
 		input:   in,
 		output:  out,
 		catalog: catalog,
 		engine:  engine,
+		tw:      tw,
 		prompt:  prompt,
 		closeCh: make(chan struct{}),
 	}
 }
 
-func (r *Repl) Run(ctx context.Context) error {
-	r.write("repl is the NanoDB interactive terminal.\n")
+func (s *Shell) Run(ctx context.Context) {
+	s.write("shell is the NanoDB interactive terminal.\n")
 
 	go func() {
 		for {
-			r.write(r.prompt)
+			s.write(s.prompt)
 
-			scanner := bufio.NewScanner(r.input)
+			scanner := bufio.NewScanner(s.input)
 			scanner.Scan()
 			input := scanner.Text()
 
@@ -60,77 +63,75 @@ func (r *Repl) Run(ctx context.Context) error {
 				continue
 			}
 
-			if repl, err := r.exec(input); err != nil {
-				r.write(err.Error() + "\n")
+			if repl, err := s.exec(input); err != nil {
+				s.write(err.Error() + "\n")
 			} else if repl != "" {
-				r.write(repl)
+				s.write(repl)
 			}
 		}
 	}()
 
 	select {
 	case <-ctx.Done():
-		return nil
-	case <-r.closeCh:
-		return ErrQuit
+	case <-s.closeCh:
 	}
 }
 
-func (r *Repl) write(s string) {
-	_, _ = r.output.Write([]byte(s))
+func (s *Shell) write(line string) {
+	_, _ = s.output.Write([]byte(line))
 }
 
-func (r *Repl) exec(input string) (string, error) {
+func (s *Shell) exec(input string) (string, error) {
 	switch input[0] {
 	case '\\':
-		return r.execCommand(input)
+		return s.execCommand(input)
 	default:
-		return r.execQuery(input)
+		return s.execQuery(input)
 	}
 }
 
-func (r *Repl) execCommand(input string) (string, error) {
+func (s *Shell) execCommand(input string) (string, error) {
 	cmd := strings.TrimSpace(input)
 	params := strings.Fields(cmd)
 
 	switch params[0] {
 	case `\use`:
-		return r.useDatabase(params)
+		return s.useDatabase(params)
 	case `\databases`:
-		return r.listDatabases()
+		return s.listDatabases()
 	case `\tables`:
-		return r.listTables()
+		return s.listTables()
 	case `\describe`:
-		return r.describeTable(params)
+		return s.describeTable(params)
 	case `\import`:
-		return r.importFile(params)
+		return s.importFile(params)
 	case `\help`:
-		return r.showHelp(), nil
+		return s.showHelp(), nil
 	case `\quit`:
-		return r.quit(), nil
+		return s.quit(), nil
 	default:
 		return "", fmt.Errorf("unknown command: %v", params[0])
 	}
 }
 
-func (r *Repl) useDatabase(params []string) (string, error) {
+func (s *Shell) useDatabase(params []string) (string, error) {
 	if len(params) < 2 {
 		return "", fmt.Errorf("database name not specified")
 	}
 
-	db, err := r.catalog.GetDatabase(params[1])
+	db, err := s.catalog.GetDatabase(params[1])
 	if err != nil {
 		return "", err
 	}
 
-	r.database = db
-	r.prompt = fmt.Sprintf("%s %s", db.Name(), prompt)
+	s.database = db
+	s.prompt = fmt.Sprintf("%s %s", db.Name(), prompt)
 
 	return "database changed\n", nil
 }
 
-func (r *Repl) listDatabases() (string, error) {
-	databases, err := r.catalog.ListDatabases()
+func (s *Shell) listDatabases() (string, error) {
+	databases, err := s.catalog.ListDatabases()
 	if err != nil {
 		return "", err
 	}
@@ -142,33 +143,31 @@ func (r *Repl) listDatabases() (string, error) {
 		data = append(data, []string{databases[i].Name()})
 	}
 
-	r.drawTable(buf, []string{"Database"}, data)
-	buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
+	s.tw.WriteTable(buf, []string{"Database"}, data, true)
 
 	return buf.String(), nil
 }
 
-func (r *Repl) listTables() (string, error) {
-	if r.database == nil {
+func (s *Shell) listTables() (string, error) {
+	if s.database == nil {
 		return "", fmt.Errorf("connect to database first")
 	}
 
 	buf := bytes.NewBuffer(nil)
-	tables := r.database.ListTables()
+	tables := s.database.ListTables()
 	data := make([][]string, 0, len(tables))
 
 	for i := range tables {
 		data = append(data, []string{tables[i].Name()})
 	}
 
-	r.drawTable(buf, []string{"Table"}, data)
-	buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
+	s.tw.WriteTable(buf, []string{"Table"}, data, true)
 
 	return buf.String(), nil
 }
 
-func (r *Repl) describeTable(params []string) (string, error) {
-	if r.database == nil {
+func (s *Shell) describeTable(params []string) (string, error) {
+	if s.database == nil {
 		return "", fmt.Errorf("connect to database first")
 	}
 
@@ -176,7 +175,7 @@ func (r *Repl) describeTable(params []string) (string, error) {
 		return "", fmt.Errorf("table name not specified")
 	}
 
-	table, err := r.database.GetTable(params[1])
+	table, err := s.database.GetTable(params[1])
 	if err != nil {
 		return "", err
 	}
@@ -209,21 +208,21 @@ func (r *Repl) describeTable(params []string) (string, error) {
 		row := []string{
 			columns[i].Name,
 			columns[i].DataType.String(),
-			fmt.Sprintf("%t", columns[i].Nullable),
+			strconv.FormatBool(columns[i].Nullable),
 			defaultValue,
 		}
 
 		data = append(data, row)
 	}
 
-	r.drawTable(buf, []string{"Column", "Type", "Nullable", "Default"}, data)
+	s.tw.WriteTable(buf, []string{"Column", "Type", "Nullable", "Default"}, data, false)
 	buf.WriteString("Indexes:\n")
 	buf.WriteString(fmt.Sprintf("   PRIMARY KEY (%s) autoincrement\n\n", primaryKey.Name))
 
 	return buf.String(), nil
 }
 
-func (r *Repl) importFile(params []string) (string, error) {
+func (s *Shell) importFile(params []string) (string, error) {
 	if len(params) < 2 {
 		return "", fmt.Errorf("filename not specified")
 	}
@@ -241,7 +240,7 @@ func (r *Repl) importFile(params []string) (string, error) {
 			continue
 		}
 
-		if _, err = r.exec(stmt); err != nil {
+		if _, err = s.exec(stmt); err != nil {
 			return "", err
 		}
 	}
@@ -249,7 +248,7 @@ func (r *Repl) importFile(params []string) (string, error) {
 	return "OK\n", nil
 }
 
-func (r *Repl) showHelp() string {
+func (s *Shell) showHelp() string {
 	help := `repl is the NanoDB interactive terminal.
 
 Commands:
@@ -264,19 +263,19 @@ Commands:
 	return help
 }
 
-func (r *Repl) quit() string {
-	close(r.closeCh)
+func (s *Shell) quit() string {
+	close(s.closeCh)
 	return "Bye!\n"
 }
 
-func (r *Repl) execQuery(input string) (string, error) {
+func (s *Shell) execQuery(input string) (string, error) {
 	var database string
 
-	if r.database != nil {
-		database = r.database.Name()
+	if s.database != nil {
+		database = s.database.Name()
 	}
 
-	columns, rowIter, err := r.engine.Exec(database, input)
+	columns, rowIter, err := s.engine.Exec(database, input)
 	if err != nil {
 		return "", fmt.Errorf("failed to execute query: %w", err)
 	}
@@ -311,19 +310,8 @@ loop:
 	buf := bytes.NewBuffer(nil)
 
 	if len(data) > 0 {
-		r.drawTable(buf, columns, data)
-		buf.WriteString(fmt.Sprintf("(%d rows)\n\n", len(data)))
+		s.tw.WriteTable(buf, columns, data, true)
 	}
 
 	return buf.String(), nil
-}
-
-func (r *Repl) drawTable(w io.Writer, headers []string, data [][]string) {
-	tw := tablewriter.NewWriter(w)
-	tw.SetColWidth(75)
-	tw.AppendBulk(data)
-	tw.SetAutoFormatHeaders(false)
-	tw.SetAlignment(tablewriter.ALIGN_LEFT)
-	tw.SetHeader(headers)
-	tw.Render()
 }

@@ -2,13 +2,11 @@ package main
 
 import (
 	"context"
-	"errors"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/i-sevostyanov/NanoDB/internal/repl"
+	"github.com/i-sevostyanov/NanoDB/internal/shell"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/engine"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/lexer"
@@ -21,22 +19,17 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 
-	parseFn := engine.ParseFn(func(sql string) (ast.Node, error) {
+	sqlParser := engine.ParseFn(func(sql string) (ast.Node, error) {
 		lx := lexer.New(sql)
 		pr := parser.New(lx)
 		return pr.Parse()
 	})
 
-	catalog := memory.NewCatalog()
-	aPlanner := planner.New(catalog)
-	anEngine := engine.New(parseFn, aPlanner)
-	aRepl := repl.New(os.Stdin, os.Stdout, catalog, anEngine)
+	sqlCatalog := memory.NewCatalog()
+	sqlPlanner := planner.New(sqlCatalog)
+	sqlEngine := engine.New(sqlParser, sqlPlanner)
+	tableWriter := shell.NewTableWriterFactory()
 
-	if err := aRepl.Run(ctx); err != nil {
-		switch {
-		case errors.Is(err, repl.ErrQuit):
-		default:
-			log.Printf("repl: %v\n", err)
-		}
-	}
+	sh := shell.New(os.Stdin, os.Stdout, sqlCatalog, sqlEngine, tableWriter)
+	sh.Run(ctx)
 }
