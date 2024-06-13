@@ -1,4 +1,7 @@
-.PHONY: lint test coverage generate
+.PHONY: run lint test coverage coverage-report generate build
+
+run:
+	@go run cmd/shell/main.go
 
 lint:
 	@golangci-lint run
@@ -14,3 +17,6 @@ coverage-report:
 
 generate:
 	@go generate ./...
+
+build:
+	@go build -trimpath -ldflags "-s -w" -o ./bin/shell cmd/shell/main.go
