@@ -23,6 +23,8 @@ func GreaterOrEqual(left, right sql.Value) (sql.Value, error) {
 			return greaterOrEqual[float64](left, right), nil
 		case sql.Text:
 			return greaterOrEqual[string](left, right), nil
+		case sql.Null:
+			return datatype.NewNull(), nil
 		}
 	}
 
