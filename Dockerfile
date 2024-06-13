@@ -14,12 +14,12 @@ RUN set -eux; apk update; apk add --no-cache git openssh
 # Install dependencies
 RUN go mod download
 RUN go mod verify
-RUN cd $GO_WORKDIR/cmd/repl && go install
+RUN cd $GO_WORKDIR/cmd/shell && go install
 
 # Put everything together in a clean image
 FROM scratch
 
 # Copy binary into PATH
-COPY --from=build-env /go/bin/repl /usr/local/bin/repl
+COPY --from=build-env /go/bin/shell /usr/local/bin/shell
 
-ENTRYPOINT ["repl"]
+CMD ["shell"]

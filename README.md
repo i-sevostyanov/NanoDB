@@ -29,7 +29,7 @@ The NanoDB command line provides an SQL shell that can be used to select, insert
 ```shell
 git clone https://github.com/i-sevostyanov/NanoDB.git
 cd NanoDB
-go run ./cmd/repl/main.go
+go run ./cmd/shell/main.go
 #> \import <path to project>/testdata/demo.sql
 ```
 
