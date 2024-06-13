@@ -63,10 +63,10 @@ func (s *Shell) Run(ctx context.Context) {
 				continue
 			}
 
-			if repl, err := s.exec(input); err != nil {
+			if reply, err := s.exec(input); err != nil {
 				s.write(err.Error() + "\n")
-			} else if repl != "" {
-				s.write(repl)
+			} else if reply != "" {
+				s.write(reply)
 			}
 		}
 	}()
@@ -249,7 +249,7 @@ func (s *Shell) importFile(params []string) (string, error) {
 }
 
 func (s *Shell) showHelp() string {
-	help := `repl is the NanoDB interactive terminal.
+	help := `shell is the NanoDB interactive terminal.
 
 Commands:
   \use <database>                  Use specified database
