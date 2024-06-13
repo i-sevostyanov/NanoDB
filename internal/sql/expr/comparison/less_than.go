@@ -23,6 +23,8 @@ func LessThan(left, right sql.Value) (sql.Value, error) {
 			return lessThan[float64](left, right), nil
 		case sql.Text:
 			return lessThan[string](left, right), nil
+		case sql.Null:
+			return datatype.NewNull(), nil
 		}
 	}
 

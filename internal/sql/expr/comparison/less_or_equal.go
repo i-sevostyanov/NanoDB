@@ -23,6 +23,8 @@ func LessOrEqual(left, right sql.Value) (sql.Value, error) {
 			return lessOrEqual[float64](left, right), nil
 		case sql.Text:
 			return lessOrEqual[string](left, right), nil
+		case sql.Null:
+			return datatype.NewNull(), nil
 		}
 	}
 

@@ -23,6 +23,8 @@ func GreaterThan(left, right sql.Value) (sql.Value, error) {
 			return greaterThan[float64](left, right), nil
 		case sql.Text:
 			return greaterThan[string](left, right), nil
+		case sql.Null:
+			return datatype.NewNull(), nil
 		}
 	}
 
