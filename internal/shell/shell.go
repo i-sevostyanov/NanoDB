@@ -17,7 +17,7 @@ import (
 const prompt = "#> "
 
 type TableWriter interface {
-	WriteTable(w io.Writer, headers []string, data [][]string, showRowsCount bool)
+	WriteTable(headers []string, data [][]string, showRowsCount bool) string
 }
 
 type Engine interface {
@@ -116,7 +116,7 @@ func (s *Shell) execCommand(input string) (string, error) {
 
 func (s *Shell) useDatabase(params []string) (string, error) {
 	if len(params) < 2 {
-		return "", fmt.Errorf("database name not specified")
+		return "", errors.New("database name not specified")
 	}
 
 	db, err := s.catalog.GetDatabase(params[1])
@@ -136,24 +136,22 @@ func (s *Shell) listDatabases() (string, error) {
 		return "", err
 	}
 
-	buf := bytes.NewBuffer(nil)
 	data := make([][]string, 0, len(databases))
 
 	for i := range databases {
 		data = append(data, []string{databases[i].Name()})
 	}
 
-	s.tw.WriteTable(buf, []string{"Database"}, data, true)
+	table := s.tw.WriteTable([]string{"Database"}, data, true)
 
-	return buf.String(), nil
+	return table, nil
 }
 
 func (s *Shell) listTables() (string, error) {
 	if s.database == nil {
-		return "", fmt.Errorf("connect to database first")
+		return "", errors.New("connect to database first")
 	}
 
-	buf := bytes.NewBuffer(nil)
 	tables := s.database.ListTables()
 	data := make([][]string, 0, len(tables))
 
@@ -161,18 +159,18 @@ func (s *Shell) listTables() (string, error) {
 		data = append(data, []string{tables[i].Name()})
 	}
 
-	s.tw.WriteTable(buf, []string{"Table"}, data, true)
+	table := s.tw.WriteTable([]string{"Table"}, data, true)
 
-	return buf.String(), nil
+	return table, nil
 }
 
 func (s *Shell) describeTable(params []string) (string, error) {
 	if s.database == nil {
-		return "", fmt.Errorf("connect to database first")
+		return "", errors.New("connect to database first")
 	}
 
 	if len(params) < 2 {
-		return "", fmt.Errorf("table name not specified")
+		return "", errors.New("table name not specified")
 	}
 
 	table, err := s.database.GetTable(params[1])
@@ -215,7 +213,8 @@ func (s *Shell) describeTable(params []string) (string, error) {
 		data = append(data, row)
 	}
 
-	s.tw.WriteTable(buf, []string{"Column", "Type", "Nullable", "Default"}, data, false)
+	tb := s.tw.WriteTable([]string{"Column", "Type", "Nullable", "Default"}, data, false)
+	buf.WriteString(tb)
 	buf.WriteString("Indexes:\n")
 	buf.WriteString(fmt.Sprintf("   PRIMARY KEY (%s) autoincrement\n\n", primaryKey.Name))
 
@@ -224,7 +223,7 @@ func (s *Shell) describeTable(params []string) (string, error) {
 
 func (s *Shell) importFile(params []string) (string, error) {
 	if len(params) < 2 {
-		return "", fmt.Errorf("filename not specified")
+		return "", errors.New("filename not specified")
 	}
 
 	data, err := os.ReadFile(params[1])
@@ -277,7 +276,7 @@ func (s *Shell) execQuery(input string) (string, error) {
 
 	columns, rowIter, err := s.engine.Exec(database, input)
 	if err != nil {
-		return "", fmt.Errorf("failed to execute query: %w", err)
+		return "", fmt.Errorf("execute query: %w", err)
 	}
 
 	var data [][]string
@@ -307,11 +306,9 @@ loop:
 		return "", err
 	}
 
-	buf := bytes.NewBuffer(nil)
-
 	if len(data) > 0 {
-		s.tw.WriteTable(buf, columns, data, true)
+		return s.tw.WriteTable(columns, data, true), nil
 	}
 
-	return buf.String(), nil
+	return "", nil
 }
