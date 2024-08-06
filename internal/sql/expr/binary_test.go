@@ -1,6 +1,7 @@
 package expr_test
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 
@@ -909,7 +910,7 @@ func TestBinary_Eval(t *testing.T) {
 			Right:    rightNode,
 		}
 
-		expected := fmt.Errorf("unexpected error")
+		expected := errors.New("unexpected error")
 		leftNode.EXPECT().Eval(nil).Return(nil, expected)
 
 		value, err := equal.Eval(nil)
@@ -932,7 +933,7 @@ func TestBinary_Eval(t *testing.T) {
 			Right:    rightNode,
 		}
 
-		expected := fmt.Errorf("unexpected error")
+		expected := errors.New("unexpected error")
 		leftValue := sql.NewMockValue(ctrl)
 
 		gomock.InOrder(

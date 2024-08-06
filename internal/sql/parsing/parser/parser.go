@@ -2,6 +2,7 @@
 package parser
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql/parsing/ast"
@@ -29,9 +30,9 @@ func New(lx Lexer) *Parser {
 	}
 }
 
-// Parse parses the sql and returns a statement.
+// Parse parses the SQL and returns a statement.
 func (p *Parser) Parse() (ast.Statement, error) {
-	// For simplicity, we parse one statement at a time but in the next release,
+	// For simplicity, we parse one statement at a time, but in the next release,
 	// we should implement parsing multiple statements separated semicolon.
 	return p.parseStatement()
 }
@@ -70,9 +71,11 @@ func (p *Parser) parseCreateStatement() (ast.Statement, error) {
 	switch p.token.Type {
 	case token.Database:
 		p.nextToken()
+
 		return p.parseCreateDatabaseStatement()
 	case token.Table:
 		p.nextToken()
+
 		return p.parseCreateTableStatement()
 	default:
 		return nil, fmt.Errorf("unexpected keyword after CREATE statement %q", p.token.Type)
@@ -85,9 +88,11 @@ func (p *Parser) parseDropStatement() (ast.Statement, error) {
 	switch p.token.Type {
 	case token.Database:
 		p.nextToken()
+
 		return p.parseDropDatabaseStatement()
 	case token.Table:
 		p.nextToken()
+
 		return p.parseDropTableStatement()
 	default:
 		return nil, fmt.Errorf("unexpected keyword after DROP statement %q", p.token.Type)
@@ -325,14 +330,15 @@ func (p *Parser) parseColumnType() (token.Type, error) {
 		p.nextToken()
 
 		return columnType, nil
+	default:
+		return token.Illegal, fmt.Errorf("unexpected column type: %q", p.token.Type)
 	}
-
-	return token.Illegal, fmt.Errorf("unexpected column type: %q", p.token.Type)
 }
 
 func (p *Parser) parseColumnNullable() (bool, error) {
 	if p.token.Type == token.Null {
 		p.nextToken()
+
 		return true, nil
 	}
 
@@ -427,7 +433,7 @@ func (p *Parser) parseResultStatement() ([]ast.ResultStatement, error) {
 	}
 
 	if len(results) == 0 {
-		return nil, fmt.Errorf("no columns specified")
+		return nil, errors.New("no columns specified")
 	}
 
 	return results, nil
@@ -517,12 +523,14 @@ func (p *Parser) parseOrderByStatement() (*ast.OrderByStatement, error) {
 		return nil, err
 	}
 
-	direction := token.Asc
+	var direction token.Type
 
 	switch p.token.Type {
 	case token.Asc, token.Desc:
 		direction = p.token.Type
 		p.nextToken()
+	default:
+		direction = token.Asc
 	}
 
 	order := ast.OrderByStatement{
@@ -660,6 +668,7 @@ func (p *Parser) parseSetStatement() ([]ast.SetStatement, error) {
 
 		if p.peekToken.Type == token.EOF || p.peekToken.Type == token.Where {
 			p.nextToken()
+
 			break
 		}
 

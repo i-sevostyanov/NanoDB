@@ -1,7 +1,7 @@
 package planner_test
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -27,7 +27,7 @@ func TestPlanner_CreateDatabase(t *testing.T) {
 		defer ctrl.Finish()
 
 		database := "users"
-		errDBNotExist := fmt.Errorf("databasse not exist")
+		errDBNotExist := errors.New("database not exist")
 
 		catalog := sql.NewMockCatalog(ctrl)
 		catalog.EXPECT().GetDatabase(database).Return(nil, errDBNotExist)
@@ -96,7 +96,7 @@ func TestPlanner_DropDatabase(t *testing.T) {
 		defer ctrl.Finish()
 
 		database := "users"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		catalog := sql.NewMockCatalog(ctrl)
 		catalog.EXPECT().GetDatabase(database).Return(nil, expectedErr)
@@ -122,7 +122,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		errTableNotExist := fmt.Errorf("table not exist")
+		errTableNotExist := errors.New("table not exist")
 
 		stmt := &ast.CreateTableStatement{
 			Table: tableName,
@@ -220,7 +220,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		errTableNotExist := fmt.Errorf("table not exist")
+		errTableNotExist := errors.New("table not exist")
 
 		stmt := &ast.CreateTableStatement{
 			Table: tableName,
@@ -285,7 +285,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		stmt := &ast.CreateTableStatement{
 			Table: tableName,
@@ -369,7 +369,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		errTableNotExist := fmt.Errorf("table not exist")
+		errTableNotExist := errors.New("table not exist")
 
 		stmt := &ast.CreateTableStatement{
 			Table: tableName,
@@ -413,7 +413,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		errTableNotExist := fmt.Errorf("table not exist")
+		errTableNotExist := errors.New("table not exist")
 
 		stmt := &ast.CreateTableStatement{
 			Table: tableName,
@@ -457,7 +457,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		errTableNotExist := fmt.Errorf("table not exist")
+		errTableNotExist := errors.New("table not exist")
 
 		stmt := &ast.CreateTableStatement{
 			Table: tableName,
@@ -501,7 +501,7 @@ func TestPlanner_CreateTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		errTableNotExist := fmt.Errorf("table not exist")
+		errTableNotExist := errors.New("table not exist")
 
 		stmt := &ast.CreateTableStatement{
 			Table: tableName,
@@ -574,7 +574,7 @@ func TestPlanner_DropTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		catalog := sql.NewMockCatalog(ctrl)
 		catalog.EXPECT().GetDatabase(databaseName).Return(nil, expectedErr)
@@ -596,7 +596,7 @@ func TestPlanner_DropTable(t *testing.T) {
 
 		tableName := "users"
 		databaseName := "playground"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		catalog := sql.NewMockCatalog(ctrl)
 		database := sql.NewMockDatabase(ctrl)
@@ -1459,7 +1459,7 @@ func TestPlanner_Delete(t *testing.T) {
 
 		databaseName := "playground"
 		tableName := "users"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		catalog := sql.NewMockCatalog(ctrl)
 		catalog.EXPECT().GetDatabase(databaseName).Return(nil, expectedErr)
@@ -1481,7 +1481,7 @@ func TestPlanner_Delete(t *testing.T) {
 
 		databaseName := "playground"
 		tableName := "users"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		catalog := sql.NewMockCatalog(ctrl)
 		database := sql.NewMockDatabase(ctrl)

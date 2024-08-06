@@ -34,6 +34,7 @@ func (i *SliceRowsIter) Next() (Row, error) {
 
 func (i *SliceRowsIter) Close() error {
 	i.rows = nil
+
 	return nil
 }
 

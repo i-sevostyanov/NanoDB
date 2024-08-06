@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"math"
 	"testing"
@@ -904,7 +904,7 @@ func TestSort_RowIter(t *testing.T) {
 
 		order := plan.Descending
 		columnPos := uint8(0)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		child := plan.NewMockNode(ctrl)
 		child.EXPECT().RowIter().Return(nil, expectedErr)
@@ -947,7 +947,7 @@ func TestSort_RowIter(t *testing.T) {
 
 		order := plan.Descending
 		columnPos := uint8(0)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		child := plan.NewMockNode(ctrl)
 		rowIter := sql.NewMockRowIter(ctrl)

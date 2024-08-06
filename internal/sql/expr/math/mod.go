@@ -1,6 +1,7 @@
 package math
 
 import (
+	"errors"
 	"fmt"
 	"math"
 
@@ -20,7 +21,7 @@ func Mod(left, right sql.Value) (sql.Value, error) {
 			rvalue := right.Raw().(float64)
 
 			if rvalue == 0 {
-				return nil, fmt.Errorf("division by zero")
+				return nil, errors.New("division by zero")
 			}
 
 			return datatype.NewFloat(math.Mod(lvalue, rvalue)), nil
@@ -29,10 +30,11 @@ func Mod(left, right sql.Value) (sql.Value, error) {
 			rvalue := right.Raw().(int64)
 
 			if rvalue == 0 {
-				return nil, fmt.Errorf("division by zero")
+				return nil, errors.New("division by zero")
 			}
 
 			return datatype.NewInteger(lvalue % rvalue), nil
+		default:
 		}
 	}
 
@@ -41,7 +43,7 @@ func Mod(left, right sql.Value) (sql.Value, error) {
 		rvalue := right.Raw().(float64)
 
 		if rvalue == 0 {
-			return nil, fmt.Errorf("division by zero")
+			return nil, errors.New("division by zero")
 		}
 
 		return datatype.NewFloat(math.Mod(lvalue, rvalue)), nil
@@ -52,7 +54,7 @@ func Mod(left, right sql.Value) (sql.Value, error) {
 		rvalue := float64(right.Raw().(int64))
 
 		if rvalue == 0 {
-			return nil, fmt.Errorf("division by zero")
+			return nil, errors.New("division by zero")
 		}
 
 		return datatype.NewFloat(math.Mod(lvalue, rvalue)), nil

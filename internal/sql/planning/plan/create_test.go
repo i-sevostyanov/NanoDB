@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"testing"
 
@@ -53,7 +53,7 @@ func TestCreateDatabase_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		name := "test"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		creator := NewMockDatabaseCreator(ctrl)
 		creator.EXPECT().CreateDatabase(name).Return(nil, expectedErr)
@@ -108,7 +108,7 @@ func TestCreateTable_RowIter(t *testing.T) {
 
 		name := "test"
 		scheme := sql.Scheme{}
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		creator := NewMockTableCreator(ctrl)
 		creator.EXPECT().CreateTable(name, scheme).Return(nil, expectedErr)

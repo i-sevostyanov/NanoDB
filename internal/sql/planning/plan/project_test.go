@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"testing"
 
@@ -161,7 +161,7 @@ func TestProject_RowIter(t *testing.T) {
 			{datatype.NewInteger(2), datatype.NewText("Frank"), datatype.NewFloat(2200)},
 		}
 
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		id := expr.NewMockNode(ctrl)
 		name := expr.NewMockNode(ctrl)
@@ -199,7 +199,7 @@ func TestProject_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		id := expr.NewMockNode(ctrl)
 		name := expr.NewMockNode(ctrl)
@@ -228,7 +228,7 @@ func TestProject_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		id := expr.NewMockNode(ctrl)
 		name := expr.NewMockNode(ctrl)

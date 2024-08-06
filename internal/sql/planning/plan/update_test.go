@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"testing"
 
@@ -109,7 +109,7 @@ func TestUpdate_RowIter(t *testing.T) {
 		t.Parallel()
 
 		pkIndex := uint8(0)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 		columns := map[uint8]expr.Node{}
 
 		ctrl := gomock.NewController(t)
@@ -130,7 +130,7 @@ func TestUpdate_RowIter(t *testing.T) {
 		t.Parallel()
 
 		pkIndex := uint8(0)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 		columns := map[uint8]expr.Node{}
 
 		ctrl := gomock.NewController(t)
@@ -157,7 +157,7 @@ func TestUpdate_RowIter(t *testing.T) {
 		t.Parallel()
 
 		pkIndex := uint8(0)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 		row := sql.Row{
 			datatype.NewInteger(1),
 			datatype.NewText("Max"),
@@ -241,7 +241,7 @@ func TestUpdate_RowIter(t *testing.T) {
 		child := plan.NewMockNode(ctrl)
 		rowIter := sql.NewMockRowIter(ctrl)
 
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 		key := int64(1)
 		pkIndex := uint8(0)
 		columns := map[uint8]expr.Node{

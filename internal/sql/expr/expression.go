@@ -1,6 +1,7 @@
 package expr
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
@@ -37,7 +38,7 @@ func walk(node ast.Expression, scheme sql.Scheme) (Node, error) {
 
 func columnExpr(expr *ast.IdentExpr, scheme sql.Scheme) (Node, error) {
 	if scheme == nil {
-		return nil, fmt.Errorf("schema not provided")
+		return nil, errors.New("schema not provided")
 	}
 
 	definition, ok := scheme[expr.Name]

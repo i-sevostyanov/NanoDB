@@ -17,15 +17,19 @@ func Add(left, right sql.Value) (sql.Value, error) {
 		case sql.Float:
 			lvalue := left.Raw().(float64)
 			rvalue := right.Raw().(float64)
+
 			return datatype.NewFloat(lvalue + rvalue), nil
 		case sql.Integer:
 			lvalue := left.Raw().(int64)
 			rvalue := right.Raw().(int64)
+
 			return datatype.NewInteger(lvalue + rvalue), nil
 		case sql.Text:
 			lvalue := left.Raw().(string)
 			rvalue := right.Raw().(string)
+
 			return datatype.NewText(lvalue + rvalue), nil
+		default:
 		}
 	}
 
