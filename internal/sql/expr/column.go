@@ -1,6 +1,7 @@
 package expr
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
@@ -17,7 +18,7 @@ func (c Column) String() string {
 
 func (c Column) Eval(row sql.Row) (sql.Value, error) {
 	if len(row) == 0 {
-		return nil, fmt.Errorf("empty row")
+		return nil, errors.New("empty row")
 	}
 
 	if int(c.Position) > len(row) {

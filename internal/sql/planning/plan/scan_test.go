@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -78,7 +78,7 @@ func TestScan_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		table := sql.NewMockTable(ctrl)
 		table.EXPECT().Scan().Return(nil, expectedErr)

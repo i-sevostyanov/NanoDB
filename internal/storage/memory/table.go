@@ -23,6 +23,7 @@ func NewTable(name string, scheme sql.Scheme) *Table {
 	for column := range scheme {
 		if scheme[column].PrimaryKey {
 			primaryKey = scheme[column]
+
 			break
 		}
 	}
@@ -95,6 +96,7 @@ func (t *Table) Delete(key int64) error {
 	for index := range t.keys {
 		if t.keys[index] == key {
 			t.keys = append(t.keys[:index], t.keys[index+1:]...)
+
 			break
 		}
 	}
@@ -132,5 +134,6 @@ func (i *iter) Next() (sql.Row, error) {
 
 func (i *iter) Close() error {
 	i.rows = nil
+
 	return nil
 }

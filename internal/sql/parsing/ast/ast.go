@@ -6,7 +6,7 @@ import (
 )
 
 // Node represents AST-node of the syntax tree for SQL query.
-type Node interface{}
+type Node any
 
 // Statement represents syntax tree node of SQL statement (like: SELECT).
 type Statement interface {

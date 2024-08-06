@@ -1,7 +1,7 @@
 package expr_test
 
 import (
-	"fmt"
+	"errors"
 	"math"
 	"testing"
 
@@ -135,7 +135,7 @@ func TestUnary_Eval(t *testing.T) {
 		defer ctrl.Finish()
 
 		operand := expr.NewMockNode(ctrl)
-		expected := fmt.Errorf("something went wrong")
+		expected := errors.New("something went wrong")
 		unaryExpr := expr.Unary{
 			Operator: expr.UnaryMinus,
 			Operand:  operand,

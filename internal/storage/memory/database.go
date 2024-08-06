@@ -1,6 +1,7 @@
 package memory
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
@@ -42,11 +43,11 @@ func (d *Database) GetTable(name string) (sql.Table, error) {
 
 func (d *Database) CreateTable(name string, scheme sql.Scheme) (sql.Table, error) {
 	if _, ok := d.tables[name]; ok {
-		return nil, fmt.Errorf("table already exist")
+		return nil, errors.New("table already exist")
 	}
 
 	if len(scheme) == 0 {
-		return nil, fmt.Errorf("scheme should not be empty")
+		return nil, errors.New("scheme should not be empty")
 	}
 
 	table := NewTable(name, scheme)

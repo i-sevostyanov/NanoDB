@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"testing"
 
@@ -93,7 +93,7 @@ func TestFilter_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		cond := expr.NewMockNode(ctrl)
 		child := plan.NewMockNode(ctrl)
@@ -112,7 +112,7 @@ func TestFilter_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		cond := expr.NewMockNode(ctrl)
 		child := plan.NewMockNode(ctrl)
@@ -147,7 +147,7 @@ func TestFilter_RowIter(t *testing.T) {
 		child := plan.NewMockNode(ctrl)
 		rowIter := sql.NewMockRowIter(ctrl)
 
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 		row := sql.Row{
 			datatype.NewInteger(1),
 			datatype.NewText("Max"),

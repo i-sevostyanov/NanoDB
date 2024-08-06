@@ -1,6 +1,7 @@
 package math
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
@@ -19,7 +20,7 @@ func Div(left, right sql.Value) (sql.Value, error) {
 			rvalue := right.Raw().(float64)
 
 			if rvalue == 0 {
-				return nil, fmt.Errorf("division by zero")
+				return nil, errors.New("division by zero")
 			}
 
 			return datatype.NewFloat(lvalue / rvalue), nil
@@ -28,10 +29,11 @@ func Div(left, right sql.Value) (sql.Value, error) {
 			rvalue := right.Raw().(int64)
 
 			if rvalue == 0 {
-				return nil, fmt.Errorf("division by zero")
+				return nil, errors.New("division by zero")
 			}
 
 			return datatype.NewInteger(lvalue / rvalue), nil
+		default:
 		}
 	}
 
@@ -40,7 +42,7 @@ func Div(left, right sql.Value) (sql.Value, error) {
 		rvalue := right.Raw().(float64)
 
 		if rvalue == 0 {
-			return nil, fmt.Errorf("division by zero")
+			return nil, errors.New("division by zero")
 		}
 
 		return datatype.NewFloat(lvalue / rvalue), nil
@@ -51,7 +53,7 @@ func Div(left, right sql.Value) (sql.Value, error) {
 		rvalue := float64(right.Raw().(int64))
 
 		if rvalue == 0 {
-			return nil, fmt.Errorf("division by zero")
+			return nil, errors.New("division by zero")
 		}
 
 		return datatype.NewFloat(lvalue / rvalue), nil

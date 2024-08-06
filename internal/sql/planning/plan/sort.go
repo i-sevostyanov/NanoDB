@@ -78,6 +78,7 @@ func (i *sortIter) Next() (sql.Row, error) {
 
 func (i *sortIter) Close() error {
 	i.rows = nil
+
 	return i.iter.Close()
 }
 

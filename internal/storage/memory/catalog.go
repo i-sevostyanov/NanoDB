@@ -48,6 +48,7 @@ func (c *Catalog) CreateDatabase(name string) (sql.Database, error) {
 func (c *Catalog) DropDatabase(name string) error {
 	if _, ok := c.databases[name]; ok {
 		delete(c.databases, name)
+
 		return nil
 	}
 

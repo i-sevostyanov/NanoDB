@@ -68,6 +68,7 @@ func (l *Lexer) NextToken() token.Token {
 	case '<':
 		if next := l.peek(); next == '=' {
 			l.next()
+
 			return token.New(token.LessThanOrEqual, l.offset)
 		}
 
@@ -75,6 +76,7 @@ func (l *Lexer) NextToken() token.Token {
 	case '>':
 		if next := l.peek(); next == '=' {
 			l.next()
+
 			return token.New(token.GreaterThanOrEqual, l.offset)
 		}
 
@@ -82,6 +84,7 @@ func (l *Lexer) NextToken() token.Token {
 	case '!':
 		if next := l.peek(); next == '=' {
 			l.next()
+
 			return token.New(token.NotEqual, l.offset)
 		}
 

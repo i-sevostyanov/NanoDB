@@ -1,6 +1,7 @@
 package logical
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
@@ -12,8 +13,15 @@ func Or(left, right sql.Value) (sql.Value, error) {
 		return nil, fmt.Errorf("and: unsupported operation for %T and %T values", left.Raw(), right.Raw())
 	}
 
-	lvalue := left.Raw().(bool)
-	rvalue := right.Raw().(bool)
+	lvalue, ok := left.Raw().(bool)
+	if !ok {
+		return nil, errors.New("and: left operand should be bool")
+	}
+
+	rvalue, ok := right.Raw().(bool)
+	if !ok {
+		return nil, errors.New("and: right operand should be bool")
+	}
 
 	return datatype.NewBoolean(lvalue || rvalue), nil
 }

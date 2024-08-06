@@ -259,11 +259,13 @@ Commands:
   \help                            Show help
   \quit                            Quit
 `
+
 	return help
 }
 
 func (s *Shell) quit() string {
 	close(s.closeCh)
+
 	return "Bye!\n"
 }
 

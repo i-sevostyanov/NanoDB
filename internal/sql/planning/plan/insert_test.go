@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"testing"
 
@@ -65,7 +65,7 @@ func TestInsert_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		key := int64(1)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 		row := sql.Row{
 			datatype.NewInteger(key),
 			datatype.NewText("Max"),

@@ -1,7 +1,7 @@
 package engine_test
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -103,7 +103,7 @@ func TestEngine_Query(t *testing.T) {
 
 		input := "select true"
 		database := "playground"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		parser := NewMockParser(ctrl)
 		planner := NewMockPlanner(ctrl)
@@ -125,7 +125,7 @@ func TestEngine_Query(t *testing.T) {
 
 		input := "select true"
 		database := "playground"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 		astNode := &ast.SelectStatement{
 			Result: []ast.ResultStatement{
 				{
@@ -159,7 +159,7 @@ func TestEngine_Query(t *testing.T) {
 
 		input := "select true"
 		database := "playground"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 		astNode := &ast.SelectStatement{
 			Result: []ast.ResultStatement{
 				{

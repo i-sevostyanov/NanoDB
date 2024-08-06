@@ -1,6 +1,7 @@
 package planner
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/i-sevostyanov/NanoDB/internal/sql"
@@ -102,7 +103,7 @@ func (p *Planner) planInsert(database string, stmt *ast.InsertStatement) (plan.N
 	}
 
 	if len(stmt.Columns) != len(stmt.Values) {
-		return nil, fmt.Errorf("number of expressions should be equal to the number of columns")
+		return nil, errors.New("number of expressions should be equal to the number of columns")
 	}
 
 	var key int64
@@ -271,11 +272,11 @@ func (p *Planner) planTableScheme(columns []ast.Column) (sql.Scheme, error) {
 	}
 
 	if primaryKeys == 0 {
-		return nil, fmt.Errorf("primary key is required")
+		return nil, errors.New("primary key is required")
 	}
 
 	if primaryKeys > 1 {
-		return nil, fmt.Errorf("multiple primary keys are not allowed")
+		return nil, errors.New("multiple primary keys are not allowed")
 	}
 
 	return scheme, nil
@@ -352,7 +353,7 @@ func (p *Planner) planProject(table sql.Table, stmt []ast.ResultStatement, child
 	)
 
 	if len(stmt) == 0 {
-		return nil, fmt.Errorf("projections list should be not empty")
+		return nil, errors.New("projections list should be not empty")
 	}
 
 	if table != nil {
@@ -373,7 +374,7 @@ func (p *Planner) planProjections(scheme sql.Scheme, stmt []ast.ResultStatement)
 		switch stmt[i].Expr.(type) {
 		case *ast.AsteriskExpr:
 			if scheme == nil {
-				return nil, fmt.Errorf("table not specified")
+				return nil, errors.New("table not specified")
 			}
 
 			columns := make([]string, len(scheme))
@@ -412,7 +413,7 @@ func (p *Planner) planFilter(table sql.Table, stmt *ast.WhereStatement, child pl
 	}
 
 	if table == nil {
-		return nil, fmt.Errorf("table not specified")
+		return nil, errors.New("table not specified")
 	}
 
 	cond, err := expr.New(stmt.Expr, table.Scheme())
@@ -429,7 +430,7 @@ func (p *Planner) planSort(table sql.Table, stmt *ast.OrderByStatement, child pl
 	}
 
 	if table == nil {
-		return nil, fmt.Errorf("table not specified")
+		return nil, errors.New("table not specified")
 	}
 
 	column, ok := table.Scheme()[stmt.Column]
@@ -468,11 +469,11 @@ func (p *Planner) planOffset(stmt *ast.OffsetStatement, child plan.Node) (plan.N
 
 	n, ok := limit.Raw().(int64)
 	if !ok {
-		return nil, fmt.Errorf("OFFSET expr must be integer type")
+		return nil, errors.New("OFFSET expr must be integer type")
 	}
 
 	if n < 0 {
-		return nil, fmt.Errorf("OFFSET must not be negative")
+		return nil, errors.New("OFFSET must not be negative")
 	}
 
 	return plan.NewOffset(n, child), nil
@@ -495,11 +496,11 @@ func (p *Planner) planLimit(stmt *ast.LimitStatement, child plan.Node) (plan.Nod
 
 	n, ok := limit.Raw().(int64)
 	if !ok {
-		return nil, fmt.Errorf("LIMIT expr must be integer type")
+		return nil, errors.New("LIMIT expr must be integer type")
 	}
 
 	if n < 0 {
-		return nil, fmt.Errorf("LIMIT must not be negative")
+		return nil, errors.New("LIMIT must not be negative")
 	}
 
 	return plan.NewLimit(n, child), nil
@@ -507,11 +508,11 @@ func (p *Planner) planLimit(stmt *ast.LimitStatement, child plan.Node) (plan.Nod
 
 func (p *Planner) getTable(databaseName, tableName string) (sql.Table, error) {
 	if databaseName == "" {
-		return nil, fmt.Errorf("database not specified")
+		return nil, errors.New("database not specified")
 	}
 
 	if tableName == "" {
-		return nil, fmt.Errorf("table not specified")
+		return nil, errors.New("table not specified")
 	}
 
 	db, err := p.catalog.GetDatabase(databaseName)

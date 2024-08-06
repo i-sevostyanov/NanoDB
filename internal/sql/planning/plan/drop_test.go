@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"testing"
 
@@ -52,7 +52,7 @@ func TestDropDatabase_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		name := "test"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		dropper := NewMockDatabaseDropper(ctrl)
 		dropper.EXPECT().DropDatabase(name).Return(expectedErr)
@@ -106,7 +106,7 @@ func TestDropTable_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		name := "test"
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		dropper := NewMockTableDropper(ctrl)
 		dropper.EXPECT().DropTable(name).Return(expectedErr)

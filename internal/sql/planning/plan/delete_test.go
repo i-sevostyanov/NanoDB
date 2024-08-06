@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"testing"
 
@@ -82,7 +82,7 @@ func TestDelete_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		pkIndex := uint8(0)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		child := plan.NewMockNode(ctrl)
 		deleter := NewMockRowDeleter(ctrl)
@@ -102,7 +102,7 @@ func TestDelete_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		pkIndex := uint8(0)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		child := plan.NewMockNode(ctrl)
 		rowIter := sql.NewMockRowIter(ctrl)
@@ -133,7 +133,7 @@ func TestDelete_RowIter(t *testing.T) {
 		defer ctrl.Finish()
 
 		pkIndex := uint8(0)
-		expectedErr := fmt.Errorf("something went wrong")
+		expectedErr := errors.New("something went wrong")
 
 		row := sql.Row{
 			datatype.NewInteger(1),

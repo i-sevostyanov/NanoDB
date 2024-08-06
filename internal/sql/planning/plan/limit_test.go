@@ -1,7 +1,7 @@
 package plan_test
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"testing"
 
@@ -123,7 +123,7 @@ func TestLimit_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		expectedErr := fmt.Errorf("somethig went wtrong")
+		expectedErr := errors.New("something went wrong")
 
 		child := plan.NewMockNode(ctrl)
 		child.EXPECT().RowIter().Return(nil, expectedErr)
@@ -140,7 +140,7 @@ func TestLimit_RowIter(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		expectedErr := fmt.Errorf("somethig went wtrong")
+		expectedErr := errors.New("something went wrong")
 
 		child := plan.NewMockNode(ctrl)
 		rowIter := sql.NewMockRowIter(ctrl)

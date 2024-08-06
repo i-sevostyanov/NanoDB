@@ -22,6 +22,7 @@ func main() {
 	sqlParser := engine.ParseFn(func(sql string) (ast.Node, error) {
 		lx := lexer.New(sql)
 		pr := parser.New(lx)
+
 		return pr.Parse()
 	})
 

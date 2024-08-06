@@ -18,11 +18,14 @@ func Pow(left, right sql.Value) (sql.Value, error) {
 		case sql.Float:
 			lvalue := left.Raw().(float64)
 			rvalue := right.Raw().(float64)
+
 			return datatype.NewFloat(math.Pow(lvalue, rvalue)), nil
 		case sql.Integer:
 			lvalue := left.Raw().(int64)
 			rvalue := right.Raw().(int64)
+
 			return datatype.NewFloat(math.Pow(float64(lvalue), float64(rvalue))), nil
+		default:
 		}
 	}
 
