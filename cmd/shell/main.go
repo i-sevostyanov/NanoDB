@@ -28,7 +28,7 @@ func main() {
 	sqlCatalog := memory.NewCatalog()
 	sqlPlanner := planner.New(sqlCatalog)
 	sqlEngine := engine.New(sqlParser, sqlPlanner)
-	tableWriter := shell.NewTableWriterFactory()
+	tableWriter := shell.NewTableWriter()
 
 	sh := shell.New(os.Stdin, os.Stdout, sqlCatalog, sqlEngine, tableWriter)
 	sh.Run(ctx)

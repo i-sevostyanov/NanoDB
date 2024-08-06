@@ -1,43 +1,45 @@
 package shell
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"strings"
 	"text/tabwriter"
 )
 
-type Table struct {
-	w *tabwriter.Writer
+type Table struct{}
+
+func NewTableWriter() Table {
+	return Table{}
 }
 
-func NewTableWriter(w io.Writer) *Table {
-	return &Table{
-		w: tabwriter.NewWriter(w, 0, 0, 0, ' ', tabwriter.TabIndent),
-	}
-}
-
-func (t *Table) WriteTable(headers []string, data [][]string, showRowsCount bool) {
+func (t Table) WriteTable(headers []string, data [][]string, showRowsCount bool) string {
 	divLine := t.formatDividerLine(headers, data)
 
-	t.write(divLine)
-	t.write(t.formatRow(headers))
-	t.write(divLine)
+	buf := bytes.NewBuffer(nil)
+	w := tabwriter.NewWriter(buf, 0, 0, 0, ' ', tabwriter.TabIndent)
+
+	t.write(w, divLine)
+	t.write(w, t.formatRow(headers))
+	t.write(w, divLine)
 
 	for _, row := range data {
-		t.write(t.formatRow(row))
+		t.write(w, t.formatRow(row))
 	}
 
-	t.write(divLine)
+	t.write(w, divLine)
 
 	if showRowsCount {
-		t.write(t.formatRowsCount(data))
+		t.write(w, t.formatRowsCount(data))
 	}
 
-	t.flush()
+	_ = w.Flush()
+
+	return buf.String()
 }
 
-func (t *Table) formatDividerLine(headers []string, data [][]string) string {
+func (t Table) formatDividerLine(headers []string, data [][]string) string {
 	columnsWidth := t.columnsWidth(headers, data)
 	columns := make([]string, len(headers))
 
@@ -48,23 +50,19 @@ func (t *Table) formatDividerLine(headers []string, data [][]string) string {
 	return fmt.Sprintf("+%s\t+\n", strings.Join(columns, "\t+"))
 }
 
-func (t *Table) formatRow(columns []string) string {
+func (t Table) formatRow(columns []string) string {
 	return fmt.Sprintf("| %s\t|\n", strings.Join(columns, "\t| "))
 }
 
-func (t *Table) formatRowsCount(data [][]string) string {
+func (t Table) formatRowsCount(data [][]string) string {
 	return fmt.Sprintf("(%d rows)\n\n", len(data))
 }
 
-func (t *Table) write(line string) {
-	_, _ = t.w.Write([]byte(line))
+func (t Table) write(w io.Writer, line string) {
+	_, _ = w.Write([]byte(line))
 }
 
-func (t *Table) flush() {
-	_ = t.w.Flush()
-}
-
-func (t *Table) columnsWidth(headers []string, data [][]string) []int {
+func (t Table) columnsWidth(headers []string, data [][]string) []int {
 	columns := make([]int, len(headers))
 
 	for i := range data {
@@ -80,14 +78,4 @@ func (t *Table) columnsWidth(headers []string, data [][]string) []int {
 	}
 
 	return columns
-}
-
-type TableWriterFactory struct{}
-
-func NewTableWriterFactory() TableWriterFactory {
-	return TableWriterFactory{}
-}
-
-func (f TableWriterFactory) WriteTable(w io.Writer, headers []string, data [][]string, showRowsCount bool) {
-	NewTableWriter(w).WriteTable(headers, data, showRowsCount)
 }
